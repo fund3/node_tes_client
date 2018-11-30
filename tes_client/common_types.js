@@ -105,22 +105,23 @@ var AccountType {
 };
 
 
+// Classes
 class AccountInfo {
-    constructor(accountID, exchange, exchangeAccountID, accountType, 
+    constructor(accountID, exchange, accountType, exchangeAccountID,  
                 exchangeClientID){
         //
         // accountID: int id corresponding to an account on an exchange Required.
         // exchange: str exchange in which accountID is contained
-        // exchangeAccountID: str account/wallet id, empty in client request
         // accountType: str exchange account type (exchange,
-        //     margin, combined), empty in client request (will replace label)
+        //     margin, combined), empty in client request
+        // exchangeAccountID: str account/wallet id, empty in client request
         // exchangeClientID: str exchange client (customer) ID,
         //    empty in client request
         //
         this.accountID = int(accountID);
         this.exchange = str(exchange or '');
-        this.exchangeAccountID = str(exchangeAccountID or '');
         this.accountType = str(accountType or '');
+        this.exchangeAccountID = str(exchangeAccountID or '');
         this.exchangeClientID = str(exchangeClientID or '');
     }
 }
