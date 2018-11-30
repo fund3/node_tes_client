@@ -106,9 +106,8 @@ var AccountType {
 
 
 class AccountInfo {
-    constructor(accountID: int, exchange: str=None,
-                 exchangeAccountID: str=None, accountType: str=None,
-                 exchangeClientID: str=None):
+    constructor(accountID, exchange, exchangeAccountID, accountType, 
+                exchangeClientID){
         //
         // accountID: int id corresponding to an account on an exchange Required.
         // exchange: str exchange in which accountID is contained
@@ -118,17 +117,17 @@ class AccountInfo {
         // exchangeClientID: str exchange client (customer) ID,
         //    empty in client request
         //
-        this.accountID = int(accountID)
-        this.exchange = str(exchange or '')
-        this.exchangeAccountID = str(exchangeAccountID or '')
-        this.accountType = str(accountType or '')
-        this.exchangeClientID = str(exchangeClientID or '')
+        this.accountID = int(accountID);
+        this.exchange = str(exchange or '');
+        this.exchangeAccountID = str(exchangeAccountID or '');
+        this.accountType = str(accountType or '');
+        this.exchangeClientID = str(exchangeClientID or '');
+    }
 }
 
 
 class AccountCredentials {
-    constructor(accountInfo: AccountInfo, apiKey: str, secretKey: str,
-                 passphrase: str=None):
+    constructor(accountInfo, apiKey, secretKey, passphrase){
         //
         // AccountCredentials object is used for logon
         // accountInfo: AccountInfo object containing accountID
@@ -139,10 +138,11 @@ class AccountCredentials {
         // passphrase: str (optional) passphrase for connecting to API
         //    associated with accountID
         //
-        this.accountInfo = accountInfo
-        this.apiKey = str(apiKey)
-        this.secretKey = str(secretKey)
-        this.passphrase = str(passphrase or '')
+        this.accountInfo = accountInfo;
+        this.apiKey = str(apiKey);
+        this.secretKey = str(secretKey);
+        this.passphrase = str(passphrase or '');
+    }
 }
 
 
@@ -150,12 +150,9 @@ class Order {
     //
     // object created for placing a new Order.
     //
-    constructor( accountInfo: AccountInfo, clientOrderID: int,
-                 symbol: str, side: Side, orderType: OrderType,
-                 quantity: float, price: float,
-                 timeInForce: str = TimeInForce.gtc.name,
-                 leverageType: str = LeverageType.none.name,
-                 leverage: float = 0.0, clientOrderLinkID: str = None):
+    constructor(accountInfo, clientOrderID, symbol, side, orderType, 
+                quantity, price, timeInForce, leverageType, leverage, 
+                clientOrderLinkID) {
         //
         // accountInfo: AccountInfo
         // clientOrderID: int orderID generated on the client side
@@ -171,40 +168,42 @@ class Order {
         // clientOrderLinkID: str used for identifying strategy (when
         //    multiple strategies are trading on the same account)
         //
-        this.accountInfo = accountInfo
-        this.clientOrderID = int(clientOrderID)
-        this.clientOrderLinkID = str(clientOrderLinkID or '')
-        this.symbol = str(symbol)
-        this.side = str(side.name)
-        this.orderType = str(orderType.name)
-        this.quantity = float(quantity)
-        this.price = float(price)
-        this.timeInForce = str(timeInForce)
-        this.leverageType = str(leverageType)
-        this.leverage = float(leverage)
+        this.accountInfo = accountInfo;
+        this.clientOrderID = int(clientOrderID);
+        this.clientOrderLinkID = str(clientOrderLinkID or '');
+        this.symbol = str(symbol);
+        this.side = str(side);
+        this.orderType = str(orderType);
+        this.quantity = float(quantity);
+        this.price = float(price);
+        this.timeInForce = str(timeInForce);
+        this.leverageType = str(leverageType);
+        this.leverage = float(leverage);
+    }
 }
 
 
 class RequestRejected {
-    constructor( message: str=None):
+    constructor(message){
         //
         // message: str rejection reason
         //
-        this.message = str(message or '')
+        this.message = str(message or '');
+    }
 }
 
 
 class Balance {
-    constructor( currency: str, fullBalance: float,
-                 availableBalance: float):
+    constructor(currency, fullBalance, availableBalance) {
         //
         // currency: str currency pair symbol
         // fullBalance: float
         // availableBalance: float
         //
-        this.currency = str(currency)
-        this.fullBalance = float(fullBalance)
-        this.availableBalance = float(availableBalance)
+        this.currency = str(currency);
+        this.fullBalance = float(fullBalance);
+        this.availableBalance = float(availableBalance);
+    }
 }
 
 
@@ -215,12 +214,7 @@ class OpenPosition {
     // https://github.com/fund3/communication-protocol/blob/master/TradeMessage.capnp
     //
     // TODO dict storing the valid values of these types
-    constructor(
-                 symbol: str,
-                 side: str,
-                 quantity: float,
-                 initialPrice: float,
-                 unrealizedPL: float):
+    constructor(symbol, side, quantity, initialPrice, unrealizedPL) {
         //
         // symbol: str ticker symbol
         // side: str (see Side enum)
@@ -228,11 +222,12 @@ class OpenPosition {
         // initialPrice: float
         // unrealizedPL: float
         //
-        this.symbol = str(symbol)
-        this.side = str(side)
-        this.quantity = float(quantity)
-        this.initialPrice = float(initialPrice)
-        this.unrealizedPL = float(unrealizedPL)
+        this.symbol = str(symbol);
+        this.side = str(side);
+        this.quantity = float(quantity);
+        this.initialPrice = float(initialPrice);
+        this.unrealizedPL = float(unrealizedPL);
+    }
 }
 
 
@@ -240,13 +235,10 @@ class ExecutionReport {
     //
     // returned in response to place, modify, cancel, getOrderStatus requests
     //
-    constructor( orderID: str, clientOrderID: int, exchangeOrderID: str,
-                 accountInfo: AccountInfo, symbol: str, side: str,
-                 orderType: str, quantity: float, price: float,
-                 timeInForce: str, leverageType: str, leverage: float,
-                 orderStatus: str, filledQuantity: float, avgFillPrice: float,
-                 executionReportType: str, rejectionReason: str=None,
-                 clientOrderLinkID: str=None):
+    constructor(orderID, clientOrderID, exchangeOrderID, accountInfo, symbol, 
+                side, orderType, quantity, price, timeInForce, leverageType, 
+                leverage, orderStatus, filledQuantity, avgFillPrice, 
+                executionReportType, rejectionReason, clientOrderLinkID) {
         //
         // orderID: str orderID as assigned by TES
         // clientOrderID: int orderID generated on the client side
@@ -268,31 +260,30 @@ class ExecutionReport {
         // executionReportType: str (see ExecutionReportType enum)
         // rejectionReason: str rejectionReason
         //
-        this.orderID = str(orderID)
-        this.clientOrderID = int(clientOrderID)
-        this.clientOrderLinkID = str(clientOrderLinkID or '')
-        this.exchangeOrderID = str(exchangeOrderID)
-        this.accountInfo = accountInfo
-        this.symbol = str(symbol)
-        this.side = Side[side].name
-        this.orderType = OrderType[orderType].name
-        this.quantity = float(quantity)
-        this.price = float(price)
-        this.timeInForce = TimeInForce[timeInForce].name
-        this.leverageType = LeverageType[leverageType].name
-        this.leverage = float(leverage)
-        this.orderStatus = str(orderStatus)
-        this.filledQuantity = float(filledQuantity)
-        this.avgFillPrice = float(avgFillPrice)
-        this.executionReportType = str(executionReportType)
-        this.rejectionReason = str(rejectionReason) or ''
+        this.orderID = str(orderID);
+        this.clientOrderID = int(clientOrderID);
+        this.clientOrderLinkID = str(clientOrderLinkID or '');
+        this.exchangeOrderID = str(exchangeOrderID);
+        this.accountInfo = accountInfo;
+        this.symbol = str(symbol);
+        this.side = Side[side];
+        this.orderType = OrderType[orderType];
+        this.quantity = float(quantity);
+        this.price = float(price);
+        this.timeInForce = TimeInForce[timeInForce];
+        this.leverageType = LeverageType[leverageType];
+        this.leverage = float(leverage);
+        this.orderStatus = str(orderStatus);
+        this.filledQuantity = float(filledQuantity);
+        this.avgFillPrice = float(avgFillPrice);
+        this.executionReportType = str(executionReportType);
+        this.rejectionReason = str(rejectionReason) or '';
+    }
 }
 
 
-class AccountDataReport{
-    constructor( accountInfo: AccountInfo, balances: List[Balance],
-                 openPositions: List[OpenPosition],
-                 orders: List[ExecutionReport]):
+class AccountDataReport {
+    constructor(accountInfo, balances, openPositions, orders) {
         //
         // accountInfo: accountInfo
         // balances: List of Balances of all currency pairs on the
@@ -302,27 +293,29 @@ class AccountDataReport{
         // orders: List of ExecutionReport of orders which are currently
         //    active on the account given in accountInfo
         //
-        this.accountInfo = accountInfo
-        this.balances = list(balances)
-        this.openPositions = list(openPositions)
-        this.orders = list(orders)
+        this.accountInfo = accountInfo;
+        this.balances = list(balances);
+        this.openPositions = list(openPositions);
+        this.orders = list(orders);
+    }
 }
 
 
-class AccountBalancesReport{
-    constructor( accountInfo: AccountInfo, balances: List[Balance]):
+class AccountBalancesReport {
+    constructor(accountInfo, balances) {
         //
         // accountInfo: AccountInfo
         // balances: List of Balances of all currency pairs on the
         //    account given in accountInfo
         //
-        this.accountInfo = accountInfo
-        this.balances = list(balances)
+        this.accountInfo = accountInfo;
+        this.balances = list(balances);
+    }
 }
 
 
-class OpenPositionsReport{
-    constructor( accountInfo, openPositions){
+class OpenPositionsReport {
+    constructor( accountInfo, openPositions) {
         //
         // accountInfo: AccountInfo
         // openPositions: List of OpenPosition on the account given in
@@ -334,37 +327,36 @@ class OpenPositionsReport{
 }
 
 
-class WorkingOrdersReport{
-    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]){
+class WorkingOrdersReport {
+    constructor(accountInfo, orders) {
         //
         // accountInfo: AccountInfo
         // orders: List of ExecutionReport of orders which are currently
         //    active on the account given in accountInfo
         //
-        this.accountInfo = accountInfo
-        this.orders = list(orders)
+        this.accountInfo = accountInfo;
+        this.orders = list(orders);
     }
 }
 
 
-class CompletedOrdersReport{
-    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]){
+class CompletedOrdersReport {
+    constructor(accountInfo, orders) {
         //
         // accountInfo: AccountInfo
         // exchange: str
         // orders: List of ExecutionReport of orders completed within the
         //    last 24 hours on the account given in accountInfo
         //
-        this.accountInfo = accountInfo
-        this.orders = list(orders)
+        this.accountInfo = accountInfo;
+        this.orders = list(orders);
     }
 }
 
 
-class OrderInfo{
-    constructor( orderID: str, clientOrderID: int=None,
-                 clientOrderLinkID: str=None, exchangeOrderID: str=None,
-                 symbol: str=None):
+class OrderInfo {
+    constructor(orderID, clientOrderID, clientOrderLinkID, exchangeOrderID,
+                symbol) {
         //
         // orderID: int required
         // clientOrderID: int empty in client request
@@ -372,20 +364,19 @@ class OrderInfo{
         // exchangeOrderID: str empty in client request
         // symbol: str empty in client request
         //
-        this.orderID = str(orderID)
+        this.orderID = str(orderID);
         this.clientOrderID = int(clientOrderID) if clientOrderID is not None \
-            else None
-        this.clientOrderLinkID = str(clientOrderLinkID or '')
-        this.exchangeOrderID = str(exchangeOrderID or '')
-        this.symbol = str(symbol or '')
+            else None;
+        this.clientOrderLinkID = str(clientOrderLinkID or '');
+        this.exchangeOrderID = str(exchangeOrderID or '');
+        this.symbol = str(symbol or '');
+    }
 }
 
 
-class SymbolProperties{
-    constructor( symbol: str, pricePrecision: float,
-                 quantityPrecision: float, minQuantity: float,
-                 maxQuantity: float, marginSupported: bool,
-                 leverage: Set[float]):
+class SymbolProperties {
+    constructor(symbol, pricePrecision, quantityPrecision, minQuantity,
+                maxQuantity, marginSupported, leverage) {
         //
         // symbol: str
         // pricePrecision: float
@@ -395,20 +386,19 @@ class SymbolProperties{
         // marginSupported: bool
         // leverage: set of float leverages supported for symbol
         //
-        this.symbol = str(symbol)
-        this.pricePrecision = float(pricePrecision)
-        this.quantityPrecision = float(quantityPrecision)
-        this.minQuantity = float(minQuantity)
-        this.maxQuantity = float(maxQuantity)
-        this.marginSupported = bool(marginSupported)
-        this.leverage = set(leverage)
+        this.symbol = str(symbol);
+        this.pricePrecision = float(pricePrecision);
+        this.quantityPrecision = float(quantityPrecision);
+        this.minQuantity = float(minQuantity);
+        this.maxQuantity = float(maxQuantity);
+        this.marginSupported = bool(marginSupported);
+        this.leverage = set(leverage);
+    }
 }
 
 
-class ExchangePropertiesReport{
-    constructor( exchange: str, currencies: Set[str],
-                 symbolProperties: Dict[str, SymbolProperties],
-                 timeInForces: Set[str], orderTypes: Set[str]):
+class ExchangePropertiesReport {
+    constructor(exchange, currencies, symbolProperties, timeInForces, orderTypes) {
         //
         // exchange: str
         // currencies: set of str active currencies on exchange
@@ -416,9 +406,10 @@ class ExchangePropertiesReport{
         // timeInForces: set of supported TimeInForce across all currencies
         // orderTypes: set of supported OrderType across all currencies
         //
-        this.exchange = str(exchange)
-        this.currencies = set(currencies)
-        this.symbolProperties = dict(symbolProperties)
-        this.timeInForces = set(timeInForces)
-        this.orderTypes = set(orderTypes)
+        this.exchange = str(exchange);
+        this.currencies = set(currencies);
+        this.symbolProperties = dict(symbolProperties);
+        this.timeInForces = set(timeInForces);
+        this.orderTypes = set(orderTypes);
+    }
 }
