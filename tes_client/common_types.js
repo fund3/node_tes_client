@@ -103,3 +103,306 @@ var AccountType {
     statusUpdate: 7,
     statusUpdateRejected: 8,
 };
+
+
+class AccountInfo {
+    constructor(accountID: int, exchange: str=None,
+                 exchangeAccountID: str=None, accountType: str=None,
+                 exchangeClientID: str=None):
+        //
+        // accountID: int id corresponding to an account on an exchange Required.
+        // exchange: str exchange in which accountID is contained
+        // exchangeAccountID: str account/wallet id, empty in client request
+        // accountType: str exchange account type (exchange,
+        //     margin, combined), empty in client request (will replace label)
+        // exchangeClientID: str exchange client (customer) ID,
+        //    empty in client request
+        //
+        this.accountID = int(accountID)
+        this.exchange = str(exchange or '')
+        this.exchangeAccountID = str(exchangeAccountID or '')
+        this.accountType = str(accountType or '')
+        this.exchangeClientID = str(exchangeClientID or '')
+}
+
+
+class AccountCredentials:
+    constructor(accountInfo: AccountInfo, apiKey: str, secretKey: str,
+                 passphrase: str=None):
+        //
+        // AccountCredentials object is used for logon
+        // accountInfo: AccountInfo object containing accountID
+        // apiKey: str apiKey for connecting to exchange API
+        //    associated with accountID
+        // secretKey: str secretKey for connecting to exchange API
+        //    associated with accountID
+        // passphrase: str (optional) passphrase for connecting to API
+        //    associated with accountID
+        //
+        this.accountInfo = accountInfo
+        this.apiKey = str(apiKey)
+        this.secretKey = str(secretKey)
+        this.passphrase = str(passphrase or '')
+
+
+class Order:
+    //
+    // object created for placing a new Order.
+    //
+    constructor( accountInfo: AccountInfo, clientOrderID: int,
+                 symbol: str, side: Side, orderType: OrderType,
+                 quantity: float, price: float,
+                 timeInForce: str = TimeInForce.gtc.name,
+                 leverageType: str = LeverageType.none.name,
+                 leverage: float = 0.0, clientOrderLinkID: str = None):
+        //
+        // accountInfo: AccountInfo
+        // clientOrderID: int orderID generated on the client side
+        // accountInfo: accountInfo
+        // symbol: str
+        // side: str (see Side enum)
+        // orderType: str (see OrderType enum)
+        // quantity: float
+        // price: float
+        // timeInForce: str (see TimeInForce enum)
+        // leverageType: str (see LeverageType enum)
+        // leverage: float leverage being used on this specific order
+        // clientOrderLinkID: str used for identifying strategy (when
+        //    multiple strategies are trading on the same account)
+        //
+        this.accountInfo = accountInfo
+        this.clientOrderID = int(clientOrderID)
+        this.clientOrderLinkID = str(clientOrderLinkID or '')
+        this.symbol = str(symbol)
+        this.side = str(side.name)
+        this.orderType = str(orderType.name)
+        this.quantity = float(quantity)
+        this.price = float(price)
+        this.timeInForce = str(timeInForce)
+        this.leverageType = str(leverageType)
+        this.leverage = float(leverage)
+
+
+class RequestRejected:
+    constructor( message: str=None):
+        //
+        // message: str rejection reason
+        //
+        this.message = str(message or '')
+
+
+class Balance:
+    constructor( currency: str, fullBalance: float,
+                 availableBalance: float):
+        //
+        // currency: str currency pair symbol
+        // fullBalance: float
+        // availableBalance: float
+        //
+        this.currency = str(currency)
+        this.fullBalance = float(fullBalance)
+        this.availableBalance = float(availableBalance)
+
+
+class OpenPosition:
+    //
+    // OpenPosition is a glorified immutable dict for easy storage and lookup.
+    // It is based on the "OpenPosition" struct in:
+    // https://github.com/fund3/communication-protocol/blob/master/TradeMessage.capnp
+    //
+    // TODO dict storing the valid values of these types
+    constructor(
+                 symbol: str,
+                 side: str,
+                 quantity: float,
+                 initialPrice: float,
+                 unrealizedPL: float):
+        //
+        // symbol: str ticker symbol
+        // side: str (see Side enum)
+        // quantity: float
+        // initialPrice: float
+        // unrealizedPL: float
+        //
+        this.symbol = str(symbol)
+        this.side = str(side)
+        this.quantity = float(quantity)
+        this.initialPrice = float(initialPrice)
+        this.unrealizedPL = float(unrealizedPL)
+
+
+class ExecutionReport:
+    //
+    // returned in response to place, modify, cancel, getOrderStatus requests
+    //
+    constructor( orderID: str, clientOrderID: int, exchangeOrderID: str,
+                 accountInfo: AccountInfo, symbol: str, side: str,
+                 orderType: str, quantity: float, price: float,
+                 timeInForce: str, leverageType: str, leverage: float,
+                 orderStatus: str, filledQuantity: float, avgFillPrice: float,
+                 executionReportType: str, rejectionReason: str=None,
+                 clientOrderLinkID: str=None):
+        //
+        // orderID: str orderID as assigned by TES
+        // clientOrderID: int orderID generated on the client side
+        // clientOrderLinkID: str internal id used for
+        // exchangeOrderID: str orderID as assigned by Exchange
+        // accountInfo: accountInfo
+        // symbol: str
+        // side: str (see Side enum)
+        // orderType: str (see OrderType enum)
+        // quantity: float
+        // price: float
+        // timeInForce: str (see TimeInForce enum)
+        // leverageType: str (see LeverageType enum)
+        // leverage: float leverage being used on this specific order
+        // orderStatus: str (see OrderStatus enum)
+        // filledQuantity: float amount of quantity which has been filled
+        // avgFillPrice: float average price at which the order has been
+        //    filled thus far
+        // executionReportType: str (see ExecutionReportType enum)
+        // rejectionReason: str rejectionReason
+        //
+        this.orderID = str(orderID)
+        this.clientOrderID = int(clientOrderID)
+        this.clientOrderLinkID = str(clientOrderLinkID or '')
+        this.exchangeOrderID = str(exchangeOrderID)
+        this.accountInfo = accountInfo
+        this.symbol = str(symbol)
+        this.side = Side[side].name
+        this.orderType = OrderType[orderType].name
+        this.quantity = float(quantity)
+        this.price = float(price)
+        this.timeInForce = TimeInForce[timeInForce].name
+        this.leverageType = LeverageType[leverageType].name
+        this.leverage = float(leverage)
+        this.orderStatus = str(orderStatus)
+        this.filledQuantity = float(filledQuantity)
+        this.avgFillPrice = float(avgFillPrice)
+        this.executionReportType = str(executionReportType)
+        this.rejectionReason = str(rejectionReason) or ''
+
+
+class AccountDataReport:
+    constructor( accountInfo: AccountInfo, balances: List[Balance],
+                 openPositions: List[OpenPosition],
+                 orders: List[ExecutionReport]):
+        //
+        // accountInfo: accountInfo
+        // balances: List of Balances of all currency pairs on the
+        //    account given in accountInfo
+        // openPositions: List of OpenPosition on the account given in
+        //    accountInfo
+        // orders: List of ExecutionReport of orders which are currently
+        //    active on the account given in accountInfo
+        //
+        this.accountInfo = accountInfo
+        this.balances = list(balances)
+        this.openPositions = list(openPositions)
+        this.orders = list(orders)
+
+
+class AccountBalancesReport:
+    constructor( accountInfo: AccountInfo, balances: List[Balance]):
+        //
+        // accountInfo: AccountInfo
+        // balances: List of Balances of all currency pairs on the
+        //    account given in accountInfo
+        //
+        this.accountInfo = accountInfo
+        this.balances = list(balances)
+
+
+class OpenPositionsReport:
+    constructor( accountInfo: AccountInfo,
+                 openPositions: List[OpenPosition]):
+        //
+        // accountInfo: AccountInfo
+        // openPositions: List of OpenPosition on the account given in
+        //    accountInfo
+        //
+        this.accountInfo = accountInfo
+        this.openPositions = list(openPositions)
+
+
+class WorkingOrdersReport:
+    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]):
+        //
+        // accountInfo: AccountInfo
+        // orders: List of ExecutionReport of orders which are currently
+        //    active on the account given in accountInfo
+        //
+        this.accountInfo = accountInfo
+        this.orders = list(orders)
+
+
+class CompletedOrdersReport:
+    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]):
+        //
+        // accountInfo: AccountInfo
+        // exchange: str
+        // orders: List of ExecutionReport of orders completed within the
+        //    last 24 hours on the account given in accountInfo
+        //
+        this.accountInfo = accountInfo
+        this.orders = list(orders)
+
+
+class OrderInfo:
+    constructor( orderID: str, clientOrderID: int=None,
+                 clientOrderLinkID: str=None, exchangeOrderID: str=None,
+                 symbol: str=None):
+        //
+        // orderID: int required
+        // clientOrderID: int empty in client request
+        // clientOrderLinkID: str empty in client request
+        // exchangeOrderID: str empty in client request
+        // symbol: str empty in client request
+        //
+        this.orderID = str(orderID)
+        this.clientOrderID = int(clientOrderID) if clientOrderID is not None \
+            else None
+        this.clientOrderLinkID = str(clientOrderLinkID or '')
+        this.exchangeOrderID = str(exchangeOrderID or '')
+        this.symbol = str(symbol or '')
+
+
+class SymbolProperties:
+    constructor( symbol: str, pricePrecision: float,
+                 quantityPrecision: float, minQuantity: float,
+                 maxQuantity: float, marginSupported: bool,
+                 leverage: Set[float]):
+        //
+        // symbol: str
+        // pricePrecision: float
+        // quantityPrecision: float
+        // minQuantity: float
+        // maxQuantity: float
+        // marginSupported: bool
+        // leverage: set of float leverages supported for symbol
+        //
+        this.symbol = str(symbol)
+        this.pricePrecision = float(pricePrecision)
+        this.quantityPrecision = float(quantityPrecision)
+        this.minQuantity = float(minQuantity)
+        this.maxQuantity = float(maxQuantity)
+        this.marginSupported = bool(marginSupported)
+        this.leverage = set(leverage)
+
+
+class ExchangePropertiesReport:
+    constructor( exchange: str, currencies: Set[str],
+                 symbolProperties: Dict[str, SymbolProperties],
+                 timeInForces: Set[str], orderTypes: Set[str]):
+        //
+        // exchange: str
+        // currencies: set of str active currencies on exchange
+        // symbolProperties: dict of {symbol: SymbolProperties}
+        // timeInForces: set of supported TimeInForce across all currencies
+        // orderTypes: set of supported OrderType across all currencies
+        //
+        this.exchange = str(exchange)
+        this.currencies = set(currencies)
+        this.symbolProperties = dict(symbolProperties)
+        this.timeInForces = set(timeInForces)
+        this.orderTypes = set(orderTypes)
