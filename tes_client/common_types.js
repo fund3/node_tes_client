@@ -126,7 +126,7 @@ class AccountInfo {
 }
 
 
-class AccountCredentials:
+class AccountCredentials {
     constructor(accountInfo: AccountInfo, apiKey: str, secretKey: str,
                  passphrase: str=None):
         //
@@ -143,9 +143,10 @@ class AccountCredentials:
         this.apiKey = str(apiKey)
         this.secretKey = str(secretKey)
         this.passphrase = str(passphrase or '')
+}
 
 
-class Order:
+class Order {
     //
     // object created for placing a new Order.
     //
@@ -181,17 +182,19 @@ class Order:
         this.timeInForce = str(timeInForce)
         this.leverageType = str(leverageType)
         this.leverage = float(leverage)
+}
 
 
-class RequestRejected:
+class RequestRejected {
     constructor( message: str=None):
         //
         // message: str rejection reason
         //
         this.message = str(message or '')
+}
 
 
-class Balance:
+class Balance {
     constructor( currency: str, fullBalance: float,
                  availableBalance: float):
         //
@@ -202,9 +205,10 @@ class Balance:
         this.currency = str(currency)
         this.fullBalance = float(fullBalance)
         this.availableBalance = float(availableBalance)
+}
 
 
-class OpenPosition:
+class OpenPosition {
     //
     // OpenPosition is a glorified immutable dict for easy storage and lookup.
     // It is based on the "OpenPosition" struct in:
@@ -229,9 +233,10 @@ class OpenPosition:
         this.quantity = float(quantity)
         this.initialPrice = float(initialPrice)
         this.unrealizedPL = float(unrealizedPL)
+}
 
 
-class ExecutionReport:
+class ExecutionReport {
     //
     // returned in response to place, modify, cancel, getOrderStatus requests
     //
@@ -281,9 +286,10 @@ class ExecutionReport:
         this.avgFillPrice = float(avgFillPrice)
         this.executionReportType = str(executionReportType)
         this.rejectionReason = str(rejectionReason) or ''
+}
 
 
-class AccountDataReport:
+class AccountDataReport{
     constructor( accountInfo: AccountInfo, balances: List[Balance],
                  openPositions: List[OpenPosition],
                  orders: List[ExecutionReport]):
@@ -300,9 +306,10 @@ class AccountDataReport:
         this.balances = list(balances)
         this.openPositions = list(openPositions)
         this.orders = list(orders)
+}
 
 
-class AccountBalancesReport:
+class AccountBalancesReport{
     constructor( accountInfo: AccountInfo, balances: List[Balance]):
         //
         // accountInfo: AccountInfo
@@ -311,22 +318,24 @@ class AccountBalancesReport:
         //
         this.accountInfo = accountInfo
         this.balances = list(balances)
+}
 
 
-class OpenPositionsReport:
-    constructor( accountInfo: AccountInfo,
-                 openPositions: List[OpenPosition]):
+class OpenPositionsReport{
+    constructor( accountInfo, openPositions){
         //
         // accountInfo: AccountInfo
         // openPositions: List of OpenPosition on the account given in
         //    accountInfo
         //
-        this.accountInfo = accountInfo
-        this.openPositions = list(openPositions)
+        this.accountInfo = accountInfo;
+        this.openPositions = list(openPositions);
+    }
+}
 
 
-class WorkingOrdersReport:
-    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]):
+class WorkingOrdersReport{
+    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]){
         //
         // accountInfo: AccountInfo
         // orders: List of ExecutionReport of orders which are currently
@@ -334,10 +343,12 @@ class WorkingOrdersReport:
         //
         this.accountInfo = accountInfo
         this.orders = list(orders)
+    }
+}
 
 
-class CompletedOrdersReport:
-    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]):
+class CompletedOrdersReport{
+    constructor( accountInfo: AccountInfo, orders: List[ExecutionReport]){
         //
         // accountInfo: AccountInfo
         // exchange: str
@@ -346,9 +357,11 @@ class CompletedOrdersReport:
         //
         this.accountInfo = accountInfo
         this.orders = list(orders)
+    }
+}
 
 
-class OrderInfo:
+class OrderInfo{
     constructor( orderID: str, clientOrderID: int=None,
                  clientOrderLinkID: str=None, exchangeOrderID: str=None,
                  symbol: str=None):
@@ -365,9 +378,10 @@ class OrderInfo:
         this.clientOrderLinkID = str(clientOrderLinkID or '')
         this.exchangeOrderID = str(exchangeOrderID or '')
         this.symbol = str(symbol or '')
+}
 
 
-class SymbolProperties:
+class SymbolProperties{
     constructor( symbol: str, pricePrecision: float,
                  quantityPrecision: float, minQuantity: float,
                  maxQuantity: float, marginSupported: bool,
@@ -388,9 +402,10 @@ class SymbolProperties:
         this.maxQuantity = float(maxQuantity)
         this.marginSupported = bool(marginSupported)
         this.leverage = set(leverage)
+}
 
 
-class ExchangePropertiesReport:
+class ExchangePropertiesReport{
     constructor( exchange: str, currencies: Set[str],
                  symbolProperties: Dict[str, SymbolProperties],
                  timeInForces: Set[str], orderTypes: Set[str]):
@@ -406,3 +421,4 @@ class ExchangePropertiesReport:
         this.symbolProperties = dict(symbolProperties)
         this.timeInForces = set(timeInForces)
         this.orderTypes = set(orderTypes)
+}
