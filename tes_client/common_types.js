@@ -119,10 +119,10 @@ class AccountInfo {
         //    empty in client request
         //
         this.accountID = accountID;
-        this.exchange = String(exchange or '');
-        this.accountType = String(accountType or '');
-        this.exchangeAccountID = String(exchangeAccountID or '');
-        this.exchangeClientID = String(exchangeClientID or '');
+        this.exchange = String(exchange);
+        this.accountType = String(accountType);
+        this.exchangeAccountID = String(exchangeAccountID);
+        this.exchangeClientID = String(exchangeClientID);
     }
 }
 
@@ -142,7 +142,7 @@ class AccountCredentials {
         this.accountInfo = accountInfo;
         this.apiKey = String(apiKey);
         this.secretKey = String(secretKey);
-        this.passphrase = String(passphrase or '');
+        this.passphrase = String(passphrase);
     }
 }
 
@@ -171,7 +171,7 @@ class Order {
         //
         this.accountInfo = accountInfo;
         this.clientOrderID = clientOrderID;
-        this.clientOrderLinkID = String(clientOrderLinkID or '');
+        this.clientOrderLinkID = String(clientOrderLinkID);
         this.symbol = String(symbol);
         this.side = String(side);
         this.orderType = String(orderType);
@@ -189,7 +189,7 @@ class RequeStringejected {
         //
         // message: String rejection reason
         //
-        this.message = String(message or '');
+        this.message = String(message);
     }
 }
 
@@ -263,7 +263,7 @@ class ExecutionReport {
         //
         this.orderID = String(orderID);
         this.clientOrderID = clientOrderID;
-        this.clientOrderLinkID = String(clientOrderLinkID or '');
+        this.clientOrderLinkID = String(clientOrderLinkID);
         this.exchangeOrderID = String(exchangeOrderID);
         this.accountInfo = accountInfo;
         this.symbol = String(symbol);
@@ -278,7 +278,7 @@ class ExecutionReport {
         this.filledQuantity = filledQuantity;
         this.avgFillPrice = avgFillPrice;
         this.executionReportType = String(executionReportType);
-        this.rejectionReason = String(rejectionReason) or '';
+        this.rejectionReason = String(rejectionReason);
     }
 }
 
@@ -367,9 +367,9 @@ class OrderInfo {
         //
         this.orderID = String(orderID);
         this.clientOrderID = clientOrderID;
-        this.clientOrderLinkID = String(clientOrderLinkID or '');
-        this.exchangeOrderID = String(exchangeOrderID or '');
-        this.symbol = String(symbol or '');
+        this.clientOrderLinkID = String(clientOrderLinkID);
+        this.exchangeOrderID = exchangeOrderID;
+        this.symbol = symbol;
     }
 }
 
