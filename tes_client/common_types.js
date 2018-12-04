@@ -107,7 +107,7 @@ var AccountType {
 
 // Classes
 class AccountInfo {
-    conStringuctor(accountID, exchange, accountType, exchangeAccountID,  
+    constructor(accountID, exchange, accountType, exchangeAccountID,  
                 exchangeClientID){
         //
         // accountID: int id corresponding to an account on an exchange Required.
@@ -128,7 +128,7 @@ class AccountInfo {
 
 
 class AccountCredentials {
-    conStringuctor(accountInfo, apiKey, secretKey, passphrase){
+    constructor(accountInfo, apiKey, secretKey, passphrase){
         //
         // AccountCredentials object is used for logon
         // accountInfo: AccountInfo object containing accountID
@@ -151,7 +151,7 @@ class Order {
     //
     // object created for placing a new Order.
     //
-    conStringuctor(accountInfo, clientOrderID, symbol, side, orderType, 
+    constructor(accountInfo, clientOrderID, symbol, side, orderType, 
                 quantity, price, timeInForce, leverageType, leverage, 
                 clientOrderLinkID) {
         //
@@ -167,7 +167,7 @@ class Order {
         // leverageType: String (see LeverageType enum)
         // leverage: float leverage being used on this specific order
         // clientOrderLinkID: String used for identifying Stringategy (when
-        //    multiple Stringategies are trading on the same account)
+        //    multiple Strategies are trading on the same account)
         //
         this.accountInfo = accountInfo;
         this.clientOrderID = clientOrderID;
@@ -185,7 +185,7 @@ class Order {
 
 
 class RequeStringejected {
-    conStringuctor(message){
+    constructor(message){
         //
         // message: String rejection reason
         //
@@ -195,7 +195,7 @@ class RequeStringejected {
 
 
 class Balance {
-    conStringuctor(currency, fullBalance, availableBalance) {
+    constructor(currency, fullBalance, availableBalance) {
         //
         // currency: String currency pair symbol
         // fullBalance: float
@@ -215,7 +215,7 @@ class OpenPosition {
     // https://github.com/fund3/communication-protocol/blob/master/TradeMessage.capnp
     //
     // TODO dict storing the valid values of these types
-    conStringuctor(symbol, side, quantity, initialPrice, unrealizedPL) {
+    constructor(symbol, side, quantity, initialPrice, unrealizedPL) {
         //
         // symbol: String ticker symbol
         // side: String (see Side enum)
@@ -236,7 +236,7 @@ class ExecutionReport {
     //
     // returned in response to place, modify, cancel, getOrderStatus requests
     //
-    conStringuctor(orderID, clientOrderID, exchangeOrderID, accountInfo, symbol, 
+    constructor(orderID, clientOrderID, exchangeOrderID, accountInfo, symbol, 
                 side, orderType, quantity, price, timeInForce, leverageType, 
                 leverage, orderStatus, filledQuantity, avgFillPrice, 
                 executionReportType, rejectionReason, clientOrderLinkID) {
@@ -284,7 +284,7 @@ class ExecutionReport {
 
 
 class AccountDataReport {
-    conStringuctor(accountInfo, balances, openPositions, orders) {
+    constructor(accountInfo, balances, openPositions, orders) {
         //
         // accountInfo: accountInfo
         // balances: Array of Balances of all currency pairs on the
@@ -303,7 +303,7 @@ class AccountDataReport {
 
 
 class AccountBalancesReport {
-    conStringuctor(accountInfo, balances) {
+    constructor(accountInfo, balances) {
         //
         // accountInfo: AccountInfo
         // balances: Array of Balances of all currency pairs on the
@@ -316,7 +316,7 @@ class AccountBalancesReport {
 
 
 class OpenPositionsReport {
-    conStringuctor( accountInfo, openPositions) {
+    constructor( accountInfo, openPositions) {
         //
         // accountInfo: AccountInfo
         // openPositions: Array of OpenPosition on the account given in
@@ -329,7 +329,7 @@ class OpenPositionsReport {
 
 
 class WorkingOrdersReport {
-    conStringuctor(accountInfo, orders) {
+    constructor(accountInfo, orders) {
         //
         // accountInfo: AccountInfo
         // orders: Array of ExecutionReport of orders which are currently
@@ -342,7 +342,7 @@ class WorkingOrdersReport {
 
 
 class CompletedOrdersReport {
-    conStringuctor(accountInfo, orders) {
+    constructor(accountInfo, orders) {
         //
         // accountInfo: AccountInfo
         // exchange: String
@@ -356,7 +356,7 @@ class CompletedOrdersReport {
 
 
 class OrderInfo {
-    conStringuctor(orderID, clientOrderID, clientOrderLinkID, exchangeOrderID,
+    constructor(orderID, clientOrderID, clientOrderLinkID, exchangeOrderID,
                 symbol) {
         //
         // orderID: String required
@@ -375,7 +375,7 @@ class OrderInfo {
 
 
 class SymbolProperties {
-    conStringuctor(symbol, pricePrecision, quantityPrecision, minQuantity,
+    constructor(symbol, pricePrecision, quantityPrecision, minQuantity,
                 maxQuantity, marginSupported, leverage) {
         //
         // symbol: String
@@ -398,7 +398,7 @@ class SymbolProperties {
 
 
 class ExchangePropertiesReport {
-    conStringuctor(exchange, currencies, symbolProperties, timeInForces, orderTypes) {
+    constructor(exchange, currencies, symbolProperties, timeInForces, orderTypes) {
         //
         // exchange: String
         // currencies: array (set) of String active currencies on exchange
