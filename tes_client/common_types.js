@@ -110,22 +110,22 @@ class AccountInfo {
     constructor(accountID, 
                 exchange, 
                 accountType, 
-                exchangeAccountID,  
-                exchangeClientID){
+                exchangeAccountId,  
+                exchangeClientId){
         /**
         * @param accountID: int id corresponding to an account on an exchange Required.
         * @param exchange: String exchange in which accountID is contained
         * @param accountType: String exchange account type (exchange,
         *     margin, combined), empty in client request
-        * @param exchangeAccountID: String account/wallet id, empty in client request
-        * @param exchangeClientID: String exchange client (customer) ID,
+        * @param exchangeAccountId: String account/wallet id, empty in client request
+        * @param exchangeClientId: String exchange client (customer) ID,
         *    empty in client request
         */
         this.accountID = accountID;
         this.exchange = String(exchange);
         this.accountType = String(accountType);
-        this.exchangeAccountID = String(exchangeAccountID);
-        this.exchangeClientID = String(exchangeClientID);
+        this.exchangeAccountId = String(exchangeAccountId);
+        this.exchangeClientId = String(exchangeClientId);
     }
 }
 
@@ -155,7 +155,7 @@ class Order {
     // object created for placing a new Order.
     //
     constructor(accountInfo, 
-                clientOrderID, 
+                clientOrderId, 
                 symbol, 
                 side, 
                 orderType, 
@@ -164,10 +164,10 @@ class Order {
                 timeInForce, 
                 leverageType, 
                 leverage, 
-                clientOrderLinkID) {
+                clientOrderLinkId) {
         /**
         * @param accountInfo: AccountInfo
-        * @param clientOrderID: int orderID generated on the client side
+        * @param clientOrderId: int orderID generated on the client side
         * @param accountInfo: accountInfo
         * @param symbol: String
         * @param side: String (see Side enum)
@@ -177,12 +177,11 @@ class Order {
         * @param timeInForce: String (see TimeInForce enum)
         * @param leverageType: String (see LeverageType enum)
         * @param leverage: float leverage being used on this specific order
-        * @param clientOrderLinkID: String used for identifying Stringategy (when
+        * @param clientOrderLinkId: String used for identifying Stringategy (when
         *    multiple Strategies are trading on the same account)
         */
         this.accountInfo = accountInfo;
-        this.clientOrderID = clientOrderID;
-        this.clientOrderLinkID = String(clientOrderLinkID);
+        this.clientOrderId = clientOrderId;
         this.symbol = String(symbol);
         this.side = String(side);
         this.orderType = String(orderType);
@@ -191,6 +190,7 @@ class Order {
         this.timeInForce = String(timeInForce);
         this.leverageType = String(leverageType);
         this.leverage = leverage;
+        this.clientOrderLinkId = String(clientOrderLinkId);
     }
 }
 
@@ -245,9 +245,9 @@ class ExecutionReport {
     //
     // returned in response to place, modify, cancel, getOrderStatus requests
     //
-    constructor(orderID, 
-                clientOrderID, 
-                exchangeOrderID, 
+    constructor(orderId, 
+                clientOrderId, 
+                exchangeOrderId, 
                 accountInfo, 
                 symbol, 
                 side, 
@@ -262,14 +262,13 @@ class ExecutionReport {
                 avgFillPrice, 
                 executionReportType, 
                 rejectionReason, 
-                clientOrderLinkID) {
+                clientOrderLinkId) {
         /**
-        * orderID: String orderID as assigned by TES
-        * clientOrderID: int orderID generated on the client side
-        * clientOrderLinkID: String internal id used for
-        * exchangeOrderID: String orderID as assigned by Exchange
-        * accountInfo: accountInfo
-        * symbol: String
+        * @param orderId: String orderID as assigned by TES
+        * @param clientOrderId: int orderID generated on the client side
+        * @param exchangeOrderId: String orderID as assigned by Exchange
+        * @param accountInfo: accountInfo
+        * @param symbol: String
         * @param side: String (see Side enum)
         * @param orderType: String (see OrderType enum)
         * @param quantity: float
@@ -283,11 +282,11 @@ class ExecutionReport {
         *    filled thus far
         * @param executionReportType: String (see ExecutionReportType enum)
         * @param rejectionReason: String rejectionReason
+        * @param clientOrderLinkId: String internal id used for
         */
-        this.orderID = String(orderID);
-        this.clientOrderID = clientOrderID;
-        this.clientOrderLinkID = String(clientOrderLinkID);
-        this.exchangeOrderID = String(exchangeOrderID);
+        this.orderId = String(orderId);
+        this.clientOrderId = clientOrderId;
+        this.exchangeOrderId = String(exchangeOrderId);
         this.accountInfo = accountInfo;
         this.symbol = String(symbol);
         this.side = side;
@@ -302,6 +301,7 @@ class ExecutionReport {
         this.avgFillPrice = avgFillPrice;
         this.executionReportType = String(executionReportType);
         this.rejectionReason = String(rejectionReason);
+        this.clientOrderLinkId = String(clientOrderLinkId);
     }
 }
 
@@ -379,19 +379,19 @@ class CompletedOrdersReport {
 
 
 class OrderInfo {
-    constructor(orderID, clientOrderID, clientOrderLinkID, exchangeOrderID,
+    constructor(orderId, clientOrderId, clientOrderLinkId, exchangeOrderId,
                 symbol) {
         /**
-        * @param orderID: String required
-        * @param clientOrderID: int empty in client request
-        * @param clientOrderLinkID: String empty in client request
-        * @param exchangeOrderID: String empty in client request
+        * @param orderId: String required
+        * @param clientOrderId: int empty in client request
+        * @param clientOrderLinkId: String empty in client request
+        * @param exchangeOrderId: String empty in client request
         * @param symbol: String empty in client request
         */
-        this.orderID = String(orderID);
-        this.clientOrderID = clientOrderID;
-        this.clientOrderLinkID = String(clientOrderLinkID);
-        this.exchangeOrderID = exchangeOrderID;
+        this.orderId = String(orderId);
+        this.clientOrderId = clientOrderId;
+        this.clientOrderLinkId = String(clientOrderLinkId);
+        this.exchangeOrderId = exchangeOrderId;
         this.symbol = symbol;
     }
 }
