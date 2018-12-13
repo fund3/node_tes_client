@@ -1,9 +1,9 @@
 // common_types.js
 
-//Enums
+// Enums
 var Exchange = {
-    //Exchange Names
-    //https://github.com/fund3/communication-protocol/blob/master/Exchanges.capnp
+    // Exchange Names
+    // https://github.com/fund3/communication-protocol/blob/master/Exchanges.capnp
     //
     undefined:0,
     poloniex:1,
@@ -20,8 +20,8 @@ var Exchange = {
 
 
 var Side = {
-    //Trading Sides
-    //https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
+    // Trading Sides
+    // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
     undefined:0,
     buy:1,
@@ -30,8 +30,8 @@ var Side = {
 
 
 var OrderType = {
-    //Supported Order Types
-    //https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
+    // Supported Order Types
+    // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
     undefined:0,
     market:1,
@@ -40,8 +40,8 @@ var OrderType = {
 
 
 var OrderStatus = {
-    //Order Status on Exchange
-    //https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
+    // Order Status on Exchange
+    // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
     undefined:0,
     received:1,
@@ -58,8 +58,8 @@ var OrderStatus = {
 };
 
 var TimeInForce = {
-    //Order Time In Force
-    //https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
+    // Order Time In Force
+    // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
     undefined: 0,
     gtc: 1,        # Good till cancel
@@ -71,8 +71,8 @@ var TimeInForce = {
 
 
 var LeverageType = {
-    //Leverage Type
-    //https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
+    // Leverage Type
+    // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
     undefined: 0,
     exchangeDefault: 1,
@@ -81,8 +81,8 @@ var LeverageType = {
 
 
 var AccountType {
-    //Account Type
-    //https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
+    // Account Type
+    // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
     undefined: 0,
     exchange: 1,
@@ -92,7 +92,7 @@ var AccountType {
 
 
  var ExecutionReportType = {
-    //Execution Report Type
+    // Execution Report Type
     orderAccepted: 0,
     orderRejected: 1,
     orderReplaced: 2,
@@ -107,17 +107,20 @@ var AccountType {
 
 // Classes
 class AccountInfo {
-    constructor(accountID, exchange, accountType, exchangeAccountID,  
+    constructor(accountID, 
+                exchange, 
+                accountType, 
+                exchangeAccountID,  
                 exchangeClientID){
-        //
-        // accountID: int id corresponding to an account on an exchange Required.
-        // exchange: String exchange in which accountID is contained
-        // accountType: String exchange account type (exchange,
-        //     margin, combined), empty in client request
-        // exchangeAccountID: String account/wallet id, empty in client request
-        // exchangeClientID: String exchange client (customer) ID,
-        //    empty in client request
-        //
+        /**
+        * @param accountID: int id corresponding to an account on an exchange Required.
+        * @param exchange: String exchange in which accountID is contained
+        * @param accountType: String exchange account type (exchange,
+        *     margin, combined), empty in client request
+        * @param exchangeAccountID: String account/wallet id, empty in client request
+        * @param exchangeClientID: String exchange client (customer) ID,
+        *    empty in client request
+        */
         this.accountID = accountID;
         this.exchange = String(exchange);
         this.accountType = String(accountType);
@@ -129,16 +132,16 @@ class AccountInfo {
 
 class AccountCredentials {
     constructor(accountInfo, apiKey, secretKey, passphrase){
-        //
-        // AccountCredentials object is used for logon
-        // accountInfo: AccountInfo object containing accountID
-        // apiKey: String apiKey for connecting to exchange API
-        //    associated with accountID
-        // secretKey: String secretKey for connecting to exchange API
-        //    associated with accountID
-        // passphrase: String (optional) passphrase for connecting to API
-        //    associated with accountID
-        //
+        /**
+        * @param AccountCredentials object is used for logon
+        * @param accountInfo: AccountInfo object containing accountID
+        * @param apiKey: String apiKey for connecting to exchange API
+        *    associated with accountID
+        * @param secretKey: String secretKey for connecting to exchange API
+        *    associated with accountID
+        * @param passphrase: String (optional) passphrase for connecting to API
+        *    associated with accountID
+        */
         this.accountInfo = accountInfo;
         this.apiKey = String(apiKey);
         this.secretKey = String(secretKey);
@@ -151,24 +154,32 @@ class Order {
     //
     // object created for placing a new Order.
     //
-    constructor(accountInfo, clientOrderID, symbol, side, orderType, 
-                quantity, price, timeInForce, leverageType, leverage, 
+    constructor(accountInfo, 
+                clientOrderID, 
+                symbol, 
+                side, 
+                orderType, 
+                quantity, 
+                price, 
+                timeInForce, 
+                leverageType, 
+                leverage, 
                 clientOrderLinkID) {
-        //
-        // accountInfo: AccountInfo
-        // clientOrderID: int orderID generated on the client side
-        // accountInfo: accountInfo
-        // symbol: String
-        // side: String (see Side enum)
-        // orderType: String (see OrderType enum)
-        // quantity: float
-        // price: float
-        // timeInForce: String (see TimeInForce enum)
-        // leverageType: String (see LeverageType enum)
-        // leverage: float leverage being used on this specific order
-        // clientOrderLinkID: String used for identifying Stringategy (when
-        //    multiple Strategies are trading on the same account)
-        //
+        /**
+        * @param accountInfo: AccountInfo
+        * @param clientOrderID: int orderID generated on the client side
+        * @param accountInfo: accountInfo
+        * @param symbol: String
+        * @param side: String (see Side enum)
+        * @param orderType: String (see OrderType enum)
+        * @param quantity: float
+        * @param price: float
+        * @param timeInForce: String (see TimeInForce enum)
+        * @param leverageType: String (see LeverageType enum)
+        * @param leverage: float leverage being used on this specific order
+        * @param clientOrderLinkID: String used for identifying Stringategy (when
+        *    multiple Strategies are trading on the same account)
+        */
         this.accountInfo = accountInfo;
         this.clientOrderID = clientOrderID;
         this.clientOrderLinkID = String(clientOrderLinkID);
@@ -184,11 +195,9 @@ class Order {
 }
 
 
-class RequeStringejected {
+class RequestRejected {
     constructor(message){
-        //
-        // message: String rejection reason
-        //
+        /** @param message: String rejection reason */
         this.message = String(message);
     }
 }
@@ -196,11 +205,11 @@ class RequeStringejected {
 
 class Balance {
     constructor(currency, fullBalance, availableBalance) {
-        //
-        // currency: String currency pair symbol
-        // fullBalance: float
-        // availableBalance: float
-        //
+        /**
+        * @param currency: String currency pair symbol
+        * @param fullBalance: float
+        * @param availableBalance: float
+        */
         this.currency = String(currency);
         this.fullBalance = fullBalance;
         this.availableBalance = availableBalance;
@@ -216,13 +225,13 @@ class OpenPosition {
     //
     // TODO dict storing the valid values of these types
     constructor(symbol, side, quantity, initialPrice, unrealizedPL) {
-        //
-        // symbol: String ticker symbol
-        // side: String (see Side enum)
-        // quantity: float
-        // initialPrice: float
-        // unrealizedPL: float
-        //
+        /**
+        * @param symbol: String ticker symbol
+        * @param side: String (see Side enum)
+        * @param quantity: float
+        * @param initialPrice: float
+        * @param unrealizedPL: float
+        */
         this.symbol = String(symbol);
         this.side = String(side);
         this.quantity = quantity;
@@ -236,31 +245,45 @@ class ExecutionReport {
     //
     // returned in response to place, modify, cancel, getOrderStatus requests
     //
-    constructor(orderID, clientOrderID, exchangeOrderID, accountInfo, symbol, 
-                side, orderType, quantity, price, timeInForce, leverageType, 
-                leverage, orderStatus, filledQuantity, avgFillPrice, 
-                executionReportType, rejectionReason, clientOrderLinkID) {
-        //
-        // orderID: String orderID as assigned by TES
-        // clientOrderID: int orderID generated on the client side
-        // clientOrderLinkID: String internal id used for
-        // exchangeOrderID: String orderID as assigned by Exchange
-        // accountInfo: accountInfo
-        // symbol: String
-        // side: String (see Side enum)
-        // orderType: String (see OrderType enum)
-        // quantity: float
-        // price: float
-        // timeInForce: String (see TimeInForce enum)
-        // leverageType: String (see LeverageType enum)
-        // leverage: float leverage being used on this specific order
-        // orderStatus: String (see OrderStatus enum)
-        // filledQuantity: float amount of quantity which has been filled
-        // avgFillPrice: float average price at which the order has been
-        //    filled thus far
-        // executionReportType: String (see ExecutionReportType enum)
-        // rejectionReason: String rejectionReason
-        //
+    constructor(orderID, 
+                clientOrderID, 
+                exchangeOrderID, 
+                accountInfo, 
+                symbol, 
+                side, 
+                orderType, 
+                quantity, 
+                price, 
+                timeInForce, 
+                leverageType, 
+                leverage, 
+                orderStatus, 
+                filledQuantity, 
+                avgFillPrice, 
+                executionReportType, 
+                rejectionReason, 
+                clientOrderLinkID) {
+        /**
+        * orderID: String orderID as assigned by TES
+        * clientOrderID: int orderID generated on the client side
+        * clientOrderLinkID: String internal id used for
+        * exchangeOrderID: String orderID as assigned by Exchange
+        * accountInfo: accountInfo
+        * symbol: String
+        * @param side: String (see Side enum)
+        * @param orderType: String (see OrderType enum)
+        * @param quantity: float
+        * @param price: float
+        * @param timeInForce: String (see TimeInForce enum)
+        * @param leverageType: String (see LeverageType enum)
+        * @param leverage: float leverage being used on this specific order
+        * @param orderStatus: String (see OrderStatus enum)
+        * @param filledQuantity: float amount of quantity which has been filled
+        * @param avgFillPrice: float average price at which the order has been
+        *    filled thus far
+        * @param executionReportType: String (see ExecutionReportType enum)
+        * @param rejectionReason: String rejectionReason
+        */
         this.orderID = String(orderID);
         this.clientOrderID = clientOrderID;
         this.clientOrderLinkID = String(clientOrderLinkID);
@@ -285,15 +308,15 @@ class ExecutionReport {
 
 class AccountDataReport {
     constructor(accountInfo, balances, openPositions, orders) {
-        //
-        // accountInfo: accountInfo
-        // balances: Array of Balances of all currency pairs on the
-        //    account given in accountInfo
-        // openPositions: Array of OpenPosition on the account given in
-        //    accountInfo
-        // orders: Array of ExecutionReport of orders which are currently
-        //    active on the account given in accountInfo
-        //
+        /**
+        * @param accountInfo: accountInfo
+        * @param balances: Array of Balances of all currency pairs on the
+        *    account given in accountInfo
+        * @param openPositions: Array of OpenPosition on the account given in
+        *    accountInfo
+        * @param orders: Array of ExecutionReport of orders which are currently
+        *    active on the account given in accountInfo
+        */
         this.accountInfo = accountInfo;
         this.balances = balances;
         this.openPositions = openPositions;
@@ -304,11 +327,11 @@ class AccountDataReport {
 
 class AccountBalancesReport {
     constructor(accountInfo, balances) {
-        //
-        // accountInfo: AccountInfo
-        // balances: Array of Balances of all currency pairs on the
-        //    account given in accountInfo
-        //
+        /**
+        * @param accountInfo: AccountInfo
+        * @param balances: Array of Balances of all currency pairs on the
+        *    account given in accountInfo
+        */
         this.accountInfo = accountInfo;
         this.balances = balances;
     }
@@ -316,12 +339,12 @@ class AccountBalancesReport {
 
 
 class OpenPositionsReport {
-    constructor( accountInfo, openPositions) {
-        //
-        // accountInfo: AccountInfo
-        // openPositions: Array of OpenPosition on the account given in
-        //    accountInfo
-        //
+    constructor(accountInfo, openPositions) {
+        /**
+        * @param accountInfo: AccountInfo
+        * @param openPositions: Array of OpenPosition on the account given in
+        *    accountInfo
+        */
         this.accountInfo = accountInfo;
         this.openPositions = openPositions;
     }
@@ -330,11 +353,11 @@ class OpenPositionsReport {
 
 class WorkingOrdersReport {
     constructor(accountInfo, orders) {
-        //
-        // accountInfo: AccountInfo
-        // orders: Array of ExecutionReport of orders which are currently
-        //    active on the account given in accountInfo
-        //
+        /**
+        * @param accountInfo: AccountInfo
+        * @param orders: Array of ExecutionReport of orders which are currently
+        *    active on the account given in accountInfo
+        */
         this.accountInfo = accountInfo;
         this.orders = orders;
     }
@@ -343,12 +366,12 @@ class WorkingOrdersReport {
 
 class CompletedOrdersReport {
     constructor(accountInfo, orders) {
-        //
-        // accountInfo: AccountInfo
-        // exchange: String
-        // orders: Array of ExecutionReport of orders completed within the
-        //    last 24 hours on the account given in accountInfo
-        //
+        /**
+        * @param accountInfo: AccountInfo
+        * @param exchange: String
+        * @param orders: Array of ExecutionReport of orders completed within the
+        *    last 24 hours on the account given in accountInfo
+        */
         this.accountInfo = accountInfo;
         this.orders = orders;
     }
@@ -358,13 +381,13 @@ class CompletedOrdersReport {
 class OrderInfo {
     constructor(orderID, clientOrderID, clientOrderLinkID, exchangeOrderID,
                 symbol) {
-        //
-        // orderID: String required
-        // clientOrderID: int empty in client request
-        // clientOrderLinkID: String empty in client request
-        // exchangeOrderID: String empty in client request
-        // symbol: String empty in client request
-        //
+        /**
+        * @param orderID: String required
+        * @param clientOrderID: int empty in client request
+        * @param clientOrderLinkID: String empty in client request
+        * @param exchangeOrderID: String empty in client request
+        * @param symbol: String empty in client request
+        */
         this.orderID = String(orderID);
         this.clientOrderID = clientOrderID;
         this.clientOrderLinkID = String(clientOrderLinkID);
@@ -375,17 +398,22 @@ class OrderInfo {
 
 
 class SymbolProperties {
-    constructor(symbol, pricePrecision, quantityPrecision, minQuantity,
-                maxQuantity, marginSupported, leverage) {
-        //
-        // symbol: String
-        // pricePrecision: float
-        // quantityPrecision: float
-        // minQuantity: float
-        // maxQuantity: float
-        // marginSupported: bool
-        // leverage: set of float leverages supported for symbol
-        //
+    constructor(symbol, 
+                pricePrecision, 
+                quantityPrecision, 
+                minQuantity,
+                maxQuantity, 
+                marginSupported, 
+                leverage) {
+        /**
+        * @param symbol: String
+        * @param pricePrecision: float
+        * @param quantityPrecision: float
+        * @param minQuantity: float
+        * @param maxQuantity: float
+        * @param marginSupported: bool
+        * @param leverage: set of float leverages supported for symbol
+        */
         this.symbol = String(symbol);
         this.pricePrecision = pricePrecision;
         this.quantityPrecision = quantityPrecision;
@@ -399,13 +427,13 @@ class SymbolProperties {
 
 class ExchangePropertiesReport {
     constructor(exchange, currencies, symbolProperties, timeInForces, orderTypes) {
-        //
-        // exchange: String
-        // currencies: array (set) of String active currencies on exchange
-        // symbolProperties: dict of {symbol: SymbolProperties}
-        // timeInForces: array (set) of supported TimeInForce across all currencies
-        // orderTypes: array (set) of supported OrderType across all currencies
-        //
+        /**
+        * @param exchange: String
+        * @param currencies: array (set) of String active currencies on exchange
+        * @param symbolProperties: dict of {symbol: SymbolProperties}
+        * @param timeInForces: array (set) of supported TimeInForce across all currencies
+        * @param orderTypes: array (set) of supported OrderType across all currencies
+        */
         this.exchange = String(exchange);
         this.currencies = currencies;
         this.symbolProperties = symbolProperties;
