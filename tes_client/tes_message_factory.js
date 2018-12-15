@@ -95,13 +95,13 @@ function build_exec_report(executionReport) {
             oR = executionReport.type.orderRejected;
             console.debug('Order rejected.',
                           'er_type', 'orderRejected',
-                                'rejection_message': String(oR.message),
-                                'rejection_code': String(oR.rejectionCode));
+                                'rejection_message', String(oR.message),
+                                'rejection_code', String(oR.rejectionCode));
 
         case 'orderReplaced':
             oR = executionReport.type.orderReplaced;
             console.debug('Order replaced.',
-                         'er_type': 'orderReplaced', 'order_replaced': String(oR));
+                         'er_type': 'orderReplaced', 'order_replaced', String(oR));
 
         case 'replaceRejected':
             rR = executionReport.type.replaceRejected;
@@ -135,3 +135,39 @@ function build_exec_report(executionReport) {
     }
     return build_js_execution_report_from_capnp(executionReport);
 }
+
+
+function build_account_data_report(accountDataReport) {
+    /**
+    Builds AccountDataReport Javscript object from capnp object, including
+    AccountBalances, OpenPositions, and ExecutionReports.
+    @param accountDataReport: (capnp._DynamicStructBuilder) AccountDataReport
+        object.
+    @return: (AccountDataReport) Javascript class object.
+    */
+    acct_balances = new Array(accountDataReport.balances);
+    var ab;
+    for (ab = 0; ab < open_positions.length; ab++) { 
+      acct_balances[ab] = build_js_balance_from_capnp(acct_balances[ab])
+    }
+
+    open_positions = new Array(accountDataReport.openPositions);
+    var op;
+    for (op = 0; op < open_positions.length; op++) { 
+      open_positions[op] = build_js_open_position_from_capnp(open_positions[op])
+    }
+
+    orders = new Array(accountDataReport.orders);
+    var er;
+    for (er = 0; er < orders.length; er++) { 
+      orders[er] = build_js_execution_report_from_capnp(orders[er])
+    }    
+
+    return new AccountDataReport(
+        build_py_account_info_from_capnp(accountDataReport.accountInfo),
+        acct_balances,
+        open_positions,
+        orders
+    )
+}
+
