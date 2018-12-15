@@ -37,7 +37,7 @@ function build_system_message(system) {
     @param system: (capnp._DynamicStructBuilder) system message.
     @return: array of (int) error code, (str) system message.
     */
-    return [system.errorCode, system.message];
+    return new Array(system.errorCode, system.message);
 }
 
 
@@ -57,7 +57,7 @@ function build_logon(logonAck) {
     console.debug('client accounts:', client_accounts);
     // NOTE client accounts are not used for now since they are what's
     //  passed to TES in the 1st place
-    return [logonAck.success, logonAck.message, client_accounts];
+    return new Array(logonAck.success, logonAck.message, client_accounts);
 }
 
 
@@ -75,7 +75,7 @@ function build_logoff(logoffAck) {
         console.debug('Logoff failure.', 'status', 'logoff_failure'});
     }
     console.debug('Logoff message.', 'logoff_message', logoff_msg});
-    return [logoff_success, logoff_msg];
+    return new Array(logoff_success, logoff_msg);
 }
 
 
@@ -148,26 +148,85 @@ function build_account_data_report(accountDataReport) {
     acct_balances = new Array(accountDataReport.balances);
     var ab;
     for (ab = 0; ab < open_positions.length; ab++) { 
-      acct_balances[ab] = build_js_balance_from_capnp(acct_balances[ab])
+      acct_balances[ab] = build_js_balance_from_capnp(acct_balances[ab]);
     }
 
     open_positions = new Array(accountDataReport.openPositions);
     var op;
     for (op = 0; op < open_positions.length; op++) { 
-      open_positions[op] = build_js_open_position_from_capnp(open_positions[op])
+      open_positions[op] = build_js_open_position_from_capnp(open_positions[op]);
     }
 
     orders = new Array(accountDataReport.orders);
     var er;
     for (er = 0; er < orders.length; er++) { 
-      orders[er] = build_js_execution_report_from_capnp(orders[er])
+      orders[er] = build_js_execution_report_from_capnp(orders[er]);
     }    
 
     return new AccountDataReport(
-        build_py_account_info_from_capnp(accountDataReport.accountInfo),
+        build_js_account_info_from_capnp(accountDataReport.accountInfo),
         acct_balances,
         open_positions,
         orders
-    )
+    );
 }
 
+
+function build_account_balances_report(accountBalancesReport) {
+    /**
+    Builds AccountBalancesReport Javascript object from capnp object.
+    :param accountBalancesReport: (capnp._DynamicStructBuilder)
+        AccountBalancesReport object.
+    :return: (AccountBalancesReport) Javascript class object.
+    */    
+    acct_balances = new Array(accountDataReport.balances);
+    var ab;
+    for (ab = 0; ab < open_positions.length; ab++) { 
+      acct_balances[ab] = build_js_balance_from_capnp(acct_balances[ab]);
+    }
+    return new AccountBalancesReport(
+        accountInfo=build_js_account_info_from_capnp(
+            accountBalancesReport.accountInfo),
+        balances=acct_balances
+    );
+}
+
+
+function build_open_positions_report(openPositionReport) {
+    /**
+    Builds OpenPositionReport Javascript object from capnp object.
+    :param openPositionReport: (capnp._DynamicStructBuilder)
+        OpenPositionReport object.
+    :return: (OpenPositionReport) Javascript object.
+    */
+    open_positions = new Array(accountDataReport.openPositions);
+    var op;
+    for (op = 0; op < open_positions.length; op++) { 
+      open_positions[op] = build_js_open_position_from_capnp(open_positions[op]);
+    }
+    return new OpenPositionsReport(
+        accountInfo=build_js_account_info_from_capnp(
+            openPositionReport.accountInfo),
+        openPositions=open_pos
+    );
+}
+
+
+function build_working_orders_report(workingOrdersReport) {
+    /**
+    Builds WorkingOrdersReport Javascript object from capnp object.
+    :param workingOrdersReport: (capnp._DynamicStructBuilder)
+        WorkingOrdersReport object.
+    :return: (WorkingOrdersReport) Javascript object.
+    */
+    orders = new Array(accountDataReport.orders);
+    var er;
+    for (er = 0; er < orders.length; er++) { 
+      orders[er] = build_js_execution_report_from_capnp(orders[er]);
+    }  
+    return new WorkingOrdersReport(
+        accountInfo=build_js_account_info_from_capnp(
+            workingOrdersReport.accountInfo),
+        orders=orders
+    );
+}
