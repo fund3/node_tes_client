@@ -181,15 +181,15 @@ class Order {
         *    multiple Strategies are trading on the same account)
         */
         this.accountInfo = accountInfo;
-        this.clientOrderId = clientOrderId;
+        this.clientOrderId = Number(clientOrderId);
         this.symbol = String(symbol);
         this.side = String(side);
         this.orderType = String(orderType);
-        this.quantity = quantity;
-        this.price = price;
+        this.quantity = Number(quantity);
+        this.price = Number(price);
         this.timeInForce = String(timeInForce);
         this.leverageType = String(leverageType);
-        this.leverage = leverage;
+        this.leverage = Number(leverage);
         this.clientOrderLinkId = String(clientOrderLinkId);
     }
 }
@@ -211,8 +211,8 @@ class Balance {
         * @param availableBalance: float
         */
         this.currency = String(currency);
-        this.fullBalance = fullBalance;
-        this.availableBalance = availableBalance;
+        this.fullBalance = Number(fullBalance);
+        this.availableBalance = Number(availableBalance);
     }
 }
 
@@ -234,9 +234,9 @@ class OpenPosition {
         */
         this.symbol = String(symbol);
         this.side = String(side);
-        this.quantity = quantity;
-        this.initialPrice = initialPrice;
-        this.unrealizedPL = unrealizedPL;
+        this.quantity = Number(quantity);
+        this.initialPrice = Number(initialPrice);
+        this.unrealizedPL = Number(unrealizedPL);
     }
 }
 
@@ -285,20 +285,20 @@ class ExecutionReport {
         * @param clientOrderLinkId: String internal id used for
         */
         this.orderId = String(orderId);
-        this.clientOrderId = clientOrderId;
+        this.clientOrderId = Number(clientOrderId);
         this.exchangeOrderId = String(exchangeOrderId);
         this.accountInfo = accountInfo;
         this.symbol = String(symbol);
         this.side = side;
         this.orderType = orderType;
-        this.quantity = quantity;
-        this.price = price;
+        this.quantity = Number(quantity);
+        this.price = Number(price);
         this.timeInForce = timeInForce;
         this.leverageType = leverageType;
-        this.leverage = leverage;
+        this.leverage = Number(leverage);
         this.orderStatus = String(orderStatus);
-        this.filledQuantity = filledQuantity;
-        this.avgFillPrice = avgFillPrice;
+        this.filledQuantity = Number(filledQuantity);
+        this.avgFillPrice = Number(avgFillPrice);
         this.executionReportType = String(executionReportType);
         this.rejectionReason = String(rejectionReason);
         this.clientOrderLinkId = String(clientOrderLinkId);
@@ -389,9 +389,9 @@ class OrderInfo {
         * @param symbol: String empty in client request
         */
         this.orderId = String(orderId);
-        this.clientOrderId = clientOrderId;
+        this.clientOrderId = Number(clientOrderId);
         this.clientOrderLinkId = String(clientOrderLinkId);
-        this.exchangeOrderId = exchangeOrderId;
+        this.exchangeOrderId = String(exchangeOrderId);
         this.symbol = symbol;
     }
 }
@@ -415,10 +415,10 @@ class SymbolProperties {
         * @param leverage: set of float leverages supported for symbol
         */
         this.symbol = String(symbol);
-        this.pricePrecision = pricePrecision;
-        this.quantityPrecision = quantityPrecision;
-        this.minQuantity = minQuantity;
-        this.maxQuantity = maxQuantity;
+        this.pricePrecision = Number(pricePrecision);
+        this.quantityPrecision = Number(quantityPrecision);
+        this.minQuantity = Number(minQuantity);
+        this.maxQuantity = Number(maxQuantity);
         this.marginSupported = marginSupported;
         this.leverage = leverage;
     }
