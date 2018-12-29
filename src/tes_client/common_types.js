@@ -1,7 +1,7 @@
 // common_types.js
 
 // Enums
-var Exchange = {
+const Exchange = {
     // Exchange Names
     // https://github.com/fund3/communication-protocol/blob/master/Exchanges.capnp
     //
@@ -19,7 +19,7 @@ var Exchange = {
 };
 
 
-var Side = {
+const Side = {
     // Trading Sides
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
@@ -29,7 +29,7 @@ var Side = {
 };
 
 
-var OrderType = {
+const OrderType = {
     // Supported Order Types
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
@@ -39,7 +39,7 @@ var OrderType = {
 };
 
 
-var OrderStatus = {
+const OrderStatus = {
     // Order Status on Exchange
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
@@ -57,20 +57,20 @@ var OrderStatus = {
     expired:11
 };
 
-var TimeInForce = {
+const TimeInForce = {
     // Order Time In Force
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
     undefined: 0,
-    gtc: 1,        # Good till cancel
-    gtt: 2,        # Good till time
-    day: 3,        # Day order
-    ioc: 4,        # Immediate or cancel
-    fok: 5,        # Fill or kill
+    gtc: 1,        // Good till cancel
+    gtt: 2,        // Good till time
+    day: 3,        // Day order
+    ioc: 4,        // Immediate or cancel
+    fok: 5,        // Fill or kill
 };
 
 
-var LeverageType = {
+const LeverageType = {
     // Leverage Type
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
@@ -80,7 +80,7 @@ var LeverageType = {
 };
 
 
-var AccountType {
+const AccountType = {
     // Account Type
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
@@ -91,7 +91,7 @@ var AccountType {
 };
 
 
- var ExecutionReportType = {
+const ExecutionReportType = {
     // Execution Report Type
     orderAccepted: 0,
     orderRejected: 1,
@@ -124,8 +124,8 @@ class AccountInfo {
         this.accountID = accountID;
         this.exchange = String(exchange);
         this.accountType = String(accountType);
-        this.exchangeAccountId = String(exchangeAccountId);
-        this.exchangeClientId = String(exchangeClientId);
+        this.exchangeAccountID = String(exchangeAccountId);
+        this.exchangeClientID = String(exchangeClientId);
     }
 }
 
@@ -440,4 +440,33 @@ class ExchangePropertiesReport {
         this.timeInForces = timeInForces;
         this.orderTypes = orderTypes;
     }
+}
+
+export {
+    // Enums
+    Exchange,
+    Side,
+    OrderType,
+    OrderStatus,
+    TimeInForce,
+    LeverageType,
+    AccountType,
+    ExecutionReportType,
+
+    // Classes
+    AccountInfo,
+    AccountCredentials,
+    Order,
+    RequestRejected,
+    Balance,
+    OpenPosition,
+    ExecutionReport,
+    AccountDataReport,
+    AccountBalancesReport,
+    OpenPositionsReport,
+    WorkingOrdersReport,
+    CompletedOrdersReport,
+    OrderInfo,
+    SymbolProperties,
+    ExchangePropertiesReport
 }
