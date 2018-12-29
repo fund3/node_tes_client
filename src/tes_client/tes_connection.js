@@ -5,6 +5,8 @@ const zmq = require('zeromq');
 // internal dependency imports
 // const common_types = require("./common_types");
 const tes_message_factory = require("./tes_message_factory");
+var capnp = require("capnp");
+const msgs_capnp = capnp.import("../../CommunicationProtocol/TradeMessage.capnp");
 
 function setupCurveAuth (socket, curveServerKey) {
     const clientKeypair = zmq.curveKeypair();
@@ -28,9 +30,11 @@ function createAndBindTesSockets (curveServerKey,
         // Note that separate message parts come as function arguments.
         let args = Array.apply(null, arguments);
         console.log(arguments);
-        console.log('we are in tessocks');
+        // handle message for now
+        let obj = capnp.parse(msgs_capnp.TradeMessage, args[0]);
+        console.log(obj);
         // Pass array of strings/buffers to send multipart messages.
-        backend.send(args);
+        // backend.send(args[0]);
     });
 
     tesSocket.on('close_zmq_sockets', function () {
@@ -50,28 +54,30 @@ function createAndBindTesSockets (curveServerKey,
     return [tesSocket, backend];
 }
 
-function createAndConnectMessageHandlerSocket(backendConnectionString,
-                                              msgHandlerCallback) {
-    let msgHandlerSocket = zmq.socket('dealer');
-    msgHandlerSocket.connect(backendConnectionString);
-    msgHandlerSocket.on('message', function() {
-        let args = Array.apply(null, arguments);
-        console.log(arguments);
-        console.log('we are in handler');
-        msgHandlerCallback(arguments);
-    });
-    msgHandlerSocket.on('close_zmq_sockets', function () {
-        msgHandlerSocket.close();
-    });
-    return msgHandlerSocket;
-}
+// function createAndConnectMessageHandlerSocket(backendConnectionString,
+//                                               msgHandlerCallback) {
+//     let msgHandlerSocket = zmq.socket('dealer');
+//     msgHandlerSocket.connect(backendConnectionString);
+//     msgHandlerSocket.on('message', function() {
+//         console.log("Received a message. handler");
+//         let args = Array.apply(null, arguments);
+//         console.log(arguments);
+//         console.log('we are in handler');
+//         msgHandlerCallback(arguments);
+//     });
+//     msgHandlerSocket.on('close_zmq_sockets', function () {
+//         msgHandlerSocket.close();
+//     });
+//     return msgHandlerSocket;
+// }
 
 function cleanupSocket(socket) {
     socket.emit('close_zmq_sockets');
 }
 
 
-export {cleanupSocket, createAndBindTesSockets, createAndConnectMessageHandlerSocket}
+export {cleanupSocket, createAndBindTesSockets}
+    // createAndConnectMessageHandlerSocket}
 
 //
 // // Connect to task ventilator

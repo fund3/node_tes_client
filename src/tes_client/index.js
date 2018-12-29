@@ -23,15 +23,15 @@ function msgHandlerCallback (args) {
     console.log(obj);
 }
 
-let msgHandlerSocket = createAndConnectMessageHandlerSocket(
-    "inproc://TES_CLIENT_BACKEND",
-    msgHandlerCallback);
+// let msgHandlerSocket = createAndConnectMessageHandlerSocket(
+//     "inproc://TES_CLIENT_BACKEND",
+//     msgHandlerCallback);
 
 process.on('SIGINT', function() {
     console.log("Caught interrupt signal");
     cleanupSocket(tesSocket);
     cleanupSocket(backend);
-    cleanupSocket(msgHandlerSocket);
+    // cleanupSocket(msgHandlerSocket);
     process.exit();
 });
 
