@@ -6,21 +6,21 @@ const zmq = require('zeromq');
 // const common_types = require("./common_types");
 const tes_message_factory = require("./tes_message_factory");
 
-function setupCurveAuth (socket, curveSecretKey) {
+function setupCurveAuth (socket, curveServerKey) {
     const clientKeypair = zmq.curveKeypair();
     const clientPublicKey = clientKeypair.public;
     const clientPrivateKey = clientKeypair.secret;
 
     socket.curve_publickey = clientPublicKey;
     socket.curve_secretkey = clientPrivateKey;
-    socket.curve_serverkey = curveSecretKey;
+    socket.curve_serverkey = curveServerKey;
 }
 
-function createAndBindTesSockets (curveSecretKey,
+function createAndBindTesSockets (curveServerKey,
                                   tesConnectionString,
                                   backendConnectionString) {
     let tesSocket = zmq.socket('dealer');
-    setupCurveAuth(tesSocket, curveSecretKey);
+    setupCurveAuth(tesSocket, curveServerKey);
     tesSocket.connect(tesConnectionString);
 
     tesSocket.on('message', function() {
@@ -28,6 +28,7 @@ function createAndBindTesSockets (curveSecretKey,
         // Note that separate message parts come as function arguments.
         let args = Array.apply(null, arguments);
         console.log(arguments);
+        console.log('we are in tessocks');
         // Pass array of strings/buffers to send multipart messages.
         backend.send(args);
     });
@@ -56,7 +57,8 @@ function createAndConnectMessageHandlerSocket(backendConnectionString,
     msgHandlerSocket.on('message', function() {
         let args = Array.apply(null, arguments);
         console.log(arguments);
-        msgHandlerCallback(args);
+        console.log('we are in handler');
+        msgHandlerCallback(arguments);
     });
     msgHandlerSocket.on('close_zmq_sockets', function () {
         msgHandlerSocket.close();
