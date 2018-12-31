@@ -82,6 +82,7 @@ class Body {
         switch(bodyType) {
             // system
             case "heartbeat":
+                this.body = '';
                 break;
             case "test":
                 this.body = body;
@@ -161,14 +162,14 @@ function buildMessageBody (bodyType, body) {
     switch(bodyType) {
             // system
             case "heartbeat":
-                break;
+                return {heartbeat: ''};
             case "test":
                 return {test: body};
                 // logon-logoff
             case "logon":
                 return {logon: body};
             case "logoff":
-                return {logoff: body};
+                return {logoff: ''};
             // trading requests
             case "placeOrder":
                 return {placeOrder: body};
@@ -182,7 +183,7 @@ function buildMessageBody (bodyType, body) {
                 return {getOrderMassStatus: body};
             // account-related request
             case "getAccountData":
-                return {getAccountDatabody: body};
+                return {getAccountData: body};
             case "getAccountBalances":
                 return {getAccountBalances: body};
             case "getOpenPositions":
@@ -226,20 +227,131 @@ function buildAccountInfo (accountId, exchange, accountType, exchangeAccountId,
 }
 
 
-function buildLogonCapnp(clientId, senderCompId, credentials) {
+function buildLogonCapnp (clientId, senderCompId, credentials) {
     const logon = buildLogon(credentials);
-    console.log(logon);
     const request = buildRequest(
         clientId, senderCompId, buildMessageBody("logon", logon));
-    console.log(request);
     // return capnp.serialize(msgs_capnp.Request, request);
     const tradeMessage = buildTradeMessage(buildType("request", request));
-    console.log(tradeMessage);
     return capnp.serialize(msgs_capnp.TradeMessage, tradeMessage);
 }
 
 
-// function buildLogonAckCapnp
+function buildHeartbeatCapnp (clientId, senderCompId) {
+    const request = buildRequest(
+        clientId, senderCompId, buildMessageBody("heartbeat"));
+    const tradeMessage = buildTradeMessage(buildType("request", request));
+    return capnp.serialize(msgs_capnp.TradeMessage, tradeMessage);
+}
+
+
+function buildLogoffCapnp (clientId, senderCompId) {
+    const request = buildRequest(
+        clientId, senderCompId, buildMessageBody("logoff"));
+    // return capnp.serialize(msgs_capnp.Request, request);
+    const tradeMessage = buildTradeMessage(buildType("request", request));
+    return capnp.serialize(msgs_capnp.TradeMessage, tradeMessage);
+}
+
+
+function buildGetAccountBalances (accountInfo) {
+    return {accountInfo: accountInfo}
+}
+
+
+function buildGetAccountBalancesCapnp (clientId, senderCompId, accountInfo) {
+    const getAccountBalances = buildGetAccountBalances(accountInfo);
+    const request = buildRequest(
+        clientId, senderCompId, buildMessageBody("getAccountBalances",
+                                                 getAccountBalances));
+    const tradeMessage = buildTradeMessage(buildType("request", request));
+    return capnp.serialize(msgs_capnp.TradeMessage, tradeMessage);
+}
+
+
+function buildPlaceOrder (placeOrderArguments) {
+    return {accountInfo: placeOrderArguments.accountInfo,
+            clientOrderId: placeOrderArguments.clientOrderId,
+            symbol: placeOrderArguments.symbol,
+            side: placeOrderArguments.side,
+            quantity: placeOrderArguments.quantity,
+            price: placeOrderArguments.price}
+}
+
+
+class PlaceOrderArguments {
+    constructor (accountInfo, clientOrderId, symbol, side, quantity, orderType,
+                 price, timeInForce, leverageType, leverage, clientOrderLinkId) {
+        this.accountInfo = accountInfo;
+        this.clientOrderId = clientOrderId;
+        this.symbol = symbol;
+        this.side = side;
+        this.quantity = quantity;
+        this.price = price;
+        // TODO: deal with optional arguments
+    }
+}
+
+
+function buildPlaceOrderCapnp (clientId, senderCompId, placeOrderArguments) {
+    const getAccountBalances = buildPlaceOrder(placeOrderArguments);
+    const request = buildRequest(clientId, senderCompId,
+        buildMessageBody("getAccountBalances", getAccountBalances));
+    const tradeMessage = buildTradeMessage(buildType("request", request));
+    return capnp.serialize(msgs_capnp.TradeMessage, tradeMessage);
+}
+
+
+function buildAccountBalancesReportJs (accountBalancesReport) {
+    return [
+        accountBalancesReport.accountInfo,
+        accountBalancesReport.balances
+    ]
+}
+
+
+function buildExecutionReportJs (executionReport) {
+    return [
+        executionReport.orderID,
+        executionReport.clientOrderID,
+        executionReport.clientOrderLinkID,
+        executionReport.exchangeOrderID,
+        executionReport.accountInfo,
+        executionReport.symbol,
+        executionReport.side,
+        executionReport.orderType,
+        executionReport.quantity,
+        executionReport.price,
+        executionReport.timeInForce,
+        executionReport.leverageType,
+        executionReport.leverage,
+        executionReport.orderStatus,
+        executionReport.filledQuantity,
+        executionReport.avgFillPrice,
+        executionReport.rejectionReason,
+    ]
+}
+
+
+// let logonAckObj = capnp.parse(msgs_capnp.TradeMessage, logon);
+
+
+function deserializeCapnp(messageType, messageObject) {
+    switch(messageType) {
+        case "logonAck":
+            return buildLogonAckJs(messageObject)
+    }
+}
+
+
+function handleLogonAck(logonAck, logonAckHandler) {
+    logonAckHandler(buildLogonAckJs(logonAck))
+}
+
+
+function defaultLogonAckHandler(success) {
+
+}
 
 
 function buildLogonAckJs(logonAck) {
@@ -248,36 +360,34 @@ function buildLogonAckJs(logonAck) {
     @param logonAck: (capnp._DynamicStructBuilder) LogonAck object.
     @return: array of (bool) success, (str) message, (List[int]) clientAccounts.
     */
-    let logonObj = capnp.parse(msgs_capnp.TradeMessage, logon);
     if (Boolean(logonAck.success)) {
-        console.debug('Logon success', 'status:', 'logon_success');
+        // console.debug('Logon success', 'status:', 'logon_success');
     } else {
-        console.debug('Logon failure', 'status:', 'logon_failure');
+        // console.debug('Logon failure', 'status:', 'logon_failure');
     }
-    console.debug('logon response: ', logonAck.message);
-    let client_accounts = logonAck.clientAccounts;
-    console.debug('client accounts:', client_accounts);
+    // console.debug('logon response: ', logonAck.message);
+    let clientAccounts = logonAck.clientAccounts;
+    // console.debug('client accounts:', clientAccounts);
     // NOTE client accounts are not used for now since they are what's
     //  passed to TES in the 1st place
-    return [logonAck.success, logonAck.message, client_accounts];
+    return [logonAck.success, logonAck.message, clientAccounts];
 }
 
 
-// function build_logon_capnp(clientId, senderCompId, credentials) {
-//     /**
-//     Generates a capnp Logon message with a specific clientID and set of
-//     credentials.
-//     :param credentials: (List[AccountCredentials]) List of exchange
-//         credentials in the form of AccountCredentials.
-//     :param clientID: (int) The assigned clientID.
-//     :param senderCompID: (str) uuid unique to the session the user is on.
-//     :return: (capnp) Logon capnp object.
-//     **/
-//     let inputBuffer =
-//     let logon_capnp = capnp.parse(msgs_capnp.SomeStruct, inputBuffer);
-// }
-
-
+function buildLogoffAckJs(logoffAck) {
+    /**
+    Builds Logoff Javascript object from capnp object.
+    @param logoffAck: (capnp._DynamicStructBuilder) LogoffAck object.
+    @return: array of (bool) success, (str) message.
+    */
+    if (logoffAck.success) {
+        console.debug('Logoff success.', 'status', 'logoff_success');
+    } else {
+        console.debug('Logoff failure.', 'status', 'logoff_failure');
+    }
+    console.debug('Logoff message.', 'logoff_message', logoffAck.message);
+    return [logoffAck.success, logoffAck.message];
+}
 // function build_test_message(test) {
 //     /**
 //     Builds test message Javascript object from capnp object.
@@ -298,22 +408,6 @@ function buildLogonAckJs(logonAck) {
 // }
 
 
-// function build_logoff(logoffAck) {
-//     /**
-//     Builds Logoff Javascript object from capnp object.
-//     @param logoffAck: (capnp._DynamicStructBuilder) LogoffAck object.
-//     @return: array of (bool) success, (str) message.
-//     */
-//     logoff_success = new Boolean(logoffAck.success);
-//     logoff_msg = new String(logoffAck.message);
-//     if logoff_success {
-//         console.debug('Logoff success.', 'status', 'logoff_success'});
-//     } else {
-//         console.debug('Logoff failure.', 'status', 'logoff_failure'});
-//     }
-//     console.debug('Logoff message.', 'logoff_message', logoff_msg});
-//     return new Array(logoff_success, logoff_msg);
-// }
 //
 //
 // function build_exec_report(executionReport) {
@@ -530,4 +624,13 @@ function build_account_balances_report(accountBalancesReport) {
 //     );
 // }
 
-export {buildAccountInfoCapnp, buildAccountCredentials, buildLogonCapnp, buildAccountInfo}
+export {
+    buildAccountInfoCapnp,
+    buildAccountCredentials,
+    buildLogonCapnp,
+    buildAccountInfo,
+    buildHeartbeatCapnp,
+    buildLogonAckJs,
+    buildLogoffAckJs,
+    deserializeCapnp
+}

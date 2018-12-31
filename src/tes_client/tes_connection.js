@@ -4,7 +4,7 @@
 const zmq = require('zeromq');
 // internal dependency imports
 // const common_types = require("./common_types");
-const tes_message_factory = require("./tes_message_factory");
+import {deserializeCapnp} from "./tes_message_factory";
 var capnp = require("capnp");
 const msgs_capnp = capnp.import("../../CommunicationProtocol/TradeMessage.capnp");
 
@@ -18,21 +18,65 @@ function setupCurveAuth (socket, curveServerKey) {
     socket.curve_serverkey = curveServerKey;
 }
 
+
+function defaultHandler(tradeMsgObj) {
+    // console.log(tradeMsgObj);
+}
+
+
+function messageHandlerCallbackObjectFactory({
+    heartbeatHandler = defaultHandler,
+    testMessageHandler = defaultHandler,
+    systemMessageHandler = defaultHandler,
+    logonAckHandler = defaultHandler,
+    logoffAckHandler = defaultHandler,
+    executionReportHandler = defaultHandler,
+    accountDataReportHandler = defaultHandler,
+    accountBalancesReportHandler = defaultHandler,
+    openPositionsReportHandler = defaultHandler,
+    workingOrdersReportHandler = defaultHandler,
+    completedOrdersReportHandler = defaultHandler,
+    exchangePropertiesReportHandler = defaultHandler
+}) {
+    return {
+        heartbeat: heartbeatHandler,
+        testMessage: testMessageHandler,
+        systemMessage: systemMessageHandler,
+        logonAck: logonAckHandler,
+        logoffAck: logoffAckHandler,
+        executionReport: executionReportHandler,
+        accountDataReport: accountDataReportHandler,
+        accountBalancesReport: accountBalancesReportHandler,
+        openPositionsReport: openPositionsReportHandler,
+        workingOrdersReport: workingOrdersReportHandler,
+        completedOrdersReport: completedOrdersReportHandler,
+        exchangePropertiesReport: exchangePropertiesReportHandler
+    }
+}
+
+
+function messageHandlerCallback (binaryMessage, callbackObject) {
+    const tradeMsgObj = capnp.parse(msgs_capnp.TradeMessage, binaryMessage);
+    const messageObject = tradeMsgObj.type.response.body;
+    const messageType = Object.keys(messageObject)[0];
+    callbackObject[messageType](
+        deserializeCapnp(messageType, messageObject[messageType]));
+}
+
+
 function createAndBindTesSockets (curveServerKey,
                                   tesConnectionString,
-                                  backendConnectionString) {
+                                  backendConnectionString,
+                                  callbackObject) {
     let tesSocket = zmq.socket('dealer');
     setupCurveAuth(tesSocket, curveServerKey);
     tesSocket.connect(tesConnectionString);
 
     tesSocket.on('message', function() {
-        console.log("Received a message.");
         // Note that separate message parts come as function arguments.
         let args = Array.apply(null, arguments);
-        console.log(arguments);
         // handle message for now
-        let obj = capnp.parse(msgs_capnp.TradeMessage, args[0]);
-        console.log(obj);
+        messageHandlerCallback(args[0], callbackObject);
         // Pass array of strings/buffers to send multipart messages.
         // backend.send(args[0]);
     });
@@ -45,7 +89,6 @@ function createAndBindTesSockets (curveServerKey,
     backend.bindSync(backendConnectionString);
     backend.on('message', function() {
         let args = Array.apply(null, arguments);
-        console.log(arguments);
         tesSocket.send(args[1]);
     });
     backend.on('close_zmq_sockets', function () {
@@ -76,7 +119,7 @@ function cleanupSocket(socket) {
 }
 
 
-export {cleanupSocket, createAndBindTesSockets}
+export {cleanupSocket, createAndBindTesSockets, messageHandlerCallbackObjectFactory}
     // createAndConnectMessageHandlerSocket}
 
 //

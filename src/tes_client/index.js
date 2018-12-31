@@ -1,19 +1,36 @@
 //index.js
 import * as zmq from "zeromq";
 import {AccountCredentials, AccountInfo} from "./common_types";
-import {buildLogonCapnp} from "./tes_message_factory";
+import {buildLogonCapnp, buildHeartbeatCapnp, buildLogonAckJs,
+    buildLogoffAckJs} from "./tes_message_factory";
 const uuidv4 = require('uuid/v4');
 
 var capnp = require("capnp");
 const msgs_capnp = capnp.import("../../CommunicationProtocol/TradeMessage.capnp");
 import {cleanupSocket, createAndBindTesSockets,
-        createAndConnectMessageHandlerSocket}
+        createAndConnectMessageHandlerSocket, messageHandlerCallbackObjectFactory}
         from "../../lib/tes_client/tes_connection";
 
+
+let tesResponseCallbackObject = messageHandlerCallbackObjectFactory({
+    heartbeatHandler: () => console.log('received heartbeat'),
+    logonAckHandler: ([success, message, clientAccounts]) => console.log(success, message, clientAccounts)
+});
+
+
+const clientId = 0;
+const accountId = 0;
+const senderCompId = String(uuidv4());
+const apiKey = "";
+const secretKey = "";
+const passphrase = "";
+
 let sockets = createAndBindTesSockets(
-    "curveServerKey",
-    "tcp://0.0.0.0:9999",
-    "inproc://TES_CLIENT_BACKEND");
+    "",
+    "",
+    "",
+    tesResponseCallbackObject
+);
 
 let tesSocket = sockets[0];
 let backend = sockets[1];
@@ -24,7 +41,7 @@ function msgHandlerCallback (args) {
 }
 
 // let msgHandlerSocket = createAndConnectMessageHandlerSocket(
-//     "inproc://TES_CLIENT_BACKEND",
+//     "",
 //     msgHandlerCallback);
 
 process.on('SIGINT', function() {
@@ -36,9 +53,12 @@ process.on('SIGINT', function() {
 });
 
 const accountCredentials = new AccountCredentials(
-    new AccountInfo(123), "apiKey", "secretKey");
-let logon = buildLogonCapnp(321, String(uuidv4()), [accountCredentials]);
+    new AccountInfo(accountId), apiKey, secretKey, passphrase);
+let logon = buildLogonCapnp(clientId, senderCompId, [accountCredentials]);
+
+let heartbeat = buildHeartbeatCapnp(clientId, senderCompId);
 
 let socket  = zmq.socket('dealer');
-socket.connect("inproc://TES_CLIENT_BACKEND");
+socket.connect("");
 socket.send(logon);
+setInterval(() => socket.send(heartbeat), 10000);
