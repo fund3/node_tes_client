@@ -339,7 +339,9 @@ function buildExecutionReportJs (executionReport) {
 function deserializeCapnp(messageType, messageObject) {
     switch(messageType) {
         case "logonAck":
-            return buildLogonAckJs(messageObject)
+            return buildLogonAckJs(messageObject);
+        case "accountBalancesReport":
+            return buildAccountBalancesReportJs(messageObject);
     }
 }
 
@@ -632,5 +634,6 @@ export {
     buildHeartbeatCapnp,
     buildLogonAckJs,
     buildLogoffAckJs,
-    deserializeCapnp
+    deserializeCapnp,
+    buildGetAccountBalancesCapnp
 }

@@ -2,7 +2,7 @@
 import * as zmq from "zeromq";
 import {AccountCredentials, AccountInfo} from "./common_types";
 import {buildLogonCapnp, buildHeartbeatCapnp, buildLogonAckJs,
-    buildLogoffAckJs} from "./tes_message_factory";
+    buildLogoffAckJs, buildGetAccountBalancesCapnp} from "./tes_message_factory";
 const uuidv4 = require('uuid/v4');
 
 var capnp = require("capnp");
@@ -14,7 +14,8 @@ import {cleanupSocket, createAndBindTesSockets,
 
 let tesResponseCallbackObject = messageHandlerCallbackObjectFactory({
     heartbeatHandler: () => console.log('received heartbeat'),
-    logonAckHandler: ([success, message, clientAccounts]) => console.log(success, message, clientAccounts)
+    logonAckHandler: ([success, message, clientAccounts]) => console.log(success, message, clientAccounts),
+    accountBalancesReportHandler: ([accountInfo, balances]) => console.log(balances)
 });
 
 
@@ -52,13 +53,15 @@ process.on('SIGINT', function() {
     process.exit();
 });
 
+const accountInfo = new AccountInfo(accountId);
 const accountCredentials = new AccountCredentials(
-    new AccountInfo(accountId), apiKey, secretKey, passphrase);
+    accountInfo, apiKey, secretKey, passphrase);
 let logon = buildLogonCapnp(clientId, senderCompId, [accountCredentials]);
 
 let heartbeat = buildHeartbeatCapnp(clientId, senderCompId);
-
+let getAccountBalancesCapnp = buildGetAccountBalancesCapnp(clientId, senderCompId, accountInfo);
 let socket  = zmq.socket('dealer');
 socket.connect("");
 socket.send(logon);
 setInterval(() => socket.send(heartbeat), 10000);
+setTimeout(() => socket.send(getAccountBalancesCapnp), 10000);
