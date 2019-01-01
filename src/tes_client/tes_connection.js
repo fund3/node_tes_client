@@ -6,7 +6,7 @@ const zmq = require('zeromq');
 // const common_types = require("./common_types");
 import {deserializeCapnp} from "./tes_message_factory";
 var capnp = require("capnp");
-const msgs_capnp = capnp.import("../../CommunicationProtocol/TradeMessage.capnp");
+const msgs_capnp = require("~/CommunicationProtocol/TradeMessage.capnp");
 
 function setupCurveAuth (socket, curveServerKey) {
     const clientKeypair = zmq.curveKeypair();

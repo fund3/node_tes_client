@@ -3,8 +3,8 @@
 // external dependency imports
 var capnp = require("capnp");
 // load capnp schema
-const msgs_capnp = capnp.import("../../CommunicationProtocol/TradeMessage.capnp");
-const exch_capnp = capnp.import("../../CommunicationProtocol/Exchanges.capnp");
+const msgs_capnp = require("~/CommunicationProtocol/TradeMessage.capnp");
+const exch_capnp = require("~/CommunicationProtocol/Exchanges.capnp");
 // internal dependency imports
 import {AccountCredentials, AccountInfo, AccountType //, TradeMessage
     } from "./common_types";
