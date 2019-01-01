@@ -8,8 +8,7 @@
   },
   "scripts": {
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
-    "build": "npm run remove_old_lib && npm run build_client && npm run bundle_protocol",
-    "remove_old_lib": "mkdir lib && rm -r lib",
+    "build": "npm run build_client && npm run bundle_protocol",
     "build_client": "./node_modules/.bin/babel src -d lib/",
     "bundle_protocol": "cp -R src/CommunicationProtocol lib/CommunicationProtocol"
   },
@@ -27,6 +26,7 @@
     "@babel/polyfill": "^7.2.5",
     "capnp": "^0.3.1",
     "capnp-js": "^0.2.11",
+    "dotenv": "^6.2.0",
     "uuid": "^3.3.2",
     "zeromq": "^5.1.0"
   },

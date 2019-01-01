@@ -1,5 +1,6 @@
 //index.js
 require("@babel/polyfill");
+require("dotenv").config();
 
 import * as zmq from "zeromq";
 import {AccountCredentials, AccountInfo} from "./tes_client/common_types";
@@ -21,18 +22,17 @@ let tesResponseCallbackObject = messageHandlerCallbackObjectFactory({
 });
 
 
-const clientId = 0;
-const accountId = 0;
+const clientId = parseInt(process.env.CLIENT_ID);
+const accountId = parseInt(process.env.ACCOUNT_ID);
 const senderCompId = String(uuidv4());
-const apiKey = "";
-const secretKey =
-	"";
-const passphrase = "";
+const apiKey = process.env.API_KEY;
+const secretKey = process.env.SECRET_KEY;
+const passphrase = process.env.PASSPHRASE;
 
 let sockets = createAndBindTesSockets(
-	"",
-	"",
-	"",
+	process.env.SOCKET_SECRET,
+	process.env.TCP_ADDRESS,
+	process.env.INPROC_ADDRESS,
 	tesResponseCallbackObject
 );
 
@@ -64,7 +64,7 @@ let logon = buildLogonCapnp(clientId, senderCompId, [accountCredentials]);
 let heartbeat = buildHeartbeatCapnp(clientId, senderCompId);
 let getAccountBalancesCapnp = buildGetAccountBalancesCapnp(clientId, senderCompId, accountInfo);
 let socket  = zmq.socket('dealer');
-socket.connect("");
+socket.connect(process.env.INPROC_ADDRESS);
 socket.send(logon);
 setInterval(() => socket.send(heartbeat), 10000);
 setTimeout(() => socket.send(getAccountBalancesCapnp), 10000);
