@@ -66,7 +66,7 @@ const accountCredentials = new AccountCredentials(
 const message_factory = 
     new MessageFactory({ 
         client_id: process.env.CLIENT_ID,
-        sender_comp_id: String(uuidv4()),
+        sender_comp_id: senderCompId,
         account_credentials: accountCredentials
      })
 
