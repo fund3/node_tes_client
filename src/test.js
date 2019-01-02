@@ -5,7 +5,10 @@ require("dotenv").config();
 import * as zmq from "zeromq";
 import capnp from 'capnp'
 import uuidv4 from 'uuid/v4'
+import MessageFactory from './tes_client/messages/MessageFactory'
+
 import msgs_capnp from "~/CommunicationProtocol/TradeMessage.capnp";
+
 import {AccountCredentials, AccountInfo} from "./tes_client/common_types";
 import {buildLogonCapnp, buildHeartbeatCapnp, buildLogonAckJs,
     buildLogoffAckJs, buildGetAccountBalancesCapnp} from "./tes_client/tes_message_factory";
@@ -59,12 +62,23 @@ process.on('SIGINT', function() {
 const accountInfo = new AccountInfo(accountId);
 const accountCredentials = new AccountCredentials(
     accountInfo, apiKey, secretKey, passphrase);
-let logon = buildLogonCapnp(clientId, senderCompId, [accountCredentials]);
+
+const message_factory = 
+    new MessageFactory({ 
+        client_id: process.env.CLIENT_ID,
+        sender_comp_id: String(uuidv4()),
+        account_credentials: accountCredentials
+     })
+
+const login_message = message_factory.buildLogonMessage()
+const serialized_login_message = capnp.serialize(msgs_capnp.TradeMessage, login_message);
 
 let heartbeat = buildHeartbeatCapnp(clientId, senderCompId);
 let getAccountBalancesCapnp = buildGetAccountBalancesCapnp(clientId, senderCompId, accountInfo);
+
 let socket  = zmq.socket('dealer');
+
 socket.connect(process.env.INPROC_ADDRESS);
-socket.send(logon);
+socket.send(serialized_login_message);
 setInterval(() => socket.send(heartbeat), 10000);
 setTimeout(() => socket.send(getAccountBalancesCapnp), 10000);
