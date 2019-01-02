@@ -3,6 +3,7 @@
   "plugins": [
     ["babel-plugin-root-import", {
       "rootPathSuffix": "lib"
-    }]
+    }],
+    ["@babel/plugin-proposal-class-properties"]
   ]
 }
