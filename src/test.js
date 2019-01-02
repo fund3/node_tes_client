@@ -3,13 +3,13 @@ require("@babel/polyfill");
 require("dotenv").config();
 
 import * as zmq from "zeromq";
+import capnp from 'capnp'
+import uuidv4 from 'uuid/v4'
+import msgs_capnp from "~/CommunicationProtocol/TradeMessage.capnp";
 import {AccountCredentials, AccountInfo} from "./tes_client/common_types";
 import {buildLogonCapnp, buildHeartbeatCapnp, buildLogonAckJs,
     buildLogoffAckJs, buildGetAccountBalancesCapnp} from "./tes_client/tes_message_factory";
-const uuidv4 = require('uuid/v4');
     
-var capnp = require("capnp");
-const msgs_capnp = require("~/CommunicationProtocol/TradeMessage.capnp");
 import {cleanupSocket, createAndBindTesSockets,
         createAndConnectMessageHandlerSocket, messageHandlerCallbackObjectFactory}
         from "./tes_client/tes_connection";
