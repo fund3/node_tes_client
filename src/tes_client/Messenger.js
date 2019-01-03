@@ -84,6 +84,9 @@ class Messenger {
 				const { accountInfo, balances } = message_body_contents;
 				return { account_info: accountInfo, balances };
 
+			case message_body_types.LOGOFF_COMPLETE:
+				return message_body_contents
+
 			default:
 				return {};
 		}

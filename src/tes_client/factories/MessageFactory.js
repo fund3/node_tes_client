@@ -41,6 +41,13 @@ class MessageFactory {
         return packaged_message
     }
 
+    buildLogoffMessage = () => {
+        const message_body = MessageBodyFactory.buildLogoffMessageBody()
+        const message = this.buildMessage({ message_body })
+        const packaged_message = this.buildMessageContainer({ message, message_type: message_types.REQUEST })
+        return packaged_message
+    }
+
     buildHeartbeatMessage = () => {
         const message_body = MessageBodyFactory.buildHeartbeatMessageBody();
         const message = this.buildMessage({ message_body })

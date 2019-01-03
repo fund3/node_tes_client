@@ -4,6 +4,7 @@ export default {
 	LOGON_REQUEST: "logon",
 	LOGON_COMPLETE: "logonAck",
 	LOGOFF: "logoff",
+	LOGOFF_COMPLETE: "logoffAck",
 	PLACE_ORDER: "placeOrder",
 	REPLACE_ORDER: "replaceOrder",
 	CANCEL_ORDER: "cancelOrder",

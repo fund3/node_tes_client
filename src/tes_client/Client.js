@@ -53,6 +53,14 @@ class Client {
 			onResponse: response => console.log(response)
 		})
 	}
+
+	sendLogoffMessage = () => {
+		const logoff_message = this.message_factory.buildLogoffMessage()
+		this.messenger.sendMessage({
+			message: logoff_message,
+			onResponse: response => console.log(response)
+		})
+	}
 }
 
 export default Client;

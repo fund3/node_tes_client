@@ -81,7 +81,13 @@ class MessageBodyFactory {
 			message_body_contents
         });
         return message_body
-    }
+	}
+	
+	static buildLogoffMessageBody = () => {
+		const message_body_type = message_body_types.LOGOFF
+		const message_body = MessageBodyFactory.buildMessageBody({ message_body_type })
+		return message_body
+	}
 }
 
 export default MessageBodyFactory
