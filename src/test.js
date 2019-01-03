@@ -19,4 +19,5 @@ const client =
     })
 
 client.sendLogonMessage()
-setTimeout(() => client.sendGetAccountBalancesMessage(), 1000)
+setTimeout(() => client.sendGetAccountBalancesMessage(), 10000)
+setTimeout(() => client.sendLogoffMessage(), 20000)
