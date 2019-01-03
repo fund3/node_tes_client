@@ -20,6 +20,10 @@ class TESSocket {
         this.socket.connect(this.socket_endpoint)
     }   
 
+    setOnMessage = ({ onMessage }) => {
+        this.socket.on('message', onMessage)
+    }
+
     sendMessage = ({ message }) => this.socket.send(message)
 
     get = () => this.socket
