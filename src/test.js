@@ -33,7 +33,7 @@ const secretKey = process.env.SECRET_KEY;
 const passphrase = process.env.PASSPHRASE;
 
 let sockets = createAndBindTesSockets(
-	process.env.SOCKET_SECRET,
+	process.env.CURVE_SERVER_KEY,
 	process.env.TCP_ADDRESS,
 	process.env.INPROC_ADDRESS,
 	tesResponseCallbackObject
