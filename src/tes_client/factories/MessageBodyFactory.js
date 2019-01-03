@@ -63,6 +63,12 @@ class MessageBodyFactory {
         const message_body = MessageBodyFactory.buildMessageBody({ message_body_type, message_body_contents });
         return message_body
     }
+
+    static buildHeartbeatMessageBody = () => {
+        const message_body_type = message_body_types.HEARTBEAT
+        const message_body = MessageBodyFactory.buildMessageBody({ message_body_type })
+        return message_body
+    }
 }
 
 export default MessageBodyFactory
