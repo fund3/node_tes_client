@@ -10,8 +10,8 @@ class MessageBodyFactory {
 			case message_body_types.TEST:
 				return { [message_body_types.TEST]: message_body_contents };
 
-			case message_body_types.LOGON:
-				return { [message_body_types.LOGON]: message_body_contents };
+			case message_body_types.LOGON_REQUEST:
+				return { [message_body_types.LOGON_REQUEST]: message_body_contents };
 
 			case message_body_types.LOGOFF:
 				return { [message_body_types.LOGOFF]: "" };
@@ -58,7 +58,7 @@ class MessageBodyFactory {
 	};
 
 	static buildLogonMessageBody = ({ account_credentials }) => {
-		const message_body_type = message_body_types.LOGON;
+		const message_body_type = message_body_types.LOGON_REQUEST;
 		const message_body_contents = { credentials: [account_credentials] };
 		const message_body = MessageBodyFactory.buildMessageBody({
 			message_body_type,
