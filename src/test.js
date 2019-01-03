@@ -19,3 +19,4 @@ const client =
     })
 
 client.sendLogonMessage()
+setTimeout(() => client.sendGetAccountBalancesMessage(), 1000)
