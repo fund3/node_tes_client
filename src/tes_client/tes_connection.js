@@ -3,6 +3,7 @@
 // external dependency imports
 const zmq = require('zeromq');
 import TESSocket from './sockets/TESSocket'
+import BackendSocket from './sockets/BackendSocket'
 // internal dependency imports
 // const common_types = require("./common_types");
 import {deserializeCapnp} from "./tes_message_factory";
@@ -77,16 +78,15 @@ function createAndBindTesSockets (curveServerKey,
 
     tes_socket.activate({onMessage: (message) => messageHandlerCallback(message, callbackObject)})
 
-    let backend  = zmq.socket('router');
-    backend.bindSync(backendConnectionString);
-    backend.on('message', function() {
-        let args = Array.apply(null, arguments);
-        tes_socket.sendMessage({message: args[1]});
-    });
-    backend.on('close_zmq_sockets', function () {
-        backend.close();
-    });
-    return [tes_socket.get(), backend];
+    const backend_socket = 
+        new BackendSocket({
+            tes_socket,
+            socket_endpoint: backendConnectionString
+        })
+
+    backend_socket.activate()
+
+    return [tes_socket.get(), backend_socket.get()];
 }
 
 // function createAndConnectMessageHandlerSocket(backendConnectionString,
