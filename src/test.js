@@ -54,10 +54,11 @@ process.on('SIGINT', function() {
 const accountInfo = new AccountInfo(accountId);
 const accountCredentials = new AccountCredentials(
     accountInfo, apiKey, secretKey, passphrase);
-
+    
 const message_factory = 
     new MessageFactory({ 
-        client_id: process.env.CLIENT_ID,
+        account_id: accountId,
+        client_id: clientId,
         sender_comp_id: senderCompId,
         account_credentials: accountCredentials
      })
@@ -68,11 +69,12 @@ const serialized_login_message = capnp.serialize(msgs_capnp.TradeMessage, login_
 const heartbeat_message = message_factory.buildHeartbeatMessage();
 const serialized_heartbeat_message = capnp.serialize(msgs_capnp.TradeMessage, heartbeat_message)
 
-let getAccountBalancesCapnp = buildGetAccountBalancesCapnp(clientId, senderCompId, accountInfo);
+const get_account_balances_message = message_factory.buildGetAccountBalancesMessage()
+const serialized_get_account_balances_message = capnp.serialize(msgs_capnp.TradeMessage, get_account_balances_message)
 
 let message_socket = new MessageSocket({ socket_endpoint: process.env.INPROC_ADDRESS });
 message_socket.activate()
 
 message_socket.sendMessage({ message: serialized_login_message });
 setInterval(() => message_socket.sendMessage({ message: serialized_heartbeat_message }), 10000);
-setTimeout(() => message_socket.sendMessage({ message: getAccountBalancesCapnp }), 10000);
+setTimeout(() => message_socket.sendMessage({ message: serialized_get_account_balances_message }), 10000);
