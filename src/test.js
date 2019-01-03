@@ -43,15 +43,6 @@ let sockets = createAndBindTesSockets(
 let tesSocket = sockets[0];
 let backend = sockets[1];
 
-function msgHandlerCallback (args) {
-    let obj = capnp.parse(msgs_capnp.TradeMessage, args[0]);
-    console.log(obj);
-}
-
-// let msgHandlerSocket = createAndConnectMessageHandlerSocket(
-//     "",
-//     msgHandlerCallback);
-
 process.on('SIGINT', function() {
     console.log("Caught interrupt signal");
     cleanupSocket(tesSocket);
