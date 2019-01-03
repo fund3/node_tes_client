@@ -5,7 +5,7 @@ require("dotenv").config();
 import * as zmq from "zeromq";
 import capnp from 'capnp'
 import uuidv4 from 'uuid/v4'
-import MessageFactory from './tes_client/messages/MessageFactory'
+import MessageFactory from './tes_client/factories/MessageFactory'
 import MessageSocket from './tes_client/sockets/MessageSocket'
 
 import msgs_capnp from "~/CommunicationProtocol/TradeMessage.capnp";
@@ -65,12 +65,14 @@ const message_factory =
 const login_message = message_factory.buildLogonMessage()
 const serialized_login_message = capnp.serialize(msgs_capnp.TradeMessage, login_message);
 
-let heartbeat = buildHeartbeatCapnp(clientId, senderCompId);
+const heartbeat_message = message_factory.buildHeartbeatMessage();
+const serialized_heartbeat_message = capnp.serialize(msgs_capnp.TradeMessage, heartbeat_message)
+
 let getAccountBalancesCapnp = buildGetAccountBalancesCapnp(clientId, senderCompId, accountInfo);
 
 let message_socket = new MessageSocket({ socket_endpoint: process.env.INPROC_ADDRESS });
 message_socket.activate()
 
 message_socket.sendMessage({ message: serialized_login_message });
-setInterval(() => message_socket.sendMessage({ message: heartbeat }), 10000);
+setInterval(() => message_socket.sendMessage({ message: serialized_heartbeat_message }), 10000);
 setTimeout(() => message_socket.sendMessage({ message: getAccountBalancesCapnp }), 10000);
