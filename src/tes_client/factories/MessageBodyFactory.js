@@ -1,4 +1,5 @@
 import { message_body_types } from '~/tes_client/constants'
+import { AccountInfo } from '~/tes_client/common_types';
 
 class MessageBodyFactory {
 
@@ -50,23 +51,29 @@ class MessageBodyFactory {
             case message_body_types.GET_COMPLETED_ORDERS:
                 return { [message_body_types.GET_COMPLETED_ORDERS]: message_body_contents }
 
-            case message_body_types.GET_EXCHANGE_PROPERTIES:
-                return { [message_body_types.GET_EXCHANGE_PROPERTIES]: message_body_contents }
+	static buildLogonMessageBody = ({ account_credentials }) => {
+		const message_body_type = message_body_types.LOGON;
+		const message_body_contents = { credentials: [account_credentials] };
+		const message_body = MessageBodyFactory.buildMessageBody({
+			message_body_type,
+			message_body_contents
+		});
+		return message_body;
+	};
 
-            default: return {}
-        }
-    }
+	static buildHeartbeatMessageBody = () => {
+		const message_body_type = message_body_types.HEARTBEAT;
+		const message_body = MessageBodyFactory.buildMessageBody({ message_body_type });
+		return message_body;
+	};
 
-    static buildLogonMessageBody = ({ account_credentials }) => {
-        const message_body_type = message_body_types.LOGON
-        const message_body_contents = { credentials: [account_credentials] }
-        const message_body = MessageBodyFactory.buildMessageBody({ message_body_type, message_body_contents });
-        return message_body
-    }
-
-    static buildHeartbeatMessageBody = () => {
-        const message_body_type = message_body_types.HEARTBEAT
-        const message_body = MessageBodyFactory.buildMessageBody({ message_body_type })
+	static buildGetAccountBalancesMessageBody = ({ account_id }) => {
+        const message_body_type = message_body_types.GET_ACCOUNT_BALANCES
+        const message_body_contents = { accountInfo: new AccountInfo(account_id) }
+        const message_body = MessageBodyFactory.buildMessageBody({
+			message_body_type,
+			message_body_contents
+        });
         return message_body
     }
 }

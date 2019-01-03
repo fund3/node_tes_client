@@ -4,10 +4,12 @@ import { message_types } from '~/tes_client/constants'
 class MessageFactory {
 
     constructor({ 
+        account_id,
         client_id, 
         sender_comp_id,
         account_credentials
     }) {
+        this.account_id = account_id
         this.client_id = client_id,
         this.sender_comp_id = sender_comp_id,
         this.account_credentials = account_credentials
@@ -41,6 +43,14 @@ class MessageFactory {
 
     buildHeartbeatMessage = () => {
         const message_body = MessageBodyFactory.buildHeartbeatMessageBody();
+        const message = this.buildMessage({ message_body })
+        const packaged_message = this.buildMessageContainer({ message, message_type: message_types.REQUEST })
+        return packaged_message
+    }
+
+    buildGetAccountBalancesMessage = () => {
+        const { account_id } = this
+        const message_body = MessageBodyFactory.buildGetAccountBalancesMessageBody({ account_id })
         const message = this.buildMessage({ message_body })
         const packaged_message = this.buildMessageContainer({ message, message_type: message_types.REQUEST })
         return packaged_message
