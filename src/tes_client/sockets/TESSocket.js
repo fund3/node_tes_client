@@ -17,8 +17,8 @@ class TESSocket {
     }
 
     activate = ({ onMessage }) => {
-        this.socket.connect(this.socket_endpoint)
         this.socket.on('message', onMessage)
+        this.socket.connect(this.socket_endpoint)
     }   
 
     sendMessage = ({ message }) => this.socket.send(message)
