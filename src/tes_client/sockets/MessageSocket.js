@@ -6,7 +6,7 @@ class MessageSocket {
 		this.socket_endpoint = socket_endpoint;
 	}
 
-	activate = () => {
+	connect = () => {
 		this.socket.connect(this.socket_endpoint);
 	};
 

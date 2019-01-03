@@ -16,8 +16,7 @@ class TESSocket {
         this.socket.curve_serverkey = curve_server_key;
     }
 
-    activate = ({ onMessage }) => {
-        this.socket.on('message', onMessage)
+    connect = () => {
         this.socket.connect(this.socket_endpoint)
     }   
 

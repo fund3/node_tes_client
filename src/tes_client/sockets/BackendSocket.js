@@ -9,7 +9,7 @@ class BackendSocket {
         this.tes_socket = tes_socket
     }
 
-    activate = () => {
+    connect = () => {
         this.socket.on('message', (_, message) => this.tes_socket.sendMessage({ message }))
         this.socket.bindSync(this.socket_endpoint)
     }
