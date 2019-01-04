@@ -279,20 +279,6 @@ function buildPlaceOrder (placeOrderArguments) {
 }
 
 
-class PlaceOrderArguments {
-    constructor (accountInfo, clientOrderId, symbol, side, quantity, orderType,
-                 price, timeInForce, leverageType, leverage, clientOrderLinkId) {
-        this.accountInfo = accountInfo;
-        this.clientOrderId = clientOrderId;
-        this.symbol = symbol;
-        this.side = side;
-        this.quantity = quantity;
-        this.price = price;
-        // TODO: deal with optional arguments
-    }
-}
-
-
 function buildPlaceOrderCapnp (clientId, senderCompId, placeOrderArguments) {
     const getAccountBalances = buildPlaceOrder(placeOrderArguments);
     const request = buildRequest(clientId, senderCompId,
@@ -300,40 +286,6 @@ function buildPlaceOrderCapnp (clientId, senderCompId, placeOrderArguments) {
     const tradeMessage = buildTradeMessage(buildType("request", request));
     return capnp.serialize(msgs_capnp.TradeMessage, tradeMessage);
 }
-
-
-function buildAccountBalancesReportJs (accountBalancesReport) {
-    return [
-        accountBalancesReport.accountInfo,
-        accountBalancesReport.balances
-    ]
-}
-
-
-function buildExecutionReportJs (executionReport) {
-    return [
-        executionReport.orderID,
-        executionReport.clientOrderID,
-        executionReport.clientOrderLinkID,
-        executionReport.exchangeOrderID,
-        executionReport.accountInfo,
-        executionReport.symbol,
-        executionReport.side,
-        executionReport.orderType,
-        executionReport.quantity,
-        executionReport.price,
-        executionReport.timeInForce,
-        executionReport.leverageType,
-        executionReport.leverage,
-        executionReport.orderStatus,
-        executionReport.filledQuantity,
-        executionReport.avgFillPrice,
-        executionReport.rejectionReason,
-    ]
-}
-
-
-// let logonAckObj = capnp.parse(msgs_capnp.TradeMessage, logon);
 
 
 function deserializeCapnp(messageType, messageObject) {
@@ -351,8 +303,23 @@ function handleLogonAck(logonAck, logonAckHandler) {
 }
 
 
-function defaultLogonAckHandler(success) {
+function buildTestMessageJs(test) {
+    /**
+    Builds test message Javascript object from capnp object.
+    @param test: (capnp._DynamicStructBuilder) TestMessage object.
+    @return: (str) test message.
+    */
+    return test.string;
+}
 
+
+function buildSystemMessageJs(system) {
+    /**
+    Builds system message Javascript object from capnp object.
+    @param system: (capnp._DynamicStructBuilder) system message.
+    @return: array of (int) error code, (str) system message.
+    */
+    return [system.errorCode, system.message];
 }
 
 
@@ -383,35 +350,74 @@ function buildLogoffAckJs(logoffAck) {
     @return: array of (bool) success, (str) message.
     */
     if (logoffAck.success) {
-        console.debug('Logoff success.', 'status', 'logoff_success');
+        // console.debug('Logoff success.', 'status', 'logoff_success');
     } else {
-        console.debug('Logoff failure.', 'status', 'logoff_failure');
+        // console.debug('Logoff failure.', 'status', 'logoff_failure');
     }
-    console.debug('Logoff message.', 'logoff_message', logoffAck.message);
+    // console.debug('Logoff message.', 'logoff_message', logoffAck.message);
     return [logoffAck.success, logoffAck.message];
 }
-// function build_test_message(test) {
-//     /**
-//     Builds test message Javascript object from capnp object.
-//     @param test: (capnp._DynamicStructBuilder) TestMessage object.
-//     @return: (str) test message.
-//     */
-//     return test.string;
-// }
-//
-//
-// function build_system_message(system) {
-//     /**
-//     Builds system message Javascript object from capnp object.
-//     @param system: (capnp._DynamicStructBuilder) system message.
-//     @return: array of (int) error code, (str) system message.
-//     */
-//     return [system.errorCode, system.message];
-// }
 
 
-//
-//
+function buildAccountBalancesReportJs(accountBalancesReport) {
+  return [
+      accountBalancesReport.accountInfo,
+      accountBalancesReport.balances
+  ]
+}
+
+
+function buildAccountDataReportJs(accountDataReport) {
+  return [
+      accountDataReport.accountInfo,
+      accountDataReport.balances,
+      accountDataReport.openPositions,
+      accountDataReport.orders
+  ];
+}
+
+
+function buildExecutionReportJs (executionReport) {
+    return [
+        executionReport.orderID,
+        executionReport.clientOrderID,
+        executionReport.clientOrderLinkID,
+        executionReport.exchangeOrderID,
+        executionReport.accountInfo,
+        executionReport.symbol,
+        executionReport.side,
+        executionReport.orderType,
+        executionReport.quantity,
+        executionReport.price,
+        executionReport.timeInForce,
+        executionReport.leverageType,
+        executionReport.leverage,
+        executionReport.orderStatus,
+        executionReport.filledQuantity,
+        executionReport.avgFillPrice,
+        executionReport.rejectionReason,
+    ]
+}
+
+
+function buildOpenPositionsReportJs(openPositionReport) {
+    /**
+    Builds OpenPositionReport Javascript object from capnp object.
+    @param openPositionReport: (capnp._DynamicStructBuilder)
+        OpenPositionReport object.
+    @return: (OpenPositionReport) Javascript object.
+    */
+    openPositions = openPositionReport.openPositions;
+    var op;
+    for (op = 0; op < open_positions.length; op++) {
+      open_positions[op] = build_js_open_position_from_capnp(open_positions[op]);
+    }
+    return new OpenPositionsReport(
+        accountInfo=build_js_account_info_from_capnp(
+            openPositionReport.accountInfo),
+        openPositions=open_pos
+    );
+}
 // function build_exec_report(executionReport) {
 //     /**
 //     Builds ExecutionReport Javascript object from capnp object.
@@ -501,46 +507,6 @@ function buildLogoffAckJs(logoffAck) {
 //         acct_balances,
 //         open_positions,
 //         orders
-//     );
-// }
-
-
-function build_account_balances_report(accountBalancesReport) {
-    /**
-    Builds AccountBalancesReport Javascript object from capnp object.
-    @param accountBalancesReport: (capnp._DynamicStructBuilder)
-        AccountBalancesReport object.
-    @return: (AccountBalancesReport) Javascript class object.
-    */
-    acct_balances = new Array(accountBalancesReport.balances);
-    let ab;
-    for (ab = 0; ab < open_positions.length; ab++) {
-      acct_balances[ab] = build_js_balance_from_capnp(acct_balances[ab]);
-    }
-    return new AccountBalancesReport(
-        accountInfo=build_js_account_info_from_capnp(
-            accountBalancesReport.accountInfo),
-        balances=acct_balances
-    );
-}
-
-
-// function build_open_positions_report(openPositionReport) {
-//     /**
-//     Builds OpenPositionReport Javascript object from capnp object.
-//     @param openPositionReport: (capnp._DynamicStructBuilder)
-//         OpenPositionReport object.
-//     @return: (OpenPositionReport) Javascript object.
-//     */
-//     open_positions = new Array(openPositionReport.openPositions);
-//     var op;
-//     for (op = 0; op < open_positions.length; op++) {
-//       open_positions[op] = build_js_open_position_from_capnp(open_positions[op]);
-//     }
-//     return new OpenPositionsReport(
-//         accountInfo=build_js_account_info_from_capnp(
-//             openPositionReport.accountInfo),
-//         openPositions=open_pos
 //     );
 // }
 //

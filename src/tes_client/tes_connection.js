@@ -2,7 +2,7 @@
 
 // external dependency imports
 const zmq = require('zeromq');
-import TESSocket from './sockets/TESSocket'
+import TesSocket from './sockets/TesSocket'
 import BackendSocket from './sockets/BackendSocket'
 // internal dependency imports
 // const common_types = require("./common_types");
@@ -26,33 +26,20 @@ function defaultHandler(tradeMsgObj) {
 }
 
 
-function messageHandlerCallbackObjectFactory({
-    heartbeatHandler = defaultHandler,
-    testMessageHandler = defaultHandler,
-    systemMessageHandler = defaultHandler,
-    logonAckHandler = defaultHandler,
-    logoffAckHandler = defaultHandler,
-    executionReportHandler = defaultHandler,
-    accountDataReportHandler = defaultHandler,
-    accountBalancesReportHandler = defaultHandler,
-    openPositionsReportHandler = defaultHandler,
-    workingOrdersReportHandler = defaultHandler,
-    completedOrdersReportHandler = defaultHandler,
-    exchangePropertiesReportHandler = defaultHandler
-}) {
+function messageHandlerCallbackObjectFactory(tesReponseHandler) {
     return {
-        heartbeat: heartbeatHandler,
-        testMessage: testMessageHandler,
-        systemMessage: systemMessageHandler,
-        logonAck: logonAckHandler,
-        logoffAck: logoffAckHandler,
-        executionReport: executionReportHandler,
-        accountDataReport: accountDataReportHandler,
-        accountBalancesReport: accountBalancesReportHandler,
-        openPositionsReport: openPositionsReportHandler,
-        workingOrdersReport: workingOrdersReportHandler,
-        completedOrdersReport: completedOrdersReportHandler,
-        exchangePropertiesReport: exchangePropertiesReportHandler
+        heartbeat: tesReponseHandler.heartbeatHandler,
+        testMessage: tesReponseHandler.testMessageHandler,
+        systemMessage: tesReponseHandler.systemMessageHandler,
+        logonAck: tesReponseHandler.logonAckHandler,
+        logoffAck: tesReponseHandler.logoffAckHandler,
+        executionReport: tesReponseHandler.executionReportHandler,
+        accountDataReport: tesReponseHandler.accountDataReportHandler,
+        accountBalancesReport: tesReponseHandler.accountBalancesReportHandler,
+        openPositionsReport: tesReponseHandler.openPositionsReportHandler,
+        workingOrdersReport: tesReponseHandler.workingOrdersReportHandler,
+        completedOrdersReport: tesReponseHandler.completedOrdersReportHandler,
+        exchangePropertiesReport: tesReponseHandler.exchangePropertiesReportHandler
     }
 }
 
@@ -71,7 +58,7 @@ function createAndBindTesSockets (curveServerKey,
                                   backendConnectionString,
                                   callbackObject) {
     const tes_socket = 
-        new TESSocket({ 
+        new TesSocket({
             curve_server_key: curveServerKey, 
             socket_endpoint: tesConnectionString 
         })
