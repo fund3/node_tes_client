@@ -70,6 +70,12 @@ class MessageFactory {
     const message_body = MessageBodyFactory.buildGetOrderStatusMessageBody({accountInfo, orderId});
     return this.buildRequestMessage({message_body});
   };
+
+  buildGetAccountDataMessage = () => {
+    const {account_id} = this;
+    const message_body = MessageBodyFactory.buildGetAccountDataMessageBody({account_id});
+    return this.buildRequestMessage({message_body});
+  };
 }
 
 export default MessageFactory;

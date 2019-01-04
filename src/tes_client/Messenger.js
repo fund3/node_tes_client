@@ -1,5 +1,5 @@
-import capnp from "capnp";
-import msgs_capnp from "~/CommunicationProtocol/TradeMessage.capnp";
+const capnp = require("capnp");
+const msgs_capnp = require("~/CommunicationProtocol/CommunicationProtocol/TradeMessage.capnp");
 
 import TesSocket from "./sockets/TesSocket";
 import BackendSocket from "./sockets/BackendSocket";
@@ -54,7 +54,7 @@ class Messenger {
                 const response = this.parseResponseFromMessage({ message });
                 onResponse(response);
             }
-        })
+        });
 		const serialized_message = this.serializeMessage({ message });
 		this.message_socket.sendSerializedMessage({ serialized_message });
 	};
@@ -74,21 +74,42 @@ class Messenger {
 		return { message_body_type, message_body_contents };
 	};
 
+	parseAccountBalancesReport = ({ message_body_contents }) => {
+		const { accountInfo, balances } = message_body_contents;
+		return {account_info: accountInfo, balances};
+	};
+
+	parseLogonComplete = ({ message_body_contents }) => {
+     	const { success, message, clientAccounts } = message_body_contents;
+     	return {success, message, client_accounts: clientAccounts};
+    };
+
+	parseAccountDataReport = ({ message_body_contents }) => {
+		const { accountInfo, balances, openPositions, orders} = message_body_contents;
+		return {account_info: accountInfo, balances, openPositions, orders};
+	};
+
+	parseLogoffComplete = ({ message_body_contents }) => {
+     	const { success, message } = message_body_contents;
+     	return {success, message};
+    };
+
 	parseMessageBodyContents = ({ message_body_type, message_body_contents }) => {
 		switch (message_body_type) {
 			case message_body_types.LOGON_COMPLETE:
-				const { success, message, clientAccounts } = message_body_contents;
-				return { success, message, client_accounts: clientAccounts };
+				return this.parseLogonComplete({message_body_contents});
 
 			case message_body_types.ACCOUNT_BALANCES_REPORT:
-				const { accountInfo, balances } = message_body_contents;
-				return { account_info: accountInfo, balances };
+				return this.parseAccountBalancesReport({message_body_contents});
 
 			case message_body_types.LOGOFF_COMPLETE:
-				return message_body_contents
+				return this.parseLogoffComplete({message_body_contents});
+
+			case message_body_types.ACCOUNT_DATA_REPORT:
+				return this.parseAccountDataReport({message_body_contents});
 
 			default:
-				return {};
+				return {message_body_type};
 		}
 	};
 }

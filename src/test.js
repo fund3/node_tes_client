@@ -16,8 +16,8 @@ const client =
         curve_server_key: process.env.CURVE_SERVER_KEY,
         tes_socket_endpoint: process.env.TCP_ADDRESS,
         backend_socket_endpoint: process.env.INPROC_ADDRESS
-    })
+    });
 
-client.sendLogonMessage()
-setTimeout(() => client.sendGetAccountBalancesMessage(), 10000)
-setTimeout(() => client.sendLogoffMessage(), 20000)
+client.sendLogonMessage();
+setTimeout(() => client.sendGetAccountBalancesMessage(), 10000);
+setTimeout(() => client.sendLogoffMessage(), 20000);

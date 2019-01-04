@@ -1,6 +1,6 @@
-import {AccountInfo} from '~/tes_client/common_types';
+import AccountInfo from '~/tes_client/account/AccountInfo';
 import {message_body_types} from '~/tes_client/constants';
-import {PlaceOrderArguments} from '~/tes_client/order';
+import {PlaceOrderArguments} from '~/tes_client/order/PlaceOrderArguments';
 
 class MessageBodyFactory {
 
@@ -79,7 +79,16 @@ class MessageBodyFactory {
 
   static buildGetAccountBalancesMessageBody = ({account_id}) => {
     const message_body_type = message_body_types.GET_ACCOUNT_BALANCES;
-	const message_body_contents = {accountInfo: new AccountInfo(account_id)};
+	const message_body_contents = {accountInfo: new AccountInfo({account_id})};
+	return MessageBodyFactory.buildMessageBody({
+	    message_body_type,
+		message_body_contents
+	});
+  };
+
+  static buildGetAccountDataMessageBody = ({account_id}) => {
+    const message_body_type = message_body_types.GET_ACCOUNT_DATA;
+	const message_body_contents = {accountInfo: new AccountInfo({account_id})};
 	return MessageBodyFactory.buildMessageBody({
 	    message_body_type,
 		message_body_contents

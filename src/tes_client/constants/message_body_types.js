@@ -13,6 +13,7 @@ export default {
 	GET_ACCOUNT_DATA: "getAccountData",
 	GET_ACCOUNT_BALANCES: "getAccountBalances",
     ACCOUNT_BALANCES_REPORT: "accountBalancesReport",
+	ACCOUNT_DATA_REPORT: "accountDataReport",
     GET_OPEN_POSITIONS: "getOpenPositions",
 	GET_WORKING_ORDERS: "getWorkingOrders",
 	GET_COMPLETED_ORDERS: "getCompletedOrders",

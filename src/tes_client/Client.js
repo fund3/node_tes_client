@@ -59,7 +59,7 @@ class Client {
 		this.message_factory.buildGetAccountBalancesMessage();
     this.messenger.sendMessage({
         message: get_account_balances_message,
-        onResponse: response => console.log(response)
+        onResponse: ({accountInfo, balances}) => console.log(balances)
     })
   };
 
@@ -86,6 +86,16 @@ class Client {
     this.messenger.sendMessage({
         message: get_order_status_message,
         onResponse: response => console.log(response)
+    });
+  };
+
+  sendGetAccountDataMessage = () => {
+    const get_account_data_message =
+		this.message_factory.buildGetAccountDataMessage();
+    this.messenger.sendMessage({
+        message: get_account_data_message,
+        onResponse: ({accountInfo, balances, openPositions, orders}) =>
+            console.log(accountInfo, balances, openPositions, orders)
     });
   };
 }
