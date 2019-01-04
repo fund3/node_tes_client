@@ -1,7 +1,7 @@
 import capnp from "capnp";
 import msgs_capnp from "~/CommunicationProtocol/TradeMessage.capnp";
 
-import TESSocket from "./sockets/TESSocket";
+import TesSocket from "./sockets/TesSocket";
 import BackendSocket from "./sockets/BackendSocket";
 import MessageSocket from "./sockets/MessageSocket";
 
@@ -9,7 +9,7 @@ import { message_body_types } from '~/tes_client/constants'
 
 class Messenger {
 	constructor({ curve_server_key, tes_socket_endpoint, backend_socket_endpoint }) {
-		this.tes_socket = new TESSocket({
+		this.tes_socket = new TesSocket({
 			curve_server_key,
 			socket_endpoint: tes_socket_endpoint
 		});
