@@ -4,10 +4,12 @@ require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 
 import Client from './tes_client/Client'
+import AccountInfo from './tes_client/account/AccountInfo'
 
+const account_id = parseInt(process.env.ACCOUNT_ID);
 const client = 
     new Client({
-        account_id: parseInt(process.env.ACCOUNT_ID),
+        account_id: account_id,
         client_id: parseInt(process.env.CLIENT_ID),
         sender_comp_id: String(uuidv4()),
         api_key: process.env.API_KEY,
@@ -21,3 +23,6 @@ const client =
 client.sendLogonMessage();
 setTimeout(() => client.sendGetAccountBalancesMessage(), 10000);
 setTimeout(() => client.sendLogoffMessage(), 20000);
+const accountInfo = new AccountInfo({account_id});
+setTimeout(() => client.sendGetOrderStatusMessage({accountInfo: accountInfo,
+    orderId: 'cb146384-c577-4d72-b29e-01b74549939f'}), 5000);

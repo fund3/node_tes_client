@@ -85,7 +85,25 @@ class Client {
 		this.message_factory.buildGetOrderStatusMessage({accountInfo, orderId});
     this.messenger.sendMessage({
         message: get_order_status_message,
-        onResponse: response => console.log(response)
+        onResponse: ({
+			orderID,
+			clientOrderID,
+			clientOrderLinkID,
+			exchangeOrderID,
+			accountInfo,
+			symbol,
+			side,
+			orderType,
+			quantity,
+			price,
+			timeInForce,
+			leverageType,
+			leverage,
+			orderStatus,
+			filledQuantity,
+			avgFillPrice,
+			rejectionReason
+		}) => console.log(orderID, symbol, quantity, side, orderStatus)
     });
   };
 

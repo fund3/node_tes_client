@@ -10,6 +10,7 @@ export default {
 	CANCEL_ORDER: "cancelOrder",
 	GET_ORDER_STATUS: "getOrderStatus",
 	GET_ORDER_MASS_STATUS: "getOrderMassStatus",
+	EXECUTION_REPORT: "executionReport",
 	GET_ACCOUNT_DATA: "getAccountData",
 	GET_ACCOUNT_BALANCES: "getAccountBalances",
     ACCOUNT_BALANCES_REPORT: "accountBalancesReport",
