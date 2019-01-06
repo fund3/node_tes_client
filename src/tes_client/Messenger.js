@@ -1,5 +1,5 @@
 const capnp = require("capnp");
-const msgs_capnp = require("~/CommunicationProtocol/CommunicationProtocol/TradeMessage.capnp");
+const msgs_capnp = require("~/CommunicationProtocol/TradeMessage.capnp");
 
 import TesSocket from "./sockets/TesSocket";
 import BackendSocket from "./sockets/BackendSocket";
