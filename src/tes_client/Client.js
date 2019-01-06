@@ -1,7 +1,7 @@
 import AccountCredentials from "./account/AccountCredentials";
 import AccountInfo from "./account/AccountInfo";
 import MessageFactory from "./factories/MessageFactory";
-import Messenger from "./Messenger";
+import Messenger from "./messages/Messenger";
 
 import { message_body_types } from '~/tes_client/constants'
 
