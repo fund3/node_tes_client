@@ -4,8 +4,7 @@ const msgs_capnp = require("~/CommunicationProtocol/TradeMessage.capnp");
 import TesSocket from "./sockets/TesSocket";
 import BackendSocket from "./sockets/BackendSocket";
 import MessageSocket from "./sockets/MessageSocket";
-
-import { message_body_types } from '~/tes_client/constants'
+import MessageResponder from './messages/MessageResponder'
 
 class Messenger {
 	constructor({ curve_server_key, tes_socket_endpoint, backend_socket_endpoint }) {
@@ -23,12 +22,15 @@ class Messenger {
 			socket_endpoint: backend_socket_endpoint
 		});
 
+		this.message_responder = new MessageResponder();
+
 		process.on("SIGINT", () => {
 			this.cleanupSockets();
 			process.exit();
 		});
 
 		this.connectSockets();
+		this.listenForResponses()
 	}
 
 	cleanupSocket = ({ socket }) => {
@@ -46,115 +48,21 @@ class Messenger {
 		this.message_socket.connect();
 	};
 
+	listenForResponses = () => {
+		this.tes_socket.setOnMessage({
+			onMessage: message => this.message_responder.handleResponse({ message })
+		});
+	}
+
 	serializeMessage = ({ message }) => capnp.serialize(msgs_capnp.TradeMessage, message)
 
-	sendMessage = ({ message, onResponse }) => {
-        this.tes_socket.setOnMessage({
-            onMessage: (message) => {
-                const response = this.parseResponseFromMessage({ message });
-                onResponse(response);
-            }
-        });
+	sendMessage = ({ message, response_message_body_type, onResponse }) => {
+		this.message_responder.queueCallbackForResponse({
+			callback: onResponse,
+			response_message_body_type
+		});
 		const serialized_message = this.serializeMessage({ message });
 		this.message_socket.sendSerializedMessage({ serialized_message });
-	};
-
-	parseResponseFromMessage = ({ message }) => {
-		const { message_body_type, message_body_contents } = this.parseBinaryMessageBody({
-			binary_message: message
-		});
-		return this.parseMessageBodyContents({ message_body_type, message_body_contents });
-	};
-
-	parseBinaryMessageBody = ({ binary_message }) => {
-		const message = capnp.parse(msgs_capnp.TradeMessage, binary_message);
-		const message_body = message.type.response.body;
-		const message_body_type = Object.keys(message_body)[0];
-		const message_body_contents = message_body[message_body_type];
-		return { message_body_type, message_body_contents };
-	};
-
-	parseAccountBalancesReport = ({ message_body_contents }) => {
-		const { accountInfo, balances } = message_body_contents;
-		return {account_info: accountInfo, balances};
-	};
-
-	parseLogonComplete = ({ message_body_contents }) => {
-     	const { success, message, clientAccounts } = message_body_contents;
-     	return {success, message, client_accounts: clientAccounts};
-    };
-
-	parseAccountDataReport = ({ message_body_contents }) => {
-		const { accountInfo, balances, openPositions, orders} = message_body_contents;
-		return {account_info: accountInfo, balances, openPositions, orders};
-	};
-
-	parseLogoffComplete = ({ message_body_contents }) => {
-     	const { success, message } = message_body_contents;
-     	return {success, message};
-    };
-
-	parseExecutionReport = ({ message_body_contents }) => {
-		const {
-			orderID,
-			clientOrderID,
-			clientOrderLinkID,
-			exchangeOrderID,
-			accountInfo,
-			symbol,
-			side,
-			orderType,
-			quantity,
-			price,
-			timeInForce,
-			leverageType,
-			leverage,
-			orderStatus,
-			filledQuantity,
-			avgFillPrice,
-			rejectionReason
-		} = message_body_contents;
-     	return {
-			orderID,
-			clientOrderID,
-			clientOrderLinkID,
-			exchangeOrderID,
-			accountInfo,
-			symbol,
-			side,
-			orderType,
-			quantity,
-			price,
-			timeInForce,
-			leverageType,
-			leverage,
-			orderStatus,
-			filledQuantity,
-			avgFillPrice,
-			rejectionReason
-		};
-	};
-
-	parseMessageBodyContents = ({ message_body_type, message_body_contents }) => {
-		switch (message_body_type) {
-			case message_body_types.LOGON_COMPLETE:
-				return this.parseLogonComplete({message_body_contents});
-
-			case message_body_types.ACCOUNT_BALANCES_REPORT:
-				return this.parseAccountBalancesReport({message_body_contents});
-
-			case message_body_types.LOGOFF_COMPLETE:
-				return this.parseLogoffComplete({message_body_contents});
-
-			case message_body_types.ACCOUNT_DATA_REPORT:
-				return this.parseAccountDataReport({message_body_contents});
-
-			case message_body_types.EXECUTION_REPORT:
-				return this.parseExecutionReport({message_body_contents});
-
-			default:
-				return {message_body_type};
-		}
 	};
 }
 
