@@ -107,7 +107,7 @@ const ExecutionReportType = {
 
 // Classes
 class AccountInfo {
-    constructor(accountID, 
+    constructor(accountId,
                 exchange, 
                 accountType, 
                 exchangeAccountId,  
@@ -121,12 +121,28 @@ class AccountInfo {
         * @param exchangeClientId: String exchange client (customer) ID,
         *    empty in client request
         */
-        this.accountID = accountID;
+        if (accountId === null || accountId === undefined){
+            throw 'AccountId is required.'
+        }
+        if (typeof accountId !== 'number'){
+            throw 'AccountId is required to be a Number.'
+        }
+        this.accountId = accountId;
         this.exchange = String(exchange);
         this.accountType = String(accountType);
-        this.exchangeAccountID = String(exchangeAccountId);
-        this.exchangeClientID = String(exchangeClientId);
+        this.exchangeAccountId = String(exchangeAccountId);
+        this.exchangeClientId = String(exchangeClientId);
     }
+
+    accountId() {return this.accountId}
+
+    exchange() {return this.exchange}
+
+    accountType() {return this.accountType}
+
+    exchangeAccountId() {return this.exchangeAccountId}
+
+    exchangeClientId() {return this.exchangeClientId}
 }
 
 
@@ -147,6 +163,14 @@ class AccountCredentials {
         this.secretKey = String(secretKey);
         this.passphrase = String(passphrase);
     }
+
+    accountInfo() {return this.accountInfo}
+
+    apiKey() {return this.apiKey}
+
+    secretKey() {return this.secretKey}
+
+    passphrase() {return this.passphrase}
 }
 
 
@@ -168,7 +192,6 @@ class Order {
         /**
         * @param accountInfo: AccountInfo
         * @param clientOrderId: int orderID generated on the client side
-        * @param accountInfo: accountInfo
         * @param symbol: String
         * @param side: String (see Side enum)
         * @param orderType: String (see OrderType enum)
@@ -177,21 +200,43 @@ class Order {
         * @param timeInForce: String (see TimeInForce enum)
         * @param leverageType: String (see LeverageType enum)
         * @param leverage: float leverage being used on this specific order
-        * @param clientOrderLinkId: String used for identifying Stringategy (when
-        *    multiple Strategies are trading on the same account)
+        * @param clientOrderLinkId: String used for labeling the order, e.g.
+        * when multiple Strategies are trading on the same account)
         */
         this.accountInfo = accountInfo;
-        this.clientOrderId = Number(clientOrderId);
+        this.clientOrderId = clientOrderId;
         this.symbol = String(symbol);
         this.side = String(side);
         this.orderType = String(orderType);
-        this.quantity = Number(quantity);
-        this.price = Number(price);
-        this.timeInForce = String(timeInForce);
-        this.leverageType = String(leverageType);
-        this.leverage = Number(leverage);
-        this.clientOrderLinkId = String(clientOrderLinkId);
+        this.quantity = quantity;
+        this.price = price;
+        this.timeInForce = timeInForce;
+        this.leverageType = leverageType;
+        this.leverage = leverage;
+        this.clientOrderLinkId = clientOrderLinkId;
     }
+
+    accountInfo() {return this.accountInfo}
+
+    clientOrderId() {return this.clientOrderId}
+
+    symbol() {return this.symbol}
+
+    side() {return this.side}
+
+    orderType() {return this.orderType}
+
+    quantity() {return this.quantity}
+
+    price() {return this.price}
+
+    timeInForce() {return this.timeInForce}
+
+    leverageType() {return this.leverageType}
+
+    leverage() {return this.leverage}
+
+    clientOrderLinkId() {return this.clientOrderLinkId}
 }
 
 
@@ -200,6 +245,8 @@ class RequestRejected {
         /** @param message: String rejection reason */
         this.message = String(message);
     }
+
+    message() {return this.message}
 }
 
 
@@ -211,9 +258,15 @@ class Balance {
         * @param availableBalance: float
         */
         this.currency = String(currency);
-        this.fullBalance = Number(fullBalance);
-        this.availableBalance = Number(availableBalance);
+        this.fullBalance = fullBalance;
+        this.availableBalance = availableBalance;
     }
+
+    currency() {return this.currency}
+
+    fullBalance() {return this.fullBalance}
+
+    availableBalance() {return this.availableBalance}
 }
 
 
@@ -234,10 +287,20 @@ class OpenPosition {
         */
         this.symbol = String(symbol);
         this.side = String(side);
-        this.quantity = Number(quantity);
-        this.initialPrice = Number(initialPrice);
-        this.unrealizedPL = Number(unrealizedPL);
+        this.quantity = quantity;
+        this.initialPrice = initialPrice;
+        this.unrealizedPL = unrealizedPL;
     }
+
+    symbol() {return this.symbol}
+
+    side() {return this.side}
+
+    quantity() {return this.quantity}
+
+    initialPrice() {return this.initialPrice}
+
+    unrealizedPL() {return this.unrealizedPL}
 }
 
 
@@ -285,24 +348,60 @@ class ExecutionReport {
         * @param clientOrderLinkId: String internal id used for
         */
         this.orderId = String(orderId);
-        this.clientOrderId = Number(clientOrderId);
+        this.clientOrderId = clientOrderId;
         this.exchangeOrderId = String(exchangeOrderId);
         this.accountInfo = accountInfo;
         this.symbol = String(symbol);
         this.side = side;
         this.orderType = orderType;
-        this.quantity = Number(quantity);
-        this.price = Number(price);
+        this.quantity = quantity;
+        this.price = price;
         this.timeInForce = timeInForce;
         this.leverageType = leverageType;
-        this.leverage = Number(leverage);
+        this.leverage = leverage;
         this.orderStatus = String(orderStatus);
-        this.filledQuantity = Number(filledQuantity);
-        this.avgFillPrice = Number(avgFillPrice);
+        this.filledQuantity = filledQuantity;
+        this.avgFillPrice = avgFillPrice;
         this.executionReportType = String(executionReportType);
         this.rejectionReason = String(rejectionReason);
         this.clientOrderLinkId = String(clientOrderLinkId);
     }
+
+    orderId() {return this.orderId}
+
+    clientOrderId() {return this.clientOrderId}
+
+    exchangeOrderId() {return this.exchangeOrderId}
+
+    accountInfo() {return this.accountInfo}
+
+    symbol() {return this.symbol}
+
+    side() {return this.side}
+
+    orderType() {return this.orderType}
+
+    quantity() {return this.quantity}
+
+    price() {return this.price}
+
+    timeInForce() {return this.timeInForce}
+
+    leverageType() {return this.leverageType}
+
+    leverage() {return this.leverage}
+
+    orderStatus() {return this.orderStatus}
+
+    filledQuantity() {return this.filledQuantity}
+
+    avgFillPrice() {return this.avgFillPrice}
+
+    executionReportType() {return this.executionReportType}
+
+    rejectionReason() {return this.rejectionReason}
+
+    clientOrderLinkId() {return this.clientOrderLinkId}
 }
 
 
@@ -322,6 +421,14 @@ class AccountDataReport {
         this.openPositions = openPositions;
         this.orders = orders;
     }
+
+    accountInfo() {return this.accountInfo}
+
+    balances() {return this.balances}
+
+    openPositions() {return this.openPositions}
+
+    orders() {return this.orders}
 }
 
 
@@ -335,6 +442,10 @@ class AccountBalancesReport {
         this.accountInfo = accountInfo;
         this.balances = balances;
     }
+
+    accountInfo() {return this.accountInfo}
+
+    balances() {return this.balances}
 }
 
 
@@ -348,6 +459,10 @@ class OpenPositionsReport {
         this.accountInfo = accountInfo;
         this.openPositions = openPositions;
     }
+
+    accountInfo() {return this.accountInfo}
+
+    openPositions() {return this.openPositions}
 }
 
 
@@ -361,6 +476,10 @@ class WorkingOrdersReport {
         this.accountInfo = accountInfo;
         this.orders = orders;
     }
+
+    accountInfo() {return this.accountInfo}
+
+    orders() {return this.orders}
 }
 
 
@@ -375,6 +494,10 @@ class CompletedOrdersReport {
         this.accountInfo = accountInfo;
         this.orders = orders;
     }
+
+    accountInfo() {return this.accountInfo}
+
+    orders() {return this.orders}
 }
 
 
@@ -382,18 +505,28 @@ class OrderInfo {
     constructor(orderId, clientOrderId, clientOrderLinkId, exchangeOrderId,
                 symbol) {
         /**
-        * @param orderId: String required
-        * @param clientOrderId: int empty in client request
-        * @param clientOrderLinkId: String empty in client request
-        * @param exchangeOrderId: String empty in client request
-        * @param symbol: String empty in client request
-        */
+         * @param orderId: String required
+         * @param clientOrderId: int empty in client request
+         * @param clientOrderLinkId: String empty in client request
+         * @param exchangeOrderId: String empty in client request
+         * @param symbol: String empty in client request
+         */
         this.orderId = String(orderId);
-        this.clientOrderId = Number(clientOrderId);
+        this.clientOrderId = clientOrderId;
         this.clientOrderLinkId = String(clientOrderLinkId);
         this.exchangeOrderId = String(exchangeOrderId);
         this.symbol = symbol;
     }
+
+    orderId() {return this.orderId}
+
+    clientOrderId() {return this.clientOrderId}
+
+    clientOrderLinkId() {return this.clientOrderLinkId}
+
+    exchangeOrderId() {return this.exchangeOrderId}
+
+    symbol() {return this.symbol}
 }
 
 
@@ -415,13 +548,27 @@ class SymbolProperties {
         * @param leverage: set of float leverages supported for symbol
         */
         this.symbol = String(symbol);
-        this.pricePrecision = Number(pricePrecision);
-        this.quantityPrecision = Number(quantityPrecision);
-        this.minQuantity = Number(minQuantity);
-        this.maxQuantity = Number(maxQuantity);
+        this.pricePrecision = pricePrecision;
+        this.quantityPrecision = quantityPrecision;
+        this.minQuantity = minQuantity;
+        this.maxQuantity = maxQuantity;
         this.marginSupported = marginSupported;
         this.leverage = leverage;
     }
+
+    symbol() {return this.symbol}
+
+    pricePrecision() {return this.pricePrecision}
+
+    quantityPrecision() {return this.quantityPrecision}
+
+    minQuantity() {return this.minQuantity}
+
+    maxQuantity() {return this.maxQuantity}
+
+    marginSupported() {return this.marginSupported}
+
+    leverage() {return this.leverage}
 }
 
 
@@ -440,6 +587,16 @@ class ExchangePropertiesReport {
         this.timeInForces = timeInForces;
         this.orderTypes = orderTypes;
     }
+
+    exchange() {return this.exchange}
+
+    currencies() {return this.currencies}
+
+    symbolProperties() {return this.symbolProperties}
+
+    timeInForces() {return this.timeInForces}
+
+    orderTypes() {return this.orderTypes}
 }
 
 export {
