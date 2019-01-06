@@ -38,36 +38,36 @@ class Client {
     });
   }
 
-  sendLogonMessage = () => {
+  sendLogonMessage = (onResponse) => {
     const logon_message = this.message_factory.buildLogonMessage();
     this.messenger.sendMessage({
         message: logon_message,
-        onResponse: ({success, message, client_accounts}) => console.log(message)
+        onResponse
     });
   };
 
-  sendHeartbeatMessage = () => {
+  sendHeartbeatMessage = (onResponse) => {
     const heartbeat_message = this.message_factory.buildHeartbeatMessage();
     this.messenger.sendMessage({
         message: heartbeat_message,
-        onResponse: response => console.log(response)
+        onResponse
     });
   };
 
-  sendGetAccountBalancesMessage = () => {
+  sendGetAccountBalancesMessage = (onResponse) => {
     const get_account_balances_message =
 		this.message_factory.buildGetAccountBalancesMessage();
     this.messenger.sendMessage({
         message: get_account_balances_message,
-        onResponse: ({accountInfo, balances}) => console.log(balances)
+        onResponse
     })
   };
 
-  sendLogoffMessage = () => {
+  sendLogoffMessage = (onResponse) => {
     const logoff_message = this.message_factory.buildLogoffMessage();
     this.messenger.sendMessage({
         message: logoff_message,
-        onResponse: response => console.log(response)
+        onResponse
     });
   };
 
