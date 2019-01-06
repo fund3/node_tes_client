@@ -75,8 +75,20 @@ class MessageResponder {
 	};
 
 	parseAccountBalancesReport = ({ message_body_contents }) => {
-		const { accountInfo, balances } = message_body_contents;
-		return { account_info: accountInfo, balances };
+		const { accountInfo } = message_body_contents;
+		const account_info = {
+			account_id: accountInfo.accountID,
+			exchange: accountInfo.exchange,
+			account_type: accountInfo.accountType,
+			exchange_account_id: accountInfo.exchangeAccountID,
+			exchange_client_id: accountInfo.exchangeClientID
+		}
+		const balances = message_body_contents.balances.map(balance => ({
+			currency: balance.currency,
+			full_balance: balance.fullBalance,
+			available_balance: balance.availableBalance
+		}));
+		return { account_info, balances };
 	};
 
 	parseLogonComplete = ({ message_body_contents }) => {
