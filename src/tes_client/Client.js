@@ -3,6 +3,8 @@ import AccountInfo from "./account/AccountInfo";
 import MessageFactory from "./factories/MessageFactory";
 import Messenger from "./Messenger";
 
+import { message_body_types } from '~/tes_client/constants'
+
 class Client {
   constructor({
       account_id,
@@ -41,6 +43,7 @@ class Client {
   sendLogonMessage = (onResponse) => {
     const logon_message = this.message_factory.buildLogonMessage();
     this.messenger.sendMessage({
+        response_message_body_type: message_body_types.LOGON_COMPLETE,
         message: logon_message,
         onResponse
     });
@@ -49,6 +52,7 @@ class Client {
   sendHeartbeatMessage = (onResponse) => {
     const heartbeat_message = this.message_factory.buildHeartbeatMessage();
     this.messenger.sendMessage({
+        response_message_body_type: message_body_types.HEARTBEAT,
         message: heartbeat_message,
         onResponse
     });
@@ -58,6 +62,7 @@ class Client {
     const get_account_balances_message =
 		this.message_factory.buildGetAccountBalancesMessage();
     this.messenger.sendMessage({
+        response_message_body_type: message_body_types.ACCOUNT_BALANCES_REPORT,
         message: get_account_balances_message,
         onResponse
     })
@@ -66,6 +71,7 @@ class Client {
   sendLogoffMessage = (onResponse) => {
     const logoff_message = this.message_factory.buildLogoffMessage();
     this.messenger.sendMessage({
+        response_message_body_type: message_body_types.LOGOFF_COMPLETE,
         message: logoff_message,
         onResponse
     });
@@ -73,10 +79,9 @@ class Client {
 
   sendPlaceOrderMessage = ({placeOrderArguments}) => {
     const place_order_message =
-		this.message_factory.buildPlaceOrderMessage(
-		    {placeOrderArguments});
-    console.log(place_order_message.type.request.body.placeOrder);
+		this.message_factory.buildPlaceOrderMessage({placeOrderArguments});
     this.messenger.sendMessage({
+        response_message_body_type: message_body_types.EXECUTION_REPORT,
         message: place_order_message,
         onResponse: response => console.log(response)
     });
