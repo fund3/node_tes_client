@@ -1,49 +1,48 @@
-import isNil from 'lodash/isNil'
+import { Observable } from "rxjs";
 import { message_body_types } from '~/tes_client/constants'
 
 const capnp = require("capnp");
 const msgs_capnp = require("~/CommunicationProtocol/TradeMessage.capnp");
 
 class MessageResponder {
-	constructor() {
-		this.initializeCallbackQueues();
+
+	constructor({ tes_socket }) {
+		this.tes_socket = tes_socket
+		this.listenForResponses()
 	}
 
-	initializeCallbackQueues = () => {
-		this.callback_queues = {};
-		Object.values(message_body_types).forEach(
-			message_body_type => (this.callback_queues[message_body_type] = [])
-        );
-	};
+	listenForResponses = () => {
+		this.message_observer = Observable.create((observer) => {
+			this.tes_socket.setOnMessage({
+				onMessage: message => {
+					const { message_body_type, parsed_message_body_contents } = this.parseMessage({ message });
+					observer.next({
+						message_body_type,
+						parsed_message_body_contents
+					});
+				}
+			});
+		})
+	}
 
-    queueCallbackForResponse = ({ callback, response_message_body_type }) => {
-        let callbacks_queue = this.callback_queues[response_message_body_type];
-		if (isNil(callbacks_queue)) return;
-		callbacks_queue.push(callback);
-	};
+	subscribeCallbackToResponseType = ({ callback, response_message_body_type }) => {
+		this.message_observer.subscribe(({ 
+			message_body_type, 
+			parsed_message_body_contents 
+		}) => {
+			if(message_body_type !== response_message_body_type) return;
+			callback(parsed_message_body_contents) 
+		})
+	}
 
-	runCallbacks = ({ callback_argument, message_body_type }) => {
-        let callbacks_queue = this.callback_queues[message_body_type];
-        if(isNil(callbacks_queue)) return;
-        callbacks_queue.forEach(callback => this.runCallback({ callback, callback_argument }))
-	};
-
-	runCallback = async ({ callback, callback_argument }) => {
-		return callback(callback_argument);
-	};
-
-	handleResponse = ({ message }) => {
-        const { message_body_type, message_body_contents } = 
-            this.parseBinaryMessageBody({ binary_message: message });
+	parseMessage = ({ message }) => {
+		const { message_body_type, message_body_contents } = this.parseBinaryMessageBody({ binary_message: message });
 		const parsed_message_body_contents = this.parseMessageBodyContents({
 			message_body_type,
 			message_body_contents
-        });
-        this.runCallbacks({ 
-            message_body_type,
-            callback_argument: parsed_message_body_contents,
-         })
-	};
+		});
+		return { message_body_type, parsed_message_body_contents }
+	}
 
 	parseBinaryMessageBody = ({ binary_message }) => {
 		const message = capnp.parse(msgs_capnp.TradeMessage, binary_message);
