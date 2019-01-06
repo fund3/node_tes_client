@@ -42,7 +42,7 @@ class Client {
     const logon_message = this.message_factory.buildLogonMessage();
     this.messenger.sendMessage({
         message: logon_message,
-        onResponse: response => console.log(response)
+        onResponse: ({success, message, client_accounts}) => console.log(message)
     });
   };
 
@@ -71,9 +71,11 @@ class Client {
     });
   };
 
-  sendPlaceOrderMessage = (placeOrderArguments) => {
+  sendPlaceOrderMessage = ({placeOrderArguments}) => {
     const place_order_message =
-		this.message_factory.buildPlaceOrderMessage(placeOrderArguments);
+		this.message_factory.buildPlaceOrderMessage(
+		    {placeOrderArguments});
+    console.log(place_order_message.type.request.body.placeOrder);
     this.messenger.sendMessage({
         message: place_order_message,
         onResponse: response => console.log(response)

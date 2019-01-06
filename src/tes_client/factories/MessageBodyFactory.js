@@ -103,9 +103,14 @@ class MessageBodyFactory {
 
   static buildPlaceOrderMessageBody = ({placeOrderArguments}) => {
     const message_body_type = message_body_types.PLACE_ORDER;
+    let message_body_contents = {};
+    for (let key in placeOrderArguments) {
+    	message_body_contents[key] = placeOrderArguments[key];
+	}
+    console.log(placeOrderArguments);
     return MessageBodyFactory.buildMessageBody({
 		message_body_type,
-		placeOrderArguments
+		message_body_contents
 	});
   };
 

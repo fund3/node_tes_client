@@ -5,6 +5,7 @@ import uuidv4 from 'uuid/v4'
 
 import Client from './tes_client/Client'
 import AccountInfo from './tes_client/account/AccountInfo'
+import PlaceOrderArguments from './tes_client/order/PlaceOrderArguments'
 
 const account_id = parseInt(process.env.ACCOUNT_ID);
 const client = 
@@ -24,5 +25,8 @@ client.sendLogonMessage();
 setTimeout(() => client.sendGetAccountBalancesMessage(), 10000);
 setTimeout(() => client.sendLogoffMessage(), 20000);
 const accountInfo = new AccountInfo({account_id});
+setTimeout(() => client.sendPlaceOrderMessage({placeOrderArguments: new PlaceOrderArguments({accountInfo: accountInfo,
+    clientOrderId: 'client_order_id', symbol: 'BTC/USD', side: 'buy',
+    quantity: 5.0, price: 10.0})}), 5000);
 setTimeout(() => client.sendGetOrderStatusMessage({accountInfo: accountInfo,
     orderId: 'cb146384-c577-4d72-b29e-01b74549939f'}), 5000);

@@ -13,7 +13,7 @@ class PlaceOrderArguments {
       clientOrderLinkId
   }) {
         this.accountInfo = accountInfo;
-        this.clientOrderId = clientOrderId;
+        this.clientOrderID = clientOrderId;
         this.symbol = symbol;
         this.side = side;
         this.quantity = quantity;
