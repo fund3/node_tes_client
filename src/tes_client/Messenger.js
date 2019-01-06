@@ -22,7 +22,7 @@ class Messenger {
 			socket_endpoint: backend_socket_endpoint
 		});
 
-		this.message_responder = new MessageResponder();
+		this.message_responder = new MessageResponder({ tes_socket: this.tes_socket });
 
 		process.on("SIGINT", () => {
 			this.cleanupSockets();
@@ -30,7 +30,6 @@ class Messenger {
 		});
 
 		this.connectSockets();
-		this.listenForResponses()
 	}
 
 	cleanupSocket = ({ socket }) => {
@@ -48,16 +47,10 @@ class Messenger {
 		this.message_socket.connect();
 	};
 
-	listenForResponses = () => {
-		this.tes_socket.setOnMessage({
-			onMessage: message => this.message_responder.handleResponse({ message })
-		});
-	}
-
 	serializeMessage = ({ message }) => capnp.serialize(msgs_capnp.TradeMessage, message)
 
 	sendMessage = ({ message, response_message_body_type, onResponse }) => {
-		this.message_responder.queueCallbackForResponse({
+		this.message_responder.subscribeCallbackToResponseType({
 			callback: onResponse,
 			response_message_body_type
 		});
