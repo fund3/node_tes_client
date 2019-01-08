@@ -47,10 +47,16 @@ setTimeout(
                 account_id: process.env.COINBASE_PRIME_ACCOUNT_ID,
             onResponse: response => console.log(response)
         }), 10000);
-setTimeout(() => client.sendLogoffMessage({onResponse: response => console.log(response)}), 20000);
-// const accountInfo = new AccountInfo({account_id});
-// setTimeout(() => client.sendPlaceOrderMessage({placeOrderArguments: new PlaceOrderArguments({accountInfo: accountInfo,
-//     clientOrderId: 'client_order_id', symbol: 'BTC/USD', side: 'buy',
-//     quantity: 5.0, price: 10.0})}), 5000);
+setTimeout(() => client.sendPlaceOrderMessage({
+    onResponse: response => console.log(response),
+    account_info: gemini_account_info,
+    client_order_id: 'client_order_id',
+    symbol: 'BTC/USD',
+    side: 'buy',
+    quantity: 5.0,
+    price: 10.0 
+}), 15000);
+setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 20000);
+
 // setTimeout(() => client.sendGetOrderStatusMessage({accountInfo: accountInfo,
 //     orderId: 'cb146384-c577-4d72-b29e-01b74549939f'}), 5000);
