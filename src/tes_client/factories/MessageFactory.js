@@ -53,8 +53,7 @@ class MessageFactory {
     return this.buildRequestMessage({message_body});
   };
 
-  buildGetAccountBalancesMessage = () => {
-    const {account_id} = this;
+  buildGetAccountBalancesMessage = ({ account_id }) => {
     const message_body = MessageBodyFactory.buildGetAccountBalancesMessageBody({account_id});
     return this.buildRequestMessage({message_body});
   };
@@ -70,8 +69,7 @@ class MessageFactory {
   };
 
   buildGetAccountDataMessage = () => {
-    const {account_id} = this;
-    const message_body = MessageBodyFactory.buildGetAccountDataMessageBody({account_id});
+    const message_body = MessageBodyFactory.buildGetAccountDataMessageBody({account_id: 'TODO'});
     return this.buildRequestMessage({message_body});
   };
 }
