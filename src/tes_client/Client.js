@@ -26,7 +26,7 @@ class Client {
     });
   }
 
-  sendLogonMessage = (onResponse) => {
+  sendLogonMessage = ({onResponse}) => {
     const logon_message = this.message_factory.buildLogonMessage();
     this.messenger.sendMessage({
         response_message_body_type: message_body_types.LOGON_COMPLETE,
@@ -35,7 +35,7 @@ class Client {
     });
   };
 
-  sendHeartbeatMessage = (onResponse) => {
+  sendHeartbeatMessage = ({onResponse}) => {
     const heartbeat_message = this.message_factory.buildHeartbeatMessage();
     this.messenger.sendMessage({
         response_message_body_type: message_body_types.HEARTBEAT,
@@ -53,7 +53,7 @@ class Client {
     })
   };
 
-  sendLogoffMessage = (onResponse) => {
+  sendLogoffMessage = ({onResponse}) => {
     const logoff_message = this.message_factory.buildLogoffMessage();
     this.messenger.sendMessage({
         response_message_body_type: message_body_types.LOGOFF_COMPLETE,

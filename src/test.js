@@ -40,14 +40,14 @@ const client =
         backend_socket_endpoint: process.env.INPROC_ADDRESS
     });
 
-client.sendLogonMessage(response => console.log(response));
+client.sendLogonMessage({ onResponse: response => console.log(response)});
 setTimeout(
     () => 
         client.sendGetAccountBalancesMessage({
-            account_id: process.env.COINBASE_PRIME_ACCOUNT_ID,
+                account_id: process.env.COINBASE_PRIME_ACCOUNT_ID,
             onResponse: response => console.log(response)
         }), 10000);
-setTimeout(() => client.sendLogoffMessage(response => console.log(response)), 20000);
+setTimeout(() => client.sendLogoffMessage({onResponse: response => console.log(response)}), 20000);
 // const accountInfo = new AccountInfo({account_id});
 // setTimeout(() => client.sendPlaceOrderMessage({placeOrderArguments: new PlaceOrderArguments({accountInfo: accountInfo,
 //     clientOrderId: 'client_order_id', symbol: 'BTC/USD', side: 'buy',
