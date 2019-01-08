@@ -1,5 +1,3 @@
-import AccountCredentials from "./account/AccountCredentials";
-import AccountInfo from "./account/AccountInfo";
 import MessageFactory from "./factories/MessageFactory";
 import Messenger from "./messages/Messenger";
 
@@ -7,24 +5,13 @@ import { message_body_types } from '~/tes_client/constants'
 
 class Client {
   constructor({
-      account_id,
       client_id,
       sender_comp_id,
-      api_key,
-      secret_key,
-      passphrase,
+      account_credentials_list,
       curve_server_key,
       tes_socket_endpoint,
       backend_socket_endpoint
   }) {
-    this.account_info = new AccountInfo({account_id});
-
-    this.account_credentials = new AccountCredentials({
-        account_info: this.account_info,
-        api_key,
-        secret_key,
-        passphrase
-    });
 
     this.message_factory = new MessageFactory({
         account_id,
