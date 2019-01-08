@@ -62,13 +62,40 @@ class Client {
     });
   };
 
-  sendPlaceOrderMessage = ({placeOrderArguments}) => {
+  sendPlaceOrderMessage = ({
+      onResponse, 
+      account_info,
+      client_order_id,
+      symbol,
+      side,
+      quantity,
+      order_type,
+      price,
+      time_in_force,
+      leverage_type,
+      leverage,
+      client_order_link_id
+  }) => {
+    
     const place_order_message =
-		this.message_factory.buildPlaceOrderMessage({placeOrderArguments});
+      this.message_factory.buildPlaceOrderMessage({
+        account_info,
+        client_order_id,
+        symbol,
+        side,
+        quantity,
+        order_type,
+        price,
+        time_in_force,
+        leverage_type,
+        leverage,
+        client_order_link_id
+      });
+
     this.messenger.sendMessage({
         response_message_body_type: message_body_types.EXECUTION_REPORT,
         message: place_order_message,
-        onResponse: response => console.log(response)
+        onResponse
     });
   };
 
@@ -78,24 +105,24 @@ class Client {
     this.messenger.sendMessage({
         message: get_order_status_message,
         onResponse: ({
-			orderID,
-			clientOrderID,
-			clientOrderLinkID,
-			exchangeOrderID,
-			accountInfo,
-			symbol,
-			side,
-			orderType,
-			quantity,
-			price,
-			timeInForce,
-			leverageType,
-			leverage,
-			orderStatus,
-			filledQuantity,
-			avgFillPrice,
-			rejectionReason
-		}) => console.log(orderID, symbol, quantity, side, orderStatus)
+          orderID,
+          clientOrderID,
+          clientOrderLinkID,
+          exchangeOrderID,
+          accountInfo,
+          symbol,
+          side,
+          orderType,
+          quantity,
+          price,
+          timeInForce,
+          leverageType,
+          leverage,
+          orderStatus,
+          filledQuantity,
+          avgFillPrice,
+          rejectionReason
+        }) => console.log(orderID, symbol, quantity, side, orderStatus)
     });
   };
 

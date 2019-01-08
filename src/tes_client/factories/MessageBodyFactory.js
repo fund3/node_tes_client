@@ -91,13 +91,33 @@ class MessageBodyFactory {
 		return MessageBodyFactory.buildMessageBody({ message_body_type });
 	};
 
-	static buildPlaceOrderMessageBody = ({ placeOrderArguments }) => {
+	static buildPlaceOrderMessageBody = ({ 
+		account_info,
+		client_order_id,
+		symbol,
+		side,
+		quantity,
+		order_type,
+		price,
+		time_in_force,
+		leverage_type,
+		leverage,
+		client_order_link_id
+	 }) => {
 		const message_body_type = message_body_types.PLACE_ORDER;
-		let message_body_contents = {};
-		for (let key in placeOrderArguments) {
-			message_body_contents[key] = placeOrderArguments[key];
-		}
-		console.log(placeOrderArguments);
+		let message_body_contents = {
+			accountInfo: account_info,
+			clientOrderID: client_order_id,
+			symbol,
+			side,
+			quantity,
+			orderType: order_type,
+			price,
+			timeInForce: time_in_force,
+			leverageType: leverage_type,
+			leverage,
+			clientOrderLinkID: client_order_link_id
+		};
 		return MessageBodyFactory.buildMessageBody({
 			message_body_type,
 			message_body_contents

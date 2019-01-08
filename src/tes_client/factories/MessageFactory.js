@@ -53,8 +53,33 @@ class MessageFactory {
 		return this.buildRequestMessage({ message_body });
 	};
 
-	buildPlaceOrderMessage = ({ placeOrderArguments }) => {
-		const message_body = MessageBodyFactory.buildPlaceOrderMessageBody({});
+	buildPlaceOrderMessage = ({ 
+		account_info,
+		client_order_id,
+		symbol,
+		side,
+		quantity,
+		order_type,
+		price,
+		time_in_force,
+		leverage_type,
+		leverage,
+		client_order_link_id
+	 }) => {
+		const message_body = 
+			MessageBodyFactory.buildPlaceOrderMessageBody({
+				account_info,
+				client_order_id,
+				symbol,
+				side,
+				quantity,
+				order_type,
+				price,
+				time_in_force,
+				leverage_type,
+				leverage,
+				client_order_link_id
+			});
 		return this.buildRequestMessage({ message_body });
 	};
 
