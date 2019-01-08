@@ -179,7 +179,7 @@ class Order {
     // object created for placing a new Order.
     //
     constructor(accountInfo, 
-                clientOrderId, 
+                clientOrderID, 
                 symbol, 
                 side, 
                 orderType, 
@@ -188,10 +188,10 @@ class Order {
                 timeInForce, 
                 leverageType, 
                 leverage, 
-                clientOrderLinkId) {
+                clientOrderLinkID) {
         /**
         * @param accountInfo: AccountInfo
-        * @param clientOrderId: int orderID generated on the client side
+        * @param clientOrderID: int orderID generated on the client side
         * @param symbol: String
         * @param side: String (see Side enum)
         * @param orderType: String (see OrderType enum)
@@ -200,11 +200,11 @@ class Order {
         * @param timeInForce: String (see TimeInForce enum)
         * @param leverageType: String (see LeverageType enum)
         * @param leverage: float leverage being used on this specific order
-        * @param clientOrderLinkId: String used for labeling the order, e.g.
+        * @param clientOrderLinkID: String used for labeling the order, e.g.
         * when multiple Strategies are trading on the same account)
         */
         this.accountInfo = accountInfo;
-        this.clientOrderId = clientOrderId;
+        this.clientOrderID = clientOrderID;
         this.symbol = String(symbol);
         this.side = String(side);
         this.orderType = String(orderType);
@@ -213,12 +213,12 @@ class Order {
         this.timeInForce = timeInForce;
         this.leverageType = leverageType;
         this.leverage = leverage;
-        this.clientOrderLinkId = clientOrderLinkId;
+        this.clientOrderLinkID = clientOrderLinkID;
     }
 
     accountInfo() {return this.accountInfo}
 
-    clientOrderId() {return this.clientOrderId}
+    clientOrderID() {return this.clientOrderID}
 
     symbol() {return this.symbol}
 
@@ -236,7 +236,7 @@ class Order {
 
     leverage() {return this.leverage}
 
-    clientOrderLinkId() {return this.clientOrderLinkId}
+    clientOrderLinkID() {return this.clientOrderLinkID}
 }
 
 
@@ -309,7 +309,7 @@ class ExecutionReport {
     // returned in response to place, modify, cancel, getOrderStatus requests
     //
     constructor(orderId, 
-                clientOrderId, 
+                clientOrderID, 
                 exchangeOrderId, 
                 accountInfo, 
                 symbol, 
@@ -325,10 +325,10 @@ class ExecutionReport {
                 avgFillPrice, 
                 executionReportType, 
                 rejectionReason, 
-                clientOrderLinkId) {
+                clientOrderLinkID) {
         /**
         * @param orderId: String orderID as assigned by TES
-        * @param clientOrderId: int orderID generated on the client side
+        * @param clientOrderID: int orderID generated on the client side
         * @param exchangeOrderId: String orderID as assigned by Exchange
         * @param accountInfo: accountInfo
         * @param symbol: String
@@ -345,10 +345,10 @@ class ExecutionReport {
         *    filled thus far
         * @param executionReportType: String (see ExecutionReportType enum)
         * @param rejectionReason: String rejectionReason
-        * @param clientOrderLinkId: String internal id used for
+        * @param clientOrderLinkID: String internal id used for
         */
         this.orderId = String(orderId);
-        this.clientOrderId = clientOrderId;
+        this.clientOrderID = clientOrderID;
         this.exchangeOrderId = String(exchangeOrderId);
         this.accountInfo = accountInfo;
         this.symbol = String(symbol);
@@ -364,12 +364,12 @@ class ExecutionReport {
         this.avgFillPrice = avgFillPrice;
         this.executionReportType = String(executionReportType);
         this.rejectionReason = String(rejectionReason);
-        this.clientOrderLinkId = String(clientOrderLinkId);
+        this.clientOrderLinkID = String(clientOrderLinkID);
     }
 
     orderId() {return this.orderId}
 
-    clientOrderId() {return this.clientOrderId}
+    clientOrderID() {return this.clientOrderID}
 
     exchangeOrderId() {return this.exchangeOrderId}
 
@@ -401,7 +401,7 @@ class ExecutionReport {
 
     rejectionReason() {return this.rejectionReason}
 
-    clientOrderLinkId() {return this.clientOrderLinkId}
+    clientOrderLinkID() {return this.clientOrderLinkID}
 }
 
 
@@ -502,27 +502,27 @@ class CompletedOrdersReport {
 
 
 class OrderInfo {
-    constructor(orderId, clientOrderId, clientOrderLinkId, exchangeOrderId,
+    constructor(orderId, clientOrderID, clientOrderLinkID, exchangeOrderId,
                 symbol) {
         /**
          * @param orderId: String required
-         * @param clientOrderId: int empty in client request
-         * @param clientOrderLinkId: String empty in client request
+         * @param clientOrderID: int empty in client request
+         * @param clientOrderLinkID: String empty in client request
          * @param exchangeOrderId: String empty in client request
          * @param symbol: String empty in client request
          */
         this.orderId = String(orderId);
-        this.clientOrderId = clientOrderId;
-        this.clientOrderLinkId = String(clientOrderLinkId);
+        this.clientOrderID = clientOrderID;
+        this.clientOrderLinkID = String(clientOrderLinkID);
         this.exchangeOrderId = String(exchangeOrderId);
         this.symbol = symbol;
     }
 
     orderId() {return this.orderId}
 
-    clientOrderId() {return this.clientOrderId}
+    clientOrderID() {return this.clientOrderID}
 
-    clientOrderLinkId() {return this.clientOrderLinkId}
+    clientOrderLinkID() {return this.clientOrderLinkID}
 
     exchangeOrderId() {return this.exchangeOrderId}
 

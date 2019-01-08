@@ -1,7 +1,7 @@
 class PlaceOrderArguments {
   constructor ({
       accountInfo,
-      clientOrderId,
+      clientOrderID,
       symbol,
       side,
       quantity,
@@ -10,10 +10,10 @@ class PlaceOrderArguments {
       timeInForce,
       leverageType,
       leverage,
-      clientOrderLinkId
+      clientOrderLinkID
   }) {
         this.accountInfo = accountInfo;
-        this.clientOrderID = clientOrderId;
+        this.clientOrderID = clientOrderID;
         this.symbol = symbol;
         this.side = side;
         this.quantity = quantity;

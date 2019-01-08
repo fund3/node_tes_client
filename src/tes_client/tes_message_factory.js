@@ -271,7 +271,7 @@ function buildGetAccountBalancesCapnp (clientId, senderCompId, accountInfo) {
 
 function buildPlaceOrder (placeOrderArguments) {
     return {accountInfo: placeOrderArguments.accountInfo,
-            clientOrderId: placeOrderArguments.clientOrderId,
+            clientOrderID: placeOrderArguments.clientOrderID,
             symbol: placeOrderArguments.symbol,
             side: placeOrderArguments.side,
             quantity: placeOrderArguments.quantity,
