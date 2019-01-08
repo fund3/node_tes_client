@@ -62,13 +62,13 @@ class MessageBodyFactory {
     }
   };
 
-  static buildLogonMessageBody = ({account_credentials}) => {
-    const message_body_type = message_body_types.LOGON_REQUEST;
-	const message_body_contents = {credentials: [account_credentials]};
-	return MessageBodyFactory.buildMessageBody({
-	    message_body_type,
-	    message_body_contents
-	});
+  static buildLogonMessageBody = ({account_credentials_list}) => {
+		const message_body_type = message_body_types.LOGON_REQUEST;
+		const message_body_contents = { credentials: account_credentials_list};
+		return MessageBodyFactory.buildMessageBody({
+				message_body_type,
+				message_body_contents
+		});
   };
 
   static buildHeartbeatMessageBody = () => {
