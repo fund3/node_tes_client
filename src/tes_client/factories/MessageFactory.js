@@ -7,12 +7,12 @@ class MessageFactory {
     account_id,
     client_id,
     sender_comp_id,
-    account_credentials
+    account_credentials_list
   }) {
     this.account_id = account_id;
     this.client_id = client_id;
     this.sender_comp_id = sender_comp_id;
-    this.account_credentials = account_credentials;
+    this.account_credentials_list = account_credentials_list;
   }
 
   buildMessage = ({message_body}) => ({

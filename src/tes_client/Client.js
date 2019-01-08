@@ -14,10 +14,9 @@ class Client {
   }) {
 
     this.message_factory = new MessageFactory({
-        account_id,
         client_id,
         sender_comp_id,
-        account_credentials: this.account_credentials
+        account_credentials_list
     });
 
     this.messenger = new Messenger({
@@ -45,9 +44,8 @@ class Client {
     });
   };
 
-  sendGetAccountBalancesMessage = (onResponse) => {
-    const get_account_balances_message =
-		this.message_factory.buildGetAccountBalancesMessage();
+  sendGetAccountBalancesMessage = ({ account_id, onResponse}) => {
+    const get_account_balances_message = this.message_factory.buildGetAccountBalancesMessage({ account_id });
     this.messenger.sendMessage({
         response_message_body_type: message_body_types.ACCOUNT_BALANCES_REPORT,
         message: get_account_balances_message,
