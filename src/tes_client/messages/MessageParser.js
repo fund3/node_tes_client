@@ -96,23 +96,23 @@ class MessageParser {
             rejectionReason
         } = message_body_contents;
         return {
-            orderID,
-            clientOrderID,
-            clientOrderLinkID,
-            exchangeOrderID,
-            accountInfo,
+            order_id: orderID,
+            client_order_id: clientOrderID,
+            client_order_link_id: clientOrderLinkID,
+            exchange_order_id: exchangeOrderID,
+            account_info: accountInfo,
             symbol,
             side,
-            orderType,
+            order_type: orderType,
             quantity,
             price,
-            timeInForce,
-            leverageType,
+            time_in_force: timeInForce,
+            leverage_type: leverageType,
             leverage,
-            orderStatus,
-            filledQuantity,
-            avgFillPrice,
-            rejectionReason
+            order_status: orderStatus,
+            filled_quantity: filledQuantity,
+            average_fill_price: avgFillPrice,
+            rejection_reason: rejectionReason
         };
     };
 }
