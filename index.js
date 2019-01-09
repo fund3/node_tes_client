@@ -1,5 +1,3 @@
-import { Client } from './lib/index.js'
+import { Client, AccountInfo, AccountCredentials } from "./lib/index.js";
 
-export {
-    Client
-}
+export { Client, AccountCredentials, AccountInfo };
