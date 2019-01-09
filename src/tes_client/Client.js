@@ -4,7 +4,7 @@ import Messenger from "./messages/Messenger";
 import { message_body_types } from "~/tes_client/constants";
 
 class Client {
-	
+
 	constructor({
 		client_id,
 		sender_comp_id,
@@ -99,32 +99,15 @@ class Client {
 		});
 	};
 
-	sendGetOrderStatusMessage = ({ account_info, orderId }) => {
+	sendGetOrderStatusMessage = ({ onResponse, account_info, order_id }) => {
 		const get_order_status_message = this.message_factory.buildGetOrderStatusMessage({
-			accountInfo,
-			orderId
+			account_info,
+			order_id
 		});
 		this.messenger.sendMessage({
+			response_message_body_type: message_body_types.EXECUTION_REPORT,
 			message: get_order_status_message,
-			onResponse: ({
-				orderID,
-				clientOrderID,
-				clientOrderLinkID,
-				exchangeOrderID,
-				accountInfo,
-				symbol,
-				side,
-				orderType,
-				quantity,
-				price,
-				timeInForce,
-				leverageType,
-				leverage,
-				orderStatus,
-				filledQuantity,
-				avgFillPrice,
-				rejectionReason
-			}) => console.log(orderID, symbol, quantity, side, orderStatus)
+			onResponse
 		});
 	};
 
