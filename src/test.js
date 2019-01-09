@@ -56,6 +56,7 @@ setTimeout(() => client.sendPlaceOrderMessage({
     quantity: 5.0,
     price: 10.0 
 }), 15000);
+
 setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 20000);
 
 // setTimeout(() => client.sendGetOrderStatusMessage({accountInfo: accountInfo,
