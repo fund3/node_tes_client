@@ -41,23 +41,37 @@ const client =
     });
 
 client.sendLogonMessage({ onResponse: response => console.log(response)});
+
 setTimeout(
     () => 
         client.sendGetAccountBalancesMessage({
                 account_id: process.env.COINBASE_PRIME_ACCOUNT_ID,
             onResponse: response => console.log(response)
         }), 10000);
-setTimeout(() => client.sendPlaceOrderMessage({
-    onResponse: response => console.log(response),
-    account_info: gemini_account_info,
-    client_order_id: 'client_order_id',
-    symbol: 'BTC/USD',
-    side: 'buy',
-    quantity: 5.0,
-    price: 10.0 
-}), 15000);
 
-setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 20000);
+let some_order_id = ''
 
-// setTimeout(() => client.sendGetOrderStatusMessage({accountInfo: accountInfo,
-//     orderId: 'cb146384-c577-4d72-b29e-01b74549939f'}), 5000);
+setTimeout(
+	() =>
+		client.sendPlaceOrderMessage({
+            onResponse: ({ order_id }) => (some_order_id = order_id),
+			account_info: gemini_account_info,
+			client_order_id: "client_order_id",
+			symbol: "BTC/USD",
+			side: "buy",
+			quantity: 5.0,
+			price: 10.0
+		}),
+	15000
+);
+
+setTimeout(() => 
+    client.sendGetOrderStatusMessage({
+        account_info: gemini_account_info,
+        order_id: some_order_id,
+        onResponse: (response) => {
+            console.log(response)
+        }
+}), 30000)
+
+setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 40000);
