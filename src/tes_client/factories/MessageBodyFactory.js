@@ -124,9 +124,9 @@ class MessageBodyFactory {
 		});
 	};
 
-	static buildGetOrderStatusMessageBody = ({ accountInfo, orderId }) => {
+	static buildGetOrderStatusMessageBody = ({ account_info, order_id }) => {
 		const message_body_type = message_body_types.GET_ORDER_STATUS;
-		const message_body_contents = { accountInfo: accountInfo, orderID: orderId };
+		const message_body_contents = { accountInfo: account_info, orderID: order_id };
 		return MessageBodyFactory.buildMessageBody({
 			message_body_type,
 			message_body_contents

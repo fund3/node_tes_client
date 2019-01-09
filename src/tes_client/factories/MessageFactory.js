@@ -83,10 +83,10 @@ class MessageFactory {
 		return this.buildRequestMessage({ message_body });
 	};
 
-	buildGetOrderStatusMessage = ({ accountInfo, orderId }) => {
+	buildGetOrderStatusMessage = ({ account_info, order_id }) => {
 		const message_body = MessageBodyFactory.buildGetOrderStatusMessageBody({
-			accountInfo,
-			orderId
+			account_info,
+			order_id
 		});
 		return this.buildRequestMessage({ message_body });
 	};
