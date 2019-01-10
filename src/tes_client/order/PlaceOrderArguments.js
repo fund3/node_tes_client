@@ -18,6 +18,7 @@ class PlaceOrderArguments {
         this.side = side;
         this.quantity = quantity;
         this.price = price;
+        this.orderType = orderType;
         // TODO: deal with optional arguments
     }
 }
