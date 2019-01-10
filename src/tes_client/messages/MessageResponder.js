@@ -1,4 +1,6 @@
 import { Observable } from "rxjs";
+import { share } from 'rxjs/operators';
+
 
 import MessageParser from './MessageParser'
 
@@ -10,7 +12,7 @@ class MessageResponder {
 	}
 
 	listenForResponses = () => {
-		this.message_observer = Observable.create((observer) => {
+		this.message_observer = new Observable((observer) => {
 			this.tes_socket.setOnMessage({
 				onMessage: message => {
 					const { message_body_type, parsed_message_body_contents } = MessageParser.parseMessage({ message });
@@ -20,7 +22,7 @@ class MessageResponder {
 					});
 				}
 			});
-		})
+		}).pipe(share())
 	}
 
 	subscribeCallbackToResponseType = ({ callback, response_message_body_type }) => {
