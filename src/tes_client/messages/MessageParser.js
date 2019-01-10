@@ -45,13 +45,7 @@ class MessageParser {
 
     static parseAccountBalancesReport = ({ message_body_contents }) => {
         const { accountInfo } = message_body_contents;
-        const account_info = {
-            account_id: accountInfo.accountID,
-            exchange: accountInfo.exchange,
-            account_type: accountInfo.accountType,
-            exchange_account_id: accountInfo.exchangeAccountID,
-            exchange_client_id: accountInfo.exchangeClientID
-        }
+        const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: accountInfo })
         const balances = message_body_contents.balances.map(balance => ({
             currency: balance.currency,
             full_balance: balance.fullBalance,
@@ -95,12 +89,15 @@ class MessageParser {
             avgFillPrice,
             rejectionReason
         } = message_body_contents;
+
+        const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: accountInfo })
+
         return {
             order_id: orderID,
             client_order_id: clientOrderID,
             client_order_link_id: clientOrderLinkID,
             exchange_order_id: exchangeOrderID,
-            account_info: accountInfo,
+            account_info,
             symbol,
             side,
             order_type: orderType,
@@ -115,6 +112,17 @@ class MessageParser {
             rejection_reason: rejectionReason
         };
     };
+
+    static parseAccountInfo = ({ account_info_from_tes }) => {
+        const account_info = {
+            account_id: account_info_from_tes.accountID,
+            exchange: account_info_from_tes.exchange,
+            account_type: account_info_from_tes.accountType,
+            exchange_account_id: account_info_from_tes.exchangeAccountID,
+            exchange_client_id: account_info_from_tes.exchangeClientID
+        }
+        return account_info
+    }
 }
 
 export default MessageParser
