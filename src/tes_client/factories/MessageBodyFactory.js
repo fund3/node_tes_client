@@ -1,4 +1,5 @@
 import AccountInfo from "~/tes_client/account/AccountInfo";
+import isNil from "lodash/isNil";
 import { message_body_types } from "~/tes_client/constants";
 
 class MessageBodyFactory {
@@ -132,6 +133,49 @@ class MessageBodyFactory {
 			message_body_contents
 		});
 	};
+
+	static buildGetWorkingOrdersMessageBody = ({ account_id }) => {
+		const message_body_type = message_body_types.GET_WORKING_ORDERS;
+		const message_body_contents = { accountInfo: new AccountInfo({ account_id }) };
+		return MessageBodyFactory.buildMessageBody({
+			message_body_type,
+			message_body_contents
+		});
+	};
+
+	static buildCancelOrderMessageBody = ({ account_id, order_id }) => {
+		const message_body_type = message_body_types.CANCEL_ORDER;
+		const message_body_contents = { accountInfo: new AccountInfo({ account_id }),
+			orderID:  order_id};
+		return MessageBodyFactory.buildMessageBody({
+			message_body_type,
+			message_body_contents
+		});
+	};
+
+	static buildGetCompletedOrdersMessageBody = ({ account_id, count, since }) => {
+		const message_body_type = message_body_types.GET_COMPLETED_ORDERS;
+		let message_body_contents = { accountInfo: new AccountInfo({ account_id }) };
+		if (!isNil(count)) {
+			message_body_contents.count = count;
+		}
+		if (!isNil(since)) {
+			message_body_contents.since = since;
+		}
+		return MessageBodyFactory.buildMessageBody({
+			message_body_type,
+			message_body_contents
+		});
+	};
+
+	static buildGetExchangePropertiesMessageBody = ({ exchange }) => {
+		const message_body_type = message_body_types.GET_EXCHANGE_PROPERTIES;
+		const message_body_contents = { exchange: exchange };
+		return MessageBodyFactory.buildMessageBody({
+			message_body_type,
+			message_body_contents
+		});
+	}
 }
 
 export default MessageBodyFactory;

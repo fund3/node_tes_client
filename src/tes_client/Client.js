@@ -111,12 +111,47 @@ class Client {
 		});
 	};
 
-	sendGetAccountDataMessage = () => {
+	sendGetAccountDataMessage = ({ onResponse, account_info }) => {
 		const get_account_data_message = this.message_factory.buildGetAccountDataMessage();
 		this.messenger.sendMessage({
 			message: get_account_data_message,
 			onResponse: ({ accountInfo, balances, openPositions, orders }) =>
 				console.log(accountInfo, balances, openPositions, orders)
+		});
+	};
+
+	sendGetWorkingOrdersMessage = ({ onResponse, account_id }) => {
+		const get_working_orders_message = this.message_factory.buildGetWorkingOrdersMessage({account_id});
+		this.messenger.sendMessage({
+			message: get_working_orders_message,
+			onResponse: ({ accountInfo, orders }) =>
+				console.log(accountInfo, orders)
+		});
+	};
+
+	sendCancelOrderMessage = ({ onResponse, account_id, order_id }) => {
+		const cancel_order_message = this.message_factory.buildCancelOrderMessage({account_id, order_id});
+		this.messenger.sendMessage({
+			message: cancel_order_message,
+			onResponse
+		});
+	};
+
+	sendGetCompletedOrdersMessage = ({ onResponse, account_id }) => {
+		const get_completed_orders_message = this.message_factory.buildGetCompletedOrdersMessage({account_id});
+		this.messenger.sendMessage({
+			message: get_completed_orders_message,
+			onResponse: ({ accountInfo, orders }) =>
+				console.log(accountInfo, orders)
+		});
+	};
+
+	sendGetExchangePropertiesMessage = ({ onResponse, exchange }) => {
+		const get_exchange_properties_message = this.message_factory.buildGetExchangePropertiesMessage({exchange});
+		this.messenger.sendMessage({
+			message: get_exchange_properties_message,
+			onResponse: ({ exchange, currencies, symbolProperties, timeInForces, orderTypes }) =>
+				console.log(exchange, currencies, symbolProperties, timeInForces, orderTypes)
 		});
 	};
 }

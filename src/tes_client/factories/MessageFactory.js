@@ -97,6 +97,26 @@ class MessageFactory {
 		});
 		return this.buildRequestMessage({ message_body });
 	};
+
+	buildGetWorkingOrdersMessage = ({ account_id }) => {
+		const message_body = MessageBodyFactory.buildGetWorkingOrdersMessageBody({ account_id });
+		return this.buildRequestMessage({ message_body });
+	};
+
+	buildCancelOrderMessage = ({ account_id, order_id }) => {
+		const message_body = MessageBodyFactory.buildCancelOrderMessageBody({ account_id, order_id });
+		return this.buildRequestMessage({ message_body });
+	};
+
+	buildGetCompletedOrdersMessage = ({ account_id, count, since }) => {
+		const message_body = MessageBodyFactory.buildGetCompletedOrdersMessageBody({ account_id, count, since });
+		return this.buildRequestMessage({ message_body });
+	};
+
+	buildGetExchangePropertiesMessage = ({ exchange }) => {
+		const message_body = MessageBodyFactory.buildGetExchangePropertiesMessageBody({ exchange });
+		return this.buildRequestMessage({ message_body });
+	};
 }
 
 export default MessageFactory;
