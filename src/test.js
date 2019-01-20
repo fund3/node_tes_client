@@ -47,7 +47,7 @@ client.sendLogonMessage({ onResponse: response => console.log(response)});
 //         client.sendGetAccountBalancesMessage({
 //                 account_id: process.env.COINBASE_PRIME_ACCOUNT_ID,
 //             onResponse: response => console.log(response)
-//         }), 10000);
+//         }), 3000);
 //
 // setTimeout(
 //     () =>
@@ -74,20 +74,20 @@ let coinbase_prime_order_id_1 = 2222;
 // 	15000
 // );
 
-setTimeout(
-	() =>
-		client.sendPlaceOrderMessage({
-            onResponse: ({ order_id }) => (coinbase_prime_order_id_1 = order_id),
-			account_info: coinbase_prime_account_info,
-			client_order_id: 2222,
-			symbol: "ETH/USD",
-			side: "buy",
-			quantity: 5.0,
-			price: 0.0,
-            order_type: 'market'
-		}),
-	5000
-);
+// setTimeout(
+// 	() =>
+// 		client.sendPlaceOrderMessage({
+//             onResponse: ({ order_id }) => (coinbase_prime_order_id_1 = order_id),
+// 			account_info: coinbase_prime_account_info,
+// 			client_order_id: 2222,
+// 			symbol: "ETH/USD",
+// 			side: "buy",
+// 			quantity: 5.0,
+// 			price: 0.0,
+//             order_type: 'market'
+// 		}),
+// 	5000
+// );
 
 // setTimeout(() =>
 //     client.sendGetOrderStatusMessage({
@@ -98,13 +98,87 @@ setTimeout(
 //         }
 // }), 40000);
 
+// setTimeout(() =>
+//     client.sendGetOrderStatusMessage({
+//         account_info: coinbase_prime_account_info,
+//         order_id: coinbase_prime_order_id_1,
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 6000);
+
+// setTimeout(
+//     () =>
+//         client.sendGetAccountBalancesMessage({
+//                 account_id: process.env.COINBASE_PRIME_ACCOUNT_ID,
+//             onResponse: response => console.log(response)
+//         }), 10000);
+
+// setTimeout(() =>
+//     client.sendGetOrderStatusMessage({
+//         account_info: coinbase_prime_account_info,
+//         order_id: coinbase_prime_order_id_1,
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 6000);
+
+
+// setTimeout(() =>
+//     client.sendGetWorkingOrdersMessage({
+//         account_id: coinbase_prime_account_info.accountID,
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 3000);
+//
+// setTimeout(() =>
+//     client.sendGetWorkingOrdersMessage({
+//         account_id: coinbase_prime_account_info.accountID,
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 3000);
+
+// setTimeout(() =>
+//     client.sendCancelOrderMessage({
+//         account_id: gemini_account_info.accountID, order_id: "5d86ffd5-3d27-44c0-9571-61d9abe49b2b",
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 3000);
+//
+// setTimeout(() =>
+//     client.sendCancelOrderMessage({
+//         account_id: gemini_account_info.accountID, order_id: "94792072-0962-4826-b9e0-80a4739dc86d",
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 3000);
+
+// setTimeout(() =>
+//     client.sendCancelOrderMessage({
+//         account_id: gemini_account_info.accountID, order_id: "65480fdd-1edf-4167-a036-43f64aa97bec",
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 3000);
+
 setTimeout(() =>
-    client.sendGetOrderStatusMessage({
-        account_info: coinbase_prime_account_info,
-        order_id: coinbase_prime_order_id_1,
-        onResponse: (response) => {
-            console.log(response)
+    client.sendGetExchangePropertiesMessage({
+        exchange: 'coinbasePrime',
+        onResponse: response => {
+				console.log(response)
         }
-}), 6000);
+}), 3000);
+
+setTimeout(() =>
+    client.sendGetCompletedOrdersMessage({
+        account_id: coinbase_prime_account_info.accountID,
+        count: 50,
+        onResponse: response => {
+				console.log(response)
+        }
+}), 5000);
 
 setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 30000);

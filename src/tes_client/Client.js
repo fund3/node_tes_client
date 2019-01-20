@@ -112,7 +112,7 @@ class Client {
 	};
 
 	sendGetAccountDataMessage = ({ onResponse, account_info }) => {
-		const get_account_data_message = this.message_factory.buildGetAccountDataMessage();
+		const get_account_data_message = this.message_factory.buildGetAccountDataMessage({account_info});
 		this.messenger.sendMessage({
 			message: get_account_data_message,
 			onResponse: ({ accountInfo, balances, openPositions, orders }) =>
@@ -137,12 +137,11 @@ class Client {
 		});
 	};
 
-	sendGetCompletedOrdersMessage = ({ onResponse, account_id }) => {
-		const get_completed_orders_message = this.message_factory.buildGetCompletedOrdersMessage({account_id});
+	sendGetCompletedOrdersMessage = ({ onResponse, account_id, count, since}) => {
+		const get_completed_orders_message = this.message_factory.buildGetCompletedOrdersMessage({account_id, count, since});
 		this.messenger.sendMessage({
 			message: get_completed_orders_message,
-			onResponse: ({ accountInfo, orders }) =>
-				console.log(accountInfo, orders)
+			onResponse
 		});
 	};
 
@@ -150,8 +149,7 @@ class Client {
 		const get_exchange_properties_message = this.message_factory.buildGetExchangePropertiesMessage({exchange});
 		this.messenger.sendMessage({
 			message: get_exchange_properties_message,
-			onResponse: ({ exchange, currencies, symbolProperties, timeInForces, orderTypes }) =>
-				console.log(exchange, currencies, symbolProperties, timeInForces, orderTypes)
+			onResponse
 		});
 	};
 }
