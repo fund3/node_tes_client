@@ -91,10 +91,8 @@ class MessageFactory {
 		return this.buildRequestMessage({ message_body });
 	};
 
-	buildGetAccountDataMessage = () => {
-		const message_body = MessageBodyFactory.buildGetAccountDataMessageBody({
-			account_id: "TODO"
-		});
+	buildGetAccountDataMessage = ({ account_id }) => {
+		const message_body = MessageBodyFactory.buildGetAccountDataMessageBody({ account_id });
 		return this.buildRequestMessage({ message_body });
 	};
 
