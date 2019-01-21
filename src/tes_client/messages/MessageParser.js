@@ -38,6 +38,12 @@ class MessageParser {
             case message_body_types.EXECUTION_REPORT:
                 return MessageParser.parseExecutionReport({ message_body_contents });
 
+            case message_body_types.EXCHANGE_PROPERTIES_REPORT:
+                return MessageParser.parseExchangePropertiesReport({ message_body_contents })
+
+            case message_body_types.COMPLETED_ORDERS_REPORT:
+                return MessageParser.parseCompletedOrdersReport({ message_body_contents })
+
             default:
                 return { message_body_type };
         }
@@ -122,6 +128,59 @@ class MessageParser {
             exchange_client_id: account_info_from_tes.exchangeClientID
         }
         return account_info
+    }
+
+    static parseExchangePropertiesReport = ({ message_body_contents }) => {
+        const { exchange, currencies } = message_body_contents
+        const symbol_properties = message_body_contents.symbolProperties.map(properties_of_symbol => ({
+            symbol: properties_of_symbol.symbol,
+            price_precision: properties_of_symbol.pricePrecision,
+            quantity_precision: properties_of_symbol.quantityPrecision,
+            min_quantity: properties_of_symbol.minQuantity,
+            max_quantity: properties_of_symbol.maxQuantity,
+            margin_supported: properties_of_symbol.marginSupported,
+            leverage: properties_of_symbol.leverage
+        }))
+        const time_in_forces = message_body_contents.timeInForces
+        const order_types = message_body_contents.orderTypes
+
+        return {
+            exchange,
+            currencies,
+            symbol_properties,
+            time_in_forces,
+            order_types
+        }
+    }
+
+    static parseCompletedOrdersReport = ({ message_body_contents }) => {
+        const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: message_body_contents.accountInfo })
+        const orders = message_body_contents.orders.map(order => ({
+            order_id: order.orderID,
+            client_order_id: order.clientOrderID,
+            client_order_link_id: order.clientOrderLinkID,
+            exchange_order_id: order.exchangeOrderID,
+            account_info: MessageParser.parseAccountInfo({ account_info_from_tes: order.accountInfo }),
+            symbol: order.symbol,
+            side: order.side,
+            order_type: order.orderType,
+            quantity: order.quantity,
+            price: order.price,
+            time_in_force: order.timeInForce,
+            leverage_type: order.leverageType,
+            leverage: order.leverage,
+            order_status: order.order_status,
+            filled_quantity: order.filledQuantity,
+            avg_fill_price: order.avgFillPrice,
+            type: {
+                status_update: order.type.statusUpdate
+            }
+        }))
+
+        return {
+            account_info,
+            orders
+        }
     }
 }
 
