@@ -169,7 +169,7 @@ class MessageParser {
             time_in_force: order.timeInForce,
             leverage_type: order.leverageType,
             leverage: order.leverage,
-            order_status: order.order_status,
+            order_status: order.orderStatus,
             filled_quantity: order.filledQuantity,
             avg_fill_price: order.avgFillPrice,
             type: {
