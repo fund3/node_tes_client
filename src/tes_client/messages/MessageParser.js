@@ -44,6 +44,9 @@ class MessageParser {
             case message_body_types.COMPLETED_ORDERS_REPORT:
                 return MessageParser.parseCompletedOrdersReport({ message_body_contents })
 
+            case message_body_types.WORKING_ORDERS_REPORT:
+                return MessageParser.parseWorkingOrdersReport({ message_body_contents })
+
             default:
                 return { message_body_type };
         }
@@ -93,7 +96,8 @@ class MessageParser {
             orderStatus,
             filledQuantity,
             avgFillPrice,
-            rejectionReason
+            rejectionReason,
+            type
         } = message_body_contents;
 
         const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: accountInfo })
@@ -115,7 +119,8 @@ class MessageParser {
             order_status: orderStatus,
             filled_quantity: filledQuantity,
             average_fill_price: avgFillPrice,
-            rejection_reason: rejectionReason
+            rejection_reason: rejectionReason,
+            type: type
         };
     };
 
@@ -172,9 +177,35 @@ class MessageParser {
             order_status: order.orderStatus,
             filled_quantity: order.filledQuantity,
             avg_fill_price: order.avgFillPrice,
-            type: {
-                status_update: order.type.statusUpdate
-            }
+            // type: type
+        }))
+
+        return {
+            account_info,
+            orders
+        }
+    }
+
+    static parseWorkingOrdersReport = ({ message_body_contents }) => {
+        const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: message_body_contents.accountInfo })
+        const orders = message_body_contents.orders.map(order => ({
+            order_id: order.orderID,
+            client_order_id: order.clientOrderID,
+            client_order_link_id: order.clientOrderLinkID,
+            exchange_order_id: order.exchangeOrderID,
+            account_info: MessageParser.parseAccountInfo({ account_info_from_tes: order.accountInfo }),
+            symbol: order.symbol,
+            side: order.side,
+            order_type: order.orderType,
+            quantity: order.quantity,
+            price: order.price,
+            time_in_force: order.timeInForce,
+            leverage_type: order.leverageType,
+            leverage: order.leverage,
+            order_status: order.orderStatus,
+            filled_quantity: order.filledQuantity,
+            avg_fill_price: order.avgFillPrice,
+            // type: type
         }))
 
         return {

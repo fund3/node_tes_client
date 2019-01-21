@@ -114,6 +114,7 @@ class Client {
 	sendGetAccountDataMessage = ({ onResponse, account_info }) => {
 		const get_account_data_message = this.message_factory.buildGetAccountDataMessage({account_info});
 		this.messenger.sendMessage({
+			response_message_body_type: message_body_types.ACCOUNT_DATA_REPORT,
 			message: get_account_data_message,
 			onResponse: ({ accountInfo, balances, openPositions, orders }) =>
 				console.log(accountInfo, balances, openPositions, orders)
@@ -123,15 +124,16 @@ class Client {
 	sendGetWorkingOrdersMessage = ({ onResponse, account_id }) => {
 		const get_working_orders_message = this.message_factory.buildGetWorkingOrdersMessage({account_id});
 		this.messenger.sendMessage({
+			response_message_body_type: message_body_types.WORKING_ORDERS_REPORT,
 			message: get_working_orders_message,
-			onResponse: ({ accountInfo, orders }) =>
-				console.log(accountInfo, orders)
+			onResponse
 		});
 	};
 
 	sendCancelOrderMessage = ({ onResponse, account_id, order_id }) => {
 		const cancel_order_message = this.message_factory.buildCancelOrderMessage({account_id, order_id});
 		this.messenger.sendMessage({
+			response_message_body_type: message_body_types.EXECUTION_REPORT,
 			message: cancel_order_message,
 			onResponse
 		});
