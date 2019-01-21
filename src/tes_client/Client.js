@@ -140,6 +140,7 @@ class Client {
 	sendGetCompletedOrdersMessage = ({ onResponse, account_id, count, since}) => {
 		const get_completed_orders_message = this.message_factory.buildGetCompletedOrdersMessage({account_id, count, since});
 		this.messenger.sendMessage({
+			response_message_body_type: message_body_types.COMPLETED_ORDERS_REPORT,
 			message: get_completed_orders_message,
 			onResponse
 		});
@@ -148,6 +149,7 @@ class Client {
 	sendGetExchangePropertiesMessage = ({ onResponse, exchange }) => {
 		const get_exchange_properties_message = this.message_factory.buildGetExchangePropertiesMessage({exchange});
 		this.messenger.sendMessage({
+			response_message_body_type: message_body_types.EXCHANGE_PROPERTIES_REPORT,
 			message: get_exchange_properties_message,
 			onResponse
 		});
