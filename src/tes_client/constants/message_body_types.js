@@ -13,10 +13,12 @@ export default {
 	EXECUTION_REPORT: "executionReport",
 	GET_ACCOUNT_DATA: "getAccountData",
 	GET_ACCOUNT_BALANCES: "getAccountBalances",
-    ACCOUNT_BALANCES_REPORT: "accountBalancesReport",
+	ACCOUNT_BALANCES_REPORT: "accountBalancesReport",
 	ACCOUNT_DATA_REPORT: "accountDataReport",
-    GET_OPEN_POSITIONS: "getOpenPositions",
+	GET_OPEN_POSITIONS: "getOpenPositions",
 	GET_WORKING_ORDERS: "getWorkingOrders",
 	GET_COMPLETED_ORDERS: "getCompletedOrders",
-	GET_EXCHANGE_PROPERTIES: "getExchangeProperties"
+	GET_EXCHANGE_PROPERTIES: "getExchangeProperties",
+	EXCHANGE_PROPERTIES_REPORT: "exchangePropertiesReport",
+	COMPLETED_ORDERS_REPORT: "completedOrdersReport"
 };
