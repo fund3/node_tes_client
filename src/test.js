@@ -40,7 +40,14 @@ const client =
         backend_socket_endpoint: process.env.INPROC_ADDRESS
     });
 
+
 client.sendLogonMessage({ onResponse: response => console.log(response)});
+// import TickerFactory from '~/tes_client/factories/TickerFactory'
+// function handleTicker(err, res, body) {
+//     console.log(body)
+// }
+// TickerFactory.getTickerFromCoinbasePrime({pair: 'BTC-USD', sandbox: true, onResponse: handleTicker})
+
 
 // setTimeout(
 //     () =>
@@ -83,10 +90,10 @@ let coinbase_prime_order_id_1 = 2222;
 // 			symbol: "ETH/USD",
 // 			side: "buy",
 // 			quantity: 5.0,
-// 			price: 0.0,
-//             order_type: 'market'
+// 			price: 10.0,
+//             order_type: 'limit'
 // 		}),
-// 	5000
+// 	3000
 // );
 
 // setTimeout(() =>
@@ -132,21 +139,23 @@ let coinbase_prime_order_id_1 = 2222;
 //         }
 // }), 3000);
 //
+
+
 // setTimeout(() =>
-//     client.sendGetWorkingOrdersMessage({
-//         account_id: coinbase_prime_account_info.accountID,
+//     client.sendCancelOrderMessage({
+//         account_id: coinbase_prime_account_info.accountID, order_id: "7056844b-af32-4e58-b03c-c48e6d2e65aa",
 //         onResponse: (response) => {
 //             console.log(response)
 //         }
 // }), 3000);
 
 // setTimeout(() =>
-//     client.sendCancelOrderMessage({
-//         account_id: gemini_account_info.accountID, order_id: "5d86ffd5-3d27-44c0-9571-61d9abe49b2b",
+//     client.sendGetWorkingOrdersMessage({
+//         account_id: coinbase_prime_account_info.accountID,
 //         onResponse: (response) => {
 //             console.log(response)
 //         }
-// }), 3000);
+// }), 5000);
 //
 // setTimeout(() =>
 //     client.sendCancelOrderMessage({
@@ -164,21 +173,21 @@ let coinbase_prime_order_id_1 = 2222;
 //         }
 // }), 3000);
 
-setTimeout(() =>
-    client.sendGetExchangePropertiesMessage({
-        exchange: 'coinbasePrime',
-        onResponse: response => {
-				console.log(response)
-        }
-}), 3000);
-
-setTimeout(() =>
-    client.sendGetCompletedOrdersMessage({
-        account_id: coinbase_prime_account_info.accountID,
-        count: 50,
-        onResponse: response => {
-				console.log(response)
-        }
-}), 5000);
+// setTimeout(() =>
+//     client.sendGetExchangePropertiesMessage({
+//         exchange: 'coinbasePrime',
+//         onResponse: response => {
+// 				console.log(response)
+//         }
+// }), 3000);
+//
+// setTimeout(() =>
+//     client.sendGetCompletedOrdersMessage({
+//         account_id: coinbase_prime_account_info.accountID,
+//         count: 50,
+//         onResponse: response => {
+// 				console.log(response)
+//         }
+// }), 5000);
 
 setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 30000);

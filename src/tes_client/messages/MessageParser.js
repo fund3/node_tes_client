@@ -97,7 +97,8 @@ class MessageParser {
             orderStatus,
             filledQuantity,
             avgFillPrice,
-            rejectionReason
+            rejectionReason,
+            type
         } = message_body_contents;
 
         const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: accountInfo })
@@ -119,7 +120,8 @@ class MessageParser {
             order_status: orderStatus,
             filled_quantity: filledQuantity,
             average_fill_price: avgFillPrice,
-            rejection_reason: rejectionReason
+            rejection_reason: rejectionReason,
+            type: type
         };
     };
 
