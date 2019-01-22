@@ -20,5 +20,6 @@ export default {
 	GET_COMPLETED_ORDERS: "getCompletedOrders",
 	GET_EXCHANGE_PROPERTIES: "getExchangeProperties",
 	EXCHANGE_PROPERTIES_REPORT: "exchangePropertiesReport",
-	COMPLETED_ORDERS_REPORT: "completedOrdersReport"
+	COMPLETED_ORDERS_REPORT: "completedOrdersReport",
+	WORKING_ORDERS_REPORT: "workingOrdersReport"
 };

@@ -1,6 +1,7 @@
 import { message_body_types } from "~/tes_client/constants";
 const capnp = require("capnp");
 const msgs_capnp = require("~/CommunicationProtocol/TradeMessage.capnp");
+import isNil from 'lodash/isNil'
 
 class MessageParser {
 
@@ -43,6 +44,9 @@ class MessageParser {
 
             case message_body_types.COMPLETED_ORDERS_REPORT:
                 return MessageParser.parseCompletedOrdersReport({ message_body_contents })
+
+            case message_body_types.WORKING_ORDERS_REPORT:
+                return MessageParser.parseWorkingOrdersReport({ message_body_contents })
 
             default:
                 return { message_body_type };
@@ -155,33 +159,43 @@ class MessageParser {
 
     static parseCompletedOrdersReport = ({ message_body_contents }) => {
         const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: message_body_contents.accountInfo })
-        const orders = message_body_contents.orders.map(order => ({
-            order_id: order.orderID,
-            client_order_id: order.clientOrderID,
-            client_order_link_id: order.clientOrderLinkID,
-            exchange_order_id: order.exchangeOrderID,
-            account_info: MessageParser.parseAccountInfo({ account_info_from_tes: order.accountInfo }),
-            symbol: order.symbol,
-            side: order.side,
-            order_type: order.orderType,
-            quantity: order.quantity,
-            price: order.price,
-            time_in_force: order.timeInForce,
-            leverage_type: order.leverageType,
-            leverage: order.leverage,
-            order_status: order.orderStatus,
-            filled_quantity: order.filledQuantity,
-            avg_fill_price: order.avgFillPrice,
-            type: {
-                status_update: order.type.statusUpdate
-            }
-        }))
-
+        const orders = message_body_contents.orders.map(order => MessageParser.parseOrder({ order }))
         return {
             account_info,
             orders
         }
     }
+
+    static parseWorkingOrdersReport = ({ message_body_contents }) => {
+        const account_info = MessageParser.parseAccountInfo({ account_info_from_tes: message_body_contents.accountInfo })
+        const orders = message_body_contents.orders.map(order => MessageParser.parseOrder({ order }))
+        return {
+            account_info,
+            orders
+        }
+    }
+
+    static parseOrder = ({ order }) => ({
+        order_id: order.orderID,
+        client_order_id: order.clientOrderID,
+        client_order_link_id: order.clientOrderLinkID,
+        exchange_order_id: order.exchangeOrderID,
+        account_info: MessageParser.parseAccountInfo({ account_info_from_tes: order.accountInfo }),
+        symbol: order.symbol,
+        side: order.side,
+        order_type: order.orderType,
+        quantity: order.quantity,
+        price: order.price,
+        time_in_force: order.timeInForce,
+        leverage_type: order.leverageType,
+        leverage: order.leverage,
+        order_status: order.orderStatus,
+        filled_quantity: order.filledQuantity,
+        avg_fill_price: order.avgFillPrice,
+        type: {
+            status_update: isNil(order.type) ? null : order.type.statusUpdate
+        }
+    })
 }
 
 export default MessageParser

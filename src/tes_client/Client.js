@@ -123,9 +123,9 @@ class Client {
 	sendGetWorkingOrdersMessage = ({ onResponse, account_id }) => {
 		const get_working_orders_message = this.message_factory.buildGetWorkingOrdersMessage({account_id});
 		this.messenger.sendMessage({
+			response_message_body_type: message_body_types.WORKING_ORDERS_REPORT,
 			message: get_working_orders_message,
-			onResponse: ({ accountInfo, orders }) =>
-				console.log(accountInfo, orders)
+			onResponse
 		});
 	};
 
