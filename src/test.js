@@ -76,7 +76,7 @@ let coinbase_prime_order_id_1 = 2222;
 // 			side: "buy",
 // 			quantity: 5.0,
 // 			price: 0.0,
-//             order_type: 'market'
+//             order_type: 'limit'
 // 		}),
 // 	15000
 // );
@@ -117,9 +117,9 @@ let coinbase_prime_order_id_1 = 2222;
 // setTimeout(
 //     () =>
 //         client.sendGetAccountBalancesMessage({
-//                 account_id: process.env.COINBASE_PRIME_ACCOUNT_ID,
-//             onResponse: response => console.log(response)
-//         }), 10000);
+//                 account_id: gemini_account_info.accountID,
+//             onResponse: (response) => {console.log(response)}
+//         }), 3000);
 
 // setTimeout(() =>
 //     client.sendGetOrderStatusMessage({
@@ -130,6 +130,13 @@ let coinbase_prime_order_id_1 = 2222;
 //         }
 // }), 6000);
 
+setTimeout(() =>
+    client.sendGetWorkingOrdersMessage({
+        account_id: gemini_account_info.accountID,
+        onResponse: (response) => {
+            console.log(response)
+        }
+}), 2000);
 
 // setTimeout(() =>
 //     client.sendGetWorkingOrdersMessage({
@@ -138,7 +145,6 @@ let coinbase_prime_order_id_1 = 2222;
 //             console.log(response)
 //         }
 // }), 3000);
-//
 
 
 // setTimeout(() =>
@@ -183,11 +189,20 @@ let coinbase_prime_order_id_1 = 2222;
 //
 // setTimeout(() =>
 //     client.sendGetCompletedOrdersMessage({
-//         account_id: coinbase_prime_account_info.accountID,
+//         account_id: gemini_account_info.accountID,
 //         count: 50,
 //         onResponse: response => {
 // 				console.log(response)
 //         }
 // }), 5000);
 
-setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 30000);
+// setTimeout(() =>
+//     client.sendGetCompletedOrdersMessage({
+//         account_id: gemini_account_info.accountID,
+//         count: 50,
+//         onResponse: response => {
+// 				console.log(response)
+//         }
+// }), 10000);
+
+setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 10000);
