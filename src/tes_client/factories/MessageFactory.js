@@ -2,14 +2,13 @@ import MessageBodyFactory from "./MessageBodyFactory";
 import { message_types } from "~/tes_client/constants";
 
 class MessageFactory {
-	constructor({ client_id, sender_comp_id, account_credentials_list }) {
-		this.client_id = client_id;
+	constructor({ sender_comp_id, account_credentials_list }) {
 		this.sender_comp_id = sender_comp_id;
 		this.account_credentials_list = account_credentials_list;
 	}
 
-	buildMessage = ({ message_body }) => ({
-		clientID: this.client_id,
+	buildMessage = ({ message_body, client_id }) => ({
+		clientID: client_id,
 		senderCompID: this.sender_comp_id,
 		body: message_body
 	});
@@ -27,30 +26,30 @@ class MessageFactory {
 		}
 	};
 
-	buildRequestMessage = ({ message_body }) => {
-		const message = this.buildMessage({ message_body });
+	buildRequestMessage = ({ message_body, client_id }) => {
+		const message = this.buildMessage({ message_body, client_id });
 		return this.buildMessageContainer({ message, message_type: message_types.REQUEST });
 	};
 
-	buildLogonMessage = () => {
+	buildLogonMessage = ({ client_id }) => {
 		const { account_credentials_list } = this;
 		const message_body = MessageBodyFactory.buildLogonMessageBody({ account_credentials_list });
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildLogoffMessage = () => {
+	buildLogoffMessage = ({ client_id }) => {
 		const message_body = MessageBodyFactory.buildLogoffMessageBody();
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildHeartbeatMessage = () => {
+	buildHeartbeatMessage = ({ client_id }) => {
 		const message_body = MessageBodyFactory.buildHeartbeatMessageBody();
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildGetAccountBalancesMessage = ({ account_id }) => {
+	buildGetAccountBalancesMessage = ({ account_id, client_id }) => {
 		const message_body = MessageBodyFactory.buildGetAccountBalancesMessageBody({ account_id });
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
 	buildPlaceOrderMessage = ({ 
@@ -64,7 +63,8 @@ class MessageFactory {
 		time_in_force,
 		leverage_type,
 		leverage,
-		client_order_link_id
+		client_order_link_id,
+		client_id
 	 }) => {
 		const message_body = 
 			MessageBodyFactory.buildPlaceOrderMessageBody({
@@ -80,40 +80,40 @@ class MessageFactory {
 				leverage,
 				client_order_link_id
 			});
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildGetOrderStatusMessage = ({ account_info, order_id }) => {
+	buildGetOrderStatusMessage = ({ account_info, order_id, client_id }) => {
 		const message_body = MessageBodyFactory.buildGetOrderStatusMessageBody({
 			account_info,
 			order_id
 		});
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildGetAccountDataMessage = ({ account_id }) => {
+	buildGetAccountDataMessage = ({ account_id, client_id }) => {
 		const message_body = MessageBodyFactory.buildGetAccountDataMessageBody({ account_id });
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildGetWorkingOrdersMessage = ({ account_id }) => {
+	buildGetWorkingOrdersMessage = ({ account_id, client_id }) => {
 		const message_body = MessageBodyFactory.buildGetWorkingOrdersMessageBody({ account_id });
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildCancelOrderMessage = ({ account_id, order_id }) => {
+	buildCancelOrderMessage = ({ account_id, order_id, client_id }) => {
 		const message_body = MessageBodyFactory.buildCancelOrderMessageBody({ account_id, order_id });
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 
-	buildGetCompletedOrdersMessage = ({ account_id, count, since }) => {
+	buildGetCompletedOrdersMessage = ({ account_id, count, since, client_id }) => {
 		const message_body = MessageBodyFactory.buildGetCompletedOrdersMessageBody({ account_id, count, since });
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, cilent_id });
 	};
 
-	buildGetExchangePropertiesMessage = ({ exchange }) => {
+	buildGetExchangePropertiesMessage = ({ exchange, client_id }) => {
 		const message_body = MessageBodyFactory.buildGetExchangePropertiesMessageBody({ exchange });
-		return this.buildRequestMessage({ message_body });
+		return this.buildRequestMessage({ message_body, client_id });
 	};
 }
 

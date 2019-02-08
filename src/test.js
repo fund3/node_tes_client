@@ -32,7 +32,6 @@ const account_credentials_list = [
 
 const client = 
     new Client({
-        client_id: parseInt(process.env.CLIENT_ID),
         sender_comp_id: String(uuidv4()),
         account_credentials_list,
         curve_server_key: process.env.CURVE_SERVER_KEY,
@@ -41,7 +40,9 @@ const client =
     });
 
 
-client.sendLogonMessage({ onResponse: response => console.log(response)});
+client.sendLogonMessage({
+    client_id: parseInt(process.env.CLIENT_ID),
+    onResponse: response => console.log(response)});
 // import TickerFactory from '~/tes_client/factories/TickerFactory'
 // function handleTicker(err, res, body) {
 //     console.log(body)
@@ -190,4 +191,7 @@ let coinbase_prime_order_id_1 = 2222;
 //         }
 // }), 5000);
 
-setTimeout(() => client.sendLogoffMessage({ onResponse: response => console.log(response) }), 30000);
+setTimeout(() => client.sendLogoffMessage({
+    client_id: parseInt(process.env.CLIENT_ID),
+    onResponse: response => console.log(response) 
+}), 30000);

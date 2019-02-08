@@ -6,7 +6,6 @@ import { message_body_types } from "~/tes_client/constants";
 class Client {
 
 	constructor({
-		client_id,
 		sender_comp_id,
 		account_credentials_list,
 		curve_server_key,
@@ -14,7 +13,6 @@ class Client {
 		backend_socket_endpoint
 	}) {
 		this.message_factory = new MessageFactory({
-			client_id,
 			sender_comp_id,
 			account_credentials_list
 		});
@@ -26,8 +24,8 @@ class Client {
 		});
 	}
 
-	sendLogonMessage = ({ onResponse }) => {
-		const logon_message = this.message_factory.buildLogonMessage();
+	sendLogonMessage = ({ client_id, onResponse }) => {
+		const logon_message = this.message_factory.buildLogonMessage({ client_id });
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.LOGON_COMPLETE,
 			message: logon_message,
@@ -35,8 +33,8 @@ class Client {
 		});
 	};
 
-	sendHeartbeatMessage = ({ onResponse }) => {
-		const heartbeat_message = this.message_factory.buildHeartbeatMessage();
+	sendHeartbeatMessage = ({ client_id, onResponse }) => {
+		const heartbeat_message = this.message_factory.buildHeartbeatMessage({ client_id });
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.HEARTBEAT,
 			message: heartbeat_message,
@@ -44,9 +42,10 @@ class Client {
 		});
 	};
 
-	sendGetAccountBalancesMessage = ({ account_id, onResponse }) => {
+	sendGetAccountBalancesMessage = ({ client_id, account_id, onResponse }) => {
 		const get_account_balances_message = this.message_factory.buildGetAccountBalancesMessage({
-			account_id
+			account_id,
+			client_id
 		});
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.ACCOUNT_BALANCES_REPORT,
@@ -55,8 +54,8 @@ class Client {
 		});
 	};
 
-	sendLogoffMessage = ({ onResponse }) => {
-		const logoff_message = this.message_factory.buildLogoffMessage();
+	sendLogoffMessage = ({ client_id, onResponse }) => {
+		const logoff_message = this.message_factory.buildLogoffMessage({ client_id });
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.LOGOFF_COMPLETE,
 			message: logoff_message,
@@ -76,7 +75,8 @@ class Client {
 		time_in_force,
 		leverage_type,
 		leverage,
-		client_order_link_id
+		client_order_link_id,
+		client_id
 	}) => {
 		const place_order_message = this.message_factory.buildPlaceOrderMessage({
 			account_info,
@@ -89,7 +89,8 @@ class Client {
 			time_in_force,
 			leverage_type,
 			leverage,
-			client_order_link_id
+			client_order_link_id,
+			client_id
 		});
 
 		this.messenger.sendMessage({
@@ -99,10 +100,11 @@ class Client {
 		});
 	};
 
-	sendGetOrderStatusMessage = ({ onResponse, account_info, order_id }) => {
+	sendGetOrderStatusMessage = ({ onResponse, account_info, order_id, client_id }) => {
 		const get_order_status_message = this.message_factory.buildGetOrderStatusMessage({
 			account_info,
-			order_id
+			order_id,
+			client_id
 		});
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.EXECUTION_REPORT,
@@ -111,8 +113,8 @@ class Client {
 		});
 	};
 
-	sendGetAccountDataMessage = ({ onResponse, account_info }) => {
-		const get_account_data_message = this.message_factory.buildGetAccountDataMessage({account_info});
+	sendGetAccountDataMessage = ({ onResponse, account_info, client_id }) => {
+		const get_account_data_message = this.message_factory.buildGetAccountDataMessage({account_info, client_id});
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.ACCOUNT_DATA_REPORT,
 			message: get_account_data_message,
@@ -121,8 +123,8 @@ class Client {
 		});
 	};
 
-	sendGetWorkingOrdersMessage = ({ onResponse, account_id }) => {
-		const get_working_orders_message = this.message_factory.buildGetWorkingOrdersMessage({account_id});
+	sendGetWorkingOrdersMessage = ({ onResponse, account_id, client_id }) => {
+		const get_working_orders_message = this.message_factory.buildGetWorkingOrdersMessage({account_id, client_id});
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.WORKING_ORDERS_REPORT,
 			message: get_working_orders_message,
@@ -130,8 +132,8 @@ class Client {
 		});
 	};
 
-	sendCancelOrderMessage = ({ onResponse, account_id, order_id }) => {
-		const cancel_order_message = this.message_factory.buildCancelOrderMessage({account_id, order_id});
+	sendCancelOrderMessage = ({ onResponse, account_id, order_id, client_id }) => {
+		const cancel_order_message = this.message_factory.buildCancelOrderMessage({account_id, order_id, client_id});
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.EXECUTION_REPORT,
 			message: cancel_order_message,
@@ -139,8 +141,8 @@ class Client {
 		});
 	};
 
-	sendGetCompletedOrdersMessage = ({ onResponse, account_id, count, since}) => {
-		const get_completed_orders_message = this.message_factory.buildGetCompletedOrdersMessage({account_id, count, since});
+	sendGetCompletedOrdersMessage = ({ onResponse, account_id, count, since, client_id}) => {
+		const get_completed_orders_message = this.message_factory.buildGetCompletedOrdersMessage({account_id, count, since, client_id});
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.COMPLETED_ORDERS_REPORT,
 			message: get_completed_orders_message,
@@ -148,8 +150,8 @@ class Client {
 		});
 	};
 
-	sendGetExchangePropertiesMessage = ({ onResponse, exchange }) => {
-		const get_exchange_properties_message = this.message_factory.buildGetExchangePropertiesMessage({exchange});
+	sendGetExchangePropertiesMessage = ({ onResponse, exchange, client_id }) => {
+		const get_exchange_properties_message = this.message_factory.buildGetExchangePropertiesMessage({exchange, client_id});
 		this.messenger.sendMessage({
 			response_message_body_type: message_body_types.EXCHANGE_PROPERTIES_REPORT,
 			message: get_exchange_properties_message,
