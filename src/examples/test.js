@@ -42,12 +42,6 @@ const client =
 
 
 client.sendLogonMessage({ onResponse: response => console.log(response)});
-// import TickerFactory from '~/tes_client/factories/TickerFactory'
-// function handleTicker(err, res, body) {
-//     console.log(body)
-// }
-// TickerFactory.getTickerFromCoinbasePrime({pair: 'BTC-USD', sandbox: true, onResponse: handleTicker})
-
 
 // setTimeout(
 //     () =>
