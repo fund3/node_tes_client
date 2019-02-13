@@ -24,8 +24,7 @@ const EXCHANGE_ACCOUNT_CREDENTIALS =
     new AccountCredentials({
         account_info: ACCOUNT_INFO,
         api_key: API_KEY,
-        secret_key: SECRET_KEY,
-        passphrase: PASSPHRASE
+        secret_key: SECRET_KEY
     });
 
 const ACCOUNT_CREDENTIALS_LIST = [
@@ -36,7 +35,7 @@ const client =
     new Client({
         client_id: parseInt(CLIENT_ID),
         sender_comp_id: SENDER_COMP_ID,
-        ACCOUNT_CREDENTIALS_LIST,
+        account_credentials_list: ACCOUNT_CREDENTIALS_LIST,
         curve_server_key: CURVE_SERVER_KEY,
         tes_socket_endpoint: TES_ENDPOINT,
         backend_socket_endpoint: INPROC_ENDPOINT
