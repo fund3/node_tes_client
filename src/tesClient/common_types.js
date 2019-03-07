@@ -5,17 +5,17 @@ const Exchange = {
     // Exchange Names
     // https://github.com/fund3/communication-protocol/blob/master/Exchanges.capnp
     //
-    undefined:0,
-    poloniex:1,
-    kraken:2,
-    gemini:3,
-    bitfinex:4,
-    bittrex:5,
-    binance:6,
-    coinbasePro:7,
-    coinbasePrime:8,
-    bitstamp:9,
-    itBit:10
+    undefined: 0,
+    poloniex: 1,
+    kraken: 2,
+    gemini: 3,
+    bitfinex: 4,
+    bittrex: 5,
+    binance: 6,
+    coinbasePro: 7,
+    coinbasePrime: 8,
+    bitstamp: 9,
+    itBit: 10
 };
 
 
@@ -23,9 +23,9 @@ const Side = {
     // Trading Sides
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
-    undefined:0,
-    buy:1,
-    sell:2
+    undefined: 0,
+    buy: 1,
+    sell: 2
 };
 
 
@@ -33,9 +33,13 @@ const OrderType = {
     // Supported Order Types
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
-    undefined:0,
-    market:1,
-    limit:2
+    undefined: 0,
+    market: 1,
+    limit: 2,
+    stop: 3,
+    stopLimit: 4,
+    trailingStop: 5,
+    trailingStopLimit: 6
 };
 
 
@@ -43,19 +47,35 @@ const OrderStatus = {
     // Order Status on Exchange
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
     //
-    undefined:0,
-    received:1,
-    adopted:2,
-    working:3,
-    partiallyFilled:4,
-    filled:5,
-    pendingReplace:6,
-    replaced:7,
-    pendingCancel:8,
-    canceled:9,
-    rejected:10,
-    expired:11
+    undefined: 0,
+    received: 1,
+    adopted: 2,
+    working: 3,
+    partiallyFilled: 4,
+    filled: 5,
+    pendingReplace: 6,
+    replaced: 7,
+    pendingCancel: 8,
+    canceled: 9,
+    rejected: 10,
+    expired: 11,
+    failed: 12
 };
+
+
+const ExecutionType = {
+    undefined: 0,
+    orderAccepted: 1,
+    orderRejected: 2,
+    orderReplaced: 3,
+    replaceRejected: 4,
+    orderCanceled: 5,
+    cancelRejected: 6,
+    orderFilled: 7,
+    statusUpdate: 8,
+    statusUpdateRejected: 9
+};
+
 
 const TimeInForce = {
     // Order Time In Force
@@ -90,89 +110,7 @@ const AccountType = {
     combined: 3,
 };
 
-
-const ExecutionReportType = {
-    // Execution Report Type
-    orderAccepted: 0,
-    orderRejected: 1,
-    orderReplaced: 2,
-    replaceRejected: 3,
-    orderCanceled: 4,
-    cancelRejected: 5,
-    orderFilled: 6,
-    statusUpdate: 7,
-    statusUpdateRejected: 8,
-};
-
-
 // Classes
-class AccountInfo {
-    constructor(accountId,
-                exchange, 
-                accountType, 
-                exchangeAccountId,  
-                exchangeClientId){
-        /**
-        * @param accountID: int id corresponding to an account on an exchange Required.
-        * @param exchange: String exchange in which accountID is contained
-        * @param accountType: String exchange account type (exchange,
-        *     margin, combined), empty in client request
-        * @param exchangeAccountId: String account/wallet id, empty in client request
-        * @param exchangeClientId: String exchange client (customer) ID,
-        *    empty in client request
-        */
-        if (accountId === null || accountId === undefined){
-            throw 'AccountId is required.'
-        }
-        if (typeof accountId !== 'number'){
-            throw 'AccountId is required to be a Number.'
-        }
-        this.accountId = accountId;
-        this.exchange = String(exchange);
-        this.accountType = String(accountType);
-        this.exchangeAccountId = String(exchangeAccountId);
-        this.exchangeClientId = String(exchangeClientId);
-    }
-
-    accountId() {return this.accountId}
-
-    exchange() {return this.exchange}
-
-    accountType() {return this.accountType}
-
-    exchangeAccountId() {return this.exchangeAccountId}
-
-    exchangeClientId() {return this.exchangeClientId}
-}
-
-
-class AccountCredentials {
-    constructor(accountInfo, apiKey, secretKey, passphrase){
-        /**
-        * @param AccountCredentials object is used for logon
-        * @param accountInfo: AccountInfo object containing accountID
-        * @param apiKey: String apiKey for connecting to exchange API
-        *    associated with accountID
-        * @param secretKey: String secretKey for connecting to exchange API
-        *    associated with accountID
-        * @param passphrase: String (optional) passphrase for connecting to API
-        *    associated with accountID
-        */
-        this.accountInfo = accountInfo;
-        this.apiKey = String(apiKey);
-        this.secretKey = String(secretKey);
-        this.passphrase = String(passphrase);
-    }
-
-    accountInfo() {return this.accountInfo}
-
-    apiKey() {return this.apiKey}
-
-    secretKey() {return this.secretKey}
-
-    passphrase() {return this.passphrase}
-}
-
 
 class Order {
     //
@@ -609,6 +547,7 @@ export {
     LeverageType,
     AccountType,
     ExecutionReportType,
+    ExecutionType,
 
     // Classes
     AccountInfo,
@@ -625,5 +564,5 @@ export {
     CompletedOrdersReport,
     OrderInfo,
     SymbolProperties,
-    ExchangePropertiesReport
+    ExchangePropertiesReport,
 }
