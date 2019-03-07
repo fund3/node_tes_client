@@ -12,7 +12,9 @@ class MessageBodyFactory {
 				return { [messageBodyTypes.TEST]: messageBodyContents };
 
 			case messageBodyTypes.LOGON_REQUEST:
-				return { [messageBodyTypes.LOGON_REQUEST]: messageBodyContents };
+				return {
+					[messageBodyTypes.LOGON_REQUEST]: messageBodyContents
+				};
 
 			case messageBodyTypes.LOGOFF:
 				return { [messageBodyTypes.LOGOFF]: "" };
@@ -21,34 +23,44 @@ class MessageBodyFactory {
 				return { [messageBodyTypes.PLACE_ORDER]: messageBodyContents };
 
 			case messageBodyTypes.REPLACE_ORDER:
-				return { [messageBodyTypes.REPLACE_ORDER]: messageBodyContents };
+				return { [messageBodyTypes.REPLACE_ORDER]:
+					messageBodyContents };
 
 			case messageBodyTypes.CANCEL_ORDER:
-				return { [messageBodyTypes.CANCEL_ORDER]: messageBodyContents };
+				return { [messageBodyTypes.CANCEL_ORDER]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_ORDER_STATUS:
-				return { [messageBodyTypes.GET_ORDER_STATUS]: messageBodyContents };
+				return { [messageBodyTypes.GET_ORDER_STATUS]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_ORDER_MASS_STATUS:
-				return { [messageBodyTypes.GET_ORDER_MASS_STATUS]: messageBodyContents };
+				return { [messageBodyTypes.GET_ORDER_MASS_STATUS]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_ACCOUNT_DATA:
-				return { [messageBodyTypes.GET_ACCOUNT_DATA]: messageBodyContents };
+				return { [messageBodyTypes.GET_ACCOUNT_DATA]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_ACCOUNT_BALANCES:
-				return { [messageBodyTypes.GET_ACCOUNT_BALANCES]: messageBodyContents };
+				return { [messageBodyTypes.GET_ACCOUNT_BALANCES]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_OPEN_POSITIONS:
-				return { [messageBodyTypes.GET_OPEN_POSITIONS]: messageBodyContents };
+				return { [messageBodyTypes.GET_OPEN_POSITIONS]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_WORKING_ORDERS:
-				return { [messageBodyTypes.GET_WORKING_ORDERS]: messageBodyContents };
+				return { [messageBodyTypes.GET_WORKING_ORDERS]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_COMPLETED_ORDERS:
-				return { [messageBodyTypes.GET_COMPLETED_ORDERS]: messageBodyContents };
+				return { [messageBodyTypes.GET_COMPLETED_ORDERS]:
+					messageBodyContents };
 
 			case messageBodyTypes.GET_EXCHANGE_PROPERTIES:
-				return { [messageBodyTypes.GET_EXCHANGE_PROPERTIES]: messageBodyContents };
+				return { [messageBodyTypes.GET_EXCHANGE_PROPERTIES]:
+					messageBodyContents };
 
 			default:
 				return {};
@@ -71,7 +83,8 @@ class MessageBodyFactory {
 
 	static buildGetAccountBalancesMessageBody = ({ accountId }) => {
 		const messageBodyType = messageBodyTypes.GET_ACCOUNT_BALANCES;
-		const messageBodyContents = { accountInfo: new AccountInfo({ accountId }) };
+		const messageBodyContents = {
+			accountInfo: new AccountInfo({ accountId }) };
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
 			messageBodyContents
@@ -80,7 +93,8 @@ class MessageBodyFactory {
 
 	static buildGetAccountDataMessageBody = ({ accountId }) => {
 		const messageBodyType = messageBodyTypes.GET_ACCOUNT_DATA;
-		const messageBodyContents = { accountInfo: new AccountInfo({ accountId }) };
+		const messageBodyContents = {
+			accountInfo: new AccountInfo({ accountId }) };
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
 			messageBodyContents
@@ -127,7 +141,8 @@ class MessageBodyFactory {
 
 	static buildGetOrderStatusMessageBody = ({ accountInfo, orderId }) => {
 		const messageBodyType = messageBodyTypes.GET_ORDER_STATUS;
-		const messageBodyContents = { accountInfo: accountInfo, orderID: orderId };
+		const messageBodyContents = {
+			accountInfo: accountInfo, orderID: orderId };
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
 			messageBodyContents
@@ -136,7 +151,8 @@ class MessageBodyFactory {
 
 	static buildGetWorkingOrdersMessageBody = ({ accountId }) => {
 		const messageBodyType = messageBodyTypes.GET_WORKING_ORDERS;
-		const messageBodyContents = { accountInfo: new AccountInfo({ accountId }) };
+		const messageBodyContents = {
+			accountInfo: new AccountInfo({ accountId }) };
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
 			messageBodyContents
@@ -145,7 +161,8 @@ class MessageBodyFactory {
 
 	static buildCancelOrderMessageBody = ({ accountId, orderId }) => {
 		const messageBodyType = messageBodyTypes.CANCEL_ORDER;
-		const messageBodyContents = { accountInfo: new AccountInfo({ accountId }),
+		const messageBodyContents = {
+			accountInfo: new AccountInfo({ accountId }),
 			orderID:  orderId};
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
@@ -153,19 +170,21 @@ class MessageBodyFactory {
 		});
 	};
 
-	static buildGetCompletedOrdersMessageBody = ({ accountId, count, since }) => {
-		const messageBodyType = messageBodyTypes.GET_COMPLETED_ORDERS;
-		let messageBodyContents = { accountInfo: new AccountInfo({ accountId }) };
-		if (!isNil(count)) {
-			messageBodyContents.count = count;
-		}
-		if (!isNil(since)) {
-			messageBodyContents.since = since;
-		}
-		return MessageBodyFactory.buildMessageBody({
-			messageBodyType,
-			messageBodyContents
-		});
+	static buildGetCompletedOrdersMessageBody = (
+		{ accountId, count, since }) => {
+			const messageBodyType = messageBodyTypes.GET_COMPLETED_ORDERS;
+			let messageBodyContents = {
+				accountInfo: new AccountInfo({ accountId }) };
+			if (!isNil(count)) {
+				messageBodyContents.count = count;
+			}
+			if (!isNil(since)) {
+				messageBodyContents.since = since;
+			}
+			return MessageBodyFactory.buildMessageBody({
+				messageBodyType,
+				messageBodyContents
+			});
 	};
 
 	static buildGetExchangePropertiesMessageBody = ({ exchange }) => {

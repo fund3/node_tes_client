@@ -1,4 +1,4 @@
-import messageBodyTypes from './message_body_types'
-import messageTypes from './message_types'
+import messageBodyTypes from './messageBodyTypes'
+import messageTypes from './messageTypes'
 
 export { messageBodyTypes, messageTypes };

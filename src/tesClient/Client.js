@@ -104,10 +104,11 @@ class Client {
 	};
 
 	sendGetOrderStatusMessage = ({ onResponse, accountInfo, orderId }) => {
-		const getOrderStatusMessage = this.messageFactory.buildGetOrderStatusMessage({
-			accountInfo,
-			orderId
-		});
+		const getOrderStatusMessage =
+			this.messageFactory.buildGetOrderStatusMessage({
+				accountInfo,
+				orderId
+			});
 		this.messenger.sendMessage({
 			responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
 			message: getOrderStatusMessage,
@@ -116,7 +117,8 @@ class Client {
 	};
 
 	sendGetAccountDataMessage = ({ onResponse, accountInfo }) => {
-		const getAccountDataMessage = this.messageFactory.buildGetAccountDataMessage({accountInfo});
+		const getAccountDataMessage =
+			this.messageFactory.buildGetAccountDataMessage({accountInfo});
 		this.messenger.sendMessage({
 			responseMessageBodyType: messageBodyTypes.ACCOUNT_DATA_REPORT,
 			message: getAccountDataMessage,
@@ -126,7 +128,8 @@ class Client {
 	};
 
 	sendGetWorkingOrdersMessage = ({ onResponse, accountId }) => {
-		const getWorkingOrdersMessage = this.messageFactory.buildGetWorkingOrdersMessage({accountId});
+		const getWorkingOrdersMessage =
+			this.messageFactory.buildGetWorkingOrdersMessage({accountId});
 		this.messenger.sendMessage({
 			responseMessageBodyType: messageBodyTypes.WORKING_ORDERS_REPORT,
 			message: getWorkingOrdersMessage,
@@ -135,7 +138,8 @@ class Client {
 	};
 
 	sendCancelOrderMessage = ({ onResponse, accountId, orderId }) => {
-		const cancelOrderMessage = this.messageFactory.buildCancelOrderMessage({accountId, orderId});
+		const cancelOrderMessage =
+			this.messageFactory.buildCancelOrderMessage({accountId, orderId});
 		this.messenger.sendMessage({
 			responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
 			message: cancelOrderMessage,
@@ -143,19 +147,25 @@ class Client {
 		});
 	};
 
-	sendGetCompletedOrdersMessage = ({ onResponse, accountId, count, since}) => {
-		const getCompletedOrdersMessage = this.messageFactory.buildGetCompletedOrdersMessage({accountId, count, since});
-		this.messenger.sendMessage({
-			responseMessageBodyType: messageBodyTypes.COMPLETED_ORDERS_REPORT,
-			message: getCompletedOrdersMessage,
-			onResponse
-		});
+	sendGetCompletedOrdersMessage = (
+		{ onResponse, accountId, count, since}) => {
+			const getCompletedOrdersMessage =
+				this.messageFactory.buildGetCompletedOrdersMessage(
+					{accountId, count, since});
+			this.messenger.sendMessage({
+				responseMessageBodyType:
+					messageBodyTypes.COMPLETED_ORDERS_REPORT,
+				message: getCompletedOrdersMessage,
+				onResponse
+			});
 	};
 
 	sendGetExchangePropertiesMessage = ({ onResponse, exchange }) => {
-		const getExchangePropertiesMessage = this.messageFactory.buildGetExchangePropertiesMessage({exchange});
+		const getExchangePropertiesMessage =
+			this.messageFactory.buildGetExchangePropertiesMessage({exchange});
 		this.messenger.sendMessage({
-			responseMessageBodyType: messageBodyTypes.EXCHANGE_PROPERTIES_REPORT,
+			responseMessageBodyType:
+				messageBodyTypes.EXCHANGE_PROPERTIES_REPORT,
 			message: getExchangePropertiesMessage,
 			onResponse
 		});

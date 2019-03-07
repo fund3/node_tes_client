@@ -3,9 +3,9 @@ require("@babel/polyfill");
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 
-import Client from './tes_client/Client'
-import AccountInfo from '~/tes_client/account/AccountInfo'
-import AccountCredentials from '~/tes_client/account/AccountCredentials'
+import Client from './tesClient/Client'
+import AccountInfo from '~/tesClient/account/AccountInfo'
+import AccountCredentials from '~/tesClient/account/AccountCredentials'
 
 
 const CLIENT_ID = 123;
@@ -19,12 +19,12 @@ const API_KEY = 'api_key';
 const SECRET_KEY = 'secret_key';
 const PASSPHRASE = 'passphrase'; // Optional, only required on some exchanges
 
-const ACCOUNT_INFO = new AccountInfo({ account_id: ACCOUNT_ID });
+const ACCOUNT_INFO = new AccountInfo({ accountId: ACCOUNT_ID });
 const EXCHANGE_ACCOUNT_CREDENTIALS =
     new AccountCredentials({
-        account_info: ACCOUNT_INFO,
-        api_key: API_KEY,
-        secret_key: SECRET_KEY
+        accountInfo: ACCOUNT_INFO,
+        apiKey: API_KEY,
+        secretKey: SECRET_KEY
     });
 
 const ACCOUNT_CREDENTIALS_LIST = [
@@ -33,20 +33,21 @@ const ACCOUNT_CREDENTIALS_LIST = [
 
 const client =
     new Client({
-        client_id: parseInt(CLIENT_ID),
-        sender_comp_id: SENDER_COMP_ID,
-        account_credentials_list: ACCOUNT_CREDENTIALS_LIST,
-        curve_server_key: CURVE_SERVER_KEY,
-        tes_socket_endpoint: TES_ENDPOINT,
-        backend_socket_endpoint: INPROC_ENDPOINT
+        clientId: parseInt(CLIENT_ID),
+        senderCompId: SENDER_COMP_ID,
+        accountCredentialsList: ACCOUNT_CREDENTIALS_LIST,
+        curveServerKey: CURVE_SERVER_KEY,
+        tesSocketEndpoint: TES_ENDPOINT,
+        backendSocketEndpoint: INPROC_ENDPOINT
     });
 
 
 client.sendLogonMessage({ onResponse: response => console.log(response)});
 
 setTimeout(() => client.sendGetAccountBalancesMessage({
-    account_id: ACCOUNT_ID,
+    accountId: ACCOUNT_ID,
     onResponse: response => console.log(response)
 }), 3000);
 
-setInterval(client.sendLogoffMessage({ onResponse: response => console.log(response) }), 7000);
+setInterval(client.sendLogoffMessage(
+    { onResponse: response => console.log(response) }), 7000);
