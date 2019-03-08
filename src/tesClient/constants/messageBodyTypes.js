@@ -5,7 +5,7 @@ export default {
 	LOGON_COMPLETE: "logonAck",
 	LOGOFF: "logoff",
 	LOGOFF_COMPLETE: "logoffAck",
-	PLACE_ORDER: "placeOrder",
+	PLACE_ORDER: "placeSingleOrder",
 	REPLACE_ORDER: "replaceOrder",
 	CANCEL_ORDER: "cancelOrder",
 	GET_ORDER_STATUS: "getOrderStatus",
