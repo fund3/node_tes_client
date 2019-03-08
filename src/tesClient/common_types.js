@@ -76,20 +76,6 @@ const ExecutionType = {
     statusUpdateRejected: 9
 };
 
-
-const TimeInForce = {
-    // Order Time In Force
-    // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
-    //
-    undefined: 0,
-    gtc: 1,        // Good till cancel
-    gtt: 2,        // Good till time
-    day: 3,        // Day order
-    ioc: 4,        // Immediate or cancel
-    fok: 5,        // Fill or kill
-};
-
-
 const LeverageType = {
     // Leverage Type
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
@@ -543,15 +529,10 @@ export {
     Side,
     OrderType,
     OrderStatus,
-    TimeInForce,
     LeverageType,
     AccountType,
-    ExecutionReportType,
-    ExecutionType,
 
     // Classes
-    AccountInfo,
-    AccountCredentials,
     Order,
     RequestRejected,
     Balance,
