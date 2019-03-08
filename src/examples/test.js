@@ -3,7 +3,7 @@ require("@babel/polyfill");
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 
-import Client from './tesClient/Client'
+import Client from '~/tesClient/Client'
 import AccountInfo from '~/tesClient/account/AccountInfo'
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 
