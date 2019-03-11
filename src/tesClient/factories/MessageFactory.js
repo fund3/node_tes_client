@@ -2,26 +2,9 @@ import MessageBodyFactory from "./MessageBodyFactory";
 import { messageTypes } from "~/tesClient/constants";
 
 class MessageFactory {
-	constructor({ clientId, senderCompID, accountCredentialsList,
-				  accessToken }) {
-		this.clientId = clientId;
-		this.senderCompID = senderCompID;
-		this.accountCredentialsList = accountCredentialsList;
-		this.accessToken = accessToken;
-	}
 
-	updateAccessToken = ({ newAccessToken }) => {
-		this.accessToken = newAccessToken;
-	};
-
-	buildMessage = ({ messageBody, requestHeader }) => ({
-		clientID: requestHeader.clientId === undefined ?
-            this.clientId : requestHeader.clientId,
-		senderCompID: requestHeader.senderCompId === undefined ?
-            this.senderCompId : requestHeader.senderCompId,
-		accessToken: requestHeader.accessToken === undefined ?
-            this.accessToken : requestHeader.accessToken,
-		requestID: requestHeader.requestId,
+	buildMessage = ({ requestHeader, messageBody }) => ({
+        ...requestHeader,
 		body: messageBody
 	});
 
@@ -38,104 +21,127 @@ class MessageFactory {
 		}
 	};
 
-	buildRequestMessage = ({ messageBody, requestHeader }) => {
-		const message = this.buildMessage({ messageBody, requestHeader });
+	buildRequestMessage = ({ requestHeader, messageBody }) => {
+		const message = this.buildMessage({ requestHeader, messageBody});
 		return this.buildMessageContainer({ message,
             messageType: messageTypes.REQUEST });
 	};
 
 	buildHeartbeatMessage = ({ requestHeader }) => {
 		const messageBody = MessageBodyFactory.buildHeartbeatMessageBody();
-		return this.buildRequestMessage({ messageBody, requestHeader });
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 
-	buildLogonMessage = () => {
-		const { accountCredentialsList } = this;
+	buildTestMessage = ({ requestHeader, testMessageParams }) => {
+		const messageBody = MessageBodyFactory.buildTestMessageBody({
+            testMessageParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
+	};
+
+	buildGetServerTimeMessage = ({ requestHeader }) => {
+		const messageBody = MessageBodyFactory.buildGetServerTimeMessageBody();
+		return this.buildRequestMessage({ requestHeader, messageBody });
+	};
+
+	buildLogonMessage = ({ requestHeader, logonParams }) => {
 		const messageBody = MessageBodyFactory.buildLogonMessageBody({
-            accountCredentialsList });
-		return this.buildRequestMessage({ messageBody });
+            logonParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 
-	buildLogoffMessage = () => {
+	buildLogoffMessage = ({ requestHeader }) => {
 		const messageBody = MessageBodyFactory.buildLogoffMessageBody();
-		return this.buildRequestMessage({ messageBody });
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 
-	buildGetAccountBalancesMessage = ({ accountId }) => {
-		const messageBody =
-            MessageBodyFactory.buildGetAccountBalancesMessageBody({
-                accountId });
-		return this.buildRequestMessage({ messageBody });
-	};
-
-	buildPlaceOrderMessage = ({ 
-		accountInfo,
-		clientOrderId,
-		symbol,
-		side,
-		quantity,
-		orderType,
-		price,
-		timeInForce,
-		leverageType,
-		leverage,
-		clientOrderLinkId
+	buildPlaceSingleOrderMessage = ({
+        requestHeader,
+		placeOrderParams
 	 }) => {
 		const messageBody =
-			MessageBodyFactory.buildPlaceOrderMessageBody({
-				accountInfo,
-				clientOrderId,
-				symbol,
-				side,
-				quantity,
-				orderType,
-				price,
-				timeInForce,
-				leverageType,
-				leverage,
-				clientOrderLinkId
+			MessageBodyFactory.buildPlaceSingleOrderMessageBody({
+				placeOrderParams
 			});
-		return this.buildRequestMessage({ messageBody });
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 
-	buildGetOrderStatusMessage = ({ accountInfo, orderId }) => {
-		const messageBody = MessageBodyFactory.buildGetOrderStatusMessageBody({
-			accountInfo,
-			orderId
-		});
-		return this.buildRequestMessage({ messageBody });
-	};
-
-	buildGetAccountDataMessage = ({ accountId }) => {
-		const messageBody = MessageBodyFactory.buildGetAccountDataMessageBody({
-            accountId });
-		return this.buildRequestMessage({ messageBody });
-	};
-
-	buildGetWorkingOrdersMessage = ({ accountId }) => {
+	buildReplaceOrderMessage = ({
+        requestHeader,
+		replaceOrderParams
+	 }) => {
 		const messageBody =
-            MessageBodyFactory.buildGetWorkingOrdersMessageBody({ accountId });
-		return this.buildRequestMessage({ messageBody });
+			MessageBodyFactory.buildReplaceOrderMessageBody({
+				replaceOrderParams
+			});
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 
-	buildCancelOrderMessage = ({ accountId, orderId }) => {
+	buildCancelOrderMessage = ({ requestHeader, cancelOrderParams }) => {
 		const messageBody = MessageBodyFactory.buildCancelOrderMessageBody({
-            accountId, orderId });
-		return this.buildRequestMessage({ messageBody });
+            cancelOrderParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 
-	buildGetCompletedOrdersMessage = ({ accountId, count, since }) => {
+	buildGetOrderStatusMessage = ({ requestHeader, getOrderStatusParams }) => {
+		const messageBody = MessageBodyFactory.buildGetOrderStatusMessageBody({
+			getOrderStatusParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
+	};
+
+	buildGetAccountDataMessage = ({ requestHeader, getAccountDataParams }) => {
+		const messageBody = MessageBodyFactory.buildGetAccountDataMessageBody({
+            getAccountDataParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
+	};
+
+	buildGetAccountBalancesMessage = ({
+        requestHeader,
+        getAccountBalancesParams
+	}) => {
+		const messageBody =
+            MessageBodyFactory.buildGetAccountBalancesMessageBody({
+                getAccountBalancesParams
+            });
+		return this.buildRequestMessage({ requestHeader, messageBody });
+	};
+
+	buildGetOpenPositionsMessage = ({
+        requestHeader,
+        getOpenPositionsParams
+	}) => {
+		const messageBody =
+            MessageBodyFactory.buildGetOpenPositionsMessageBody({
+                getOpenPositionsParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
+	};
+
+	buildGetWorkingOrdersMessage = ({
+        requestHeader, getWorkingOrderParams
+	}) => {
+		const messageBody =
+            MessageBodyFactory.buildGetWorkingOrdersMessageBody({
+                getWorkingOrderParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
+	};
+
+	buildGetCompletedOrdersMessage = ({
+        requestHeader,
+        getCompletedOrdersParams
+	}) => {
 		const messageBody =
             MessageBodyFactory.buildGetCompletedOrdersMessageBody(
-            { accountId, count, since });
-		return this.buildRequestMessage({ messageBody });
+            { getCompletedOrdersParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 
-	buildGetExchangePropertiesMessage = ({ exchange }) => {
+	buildGetExchangePropertiesMessage = ({
+        requestHeader,
+        getExchangePropertiesParams
+	}) => {
 		const messageBody =
             MessageBodyFactory.buildGetExchangePropertiesMessageBody(
-            { exchange });
-		return this.buildRequestMessage({ messageBody });
+            { getExchangePropertiesParams });
+		return this.buildRequestMessage({ requestHeader, messageBody });
 	};
 }
 
