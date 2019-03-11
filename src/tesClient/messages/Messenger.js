@@ -15,10 +15,18 @@ class Messenger {
 			messageSocket: this.messageSocket });
 	}
 
-	sendMessage = ({ message, responseMessageBodyType, onResponse }) => {
+	sendMessage = ({
+        message,
+        expectedRequestId,
+        onResponse,
+        responseMessageBodyType = undefined,
+        responseTypeCallback = undefined
+	}) => {
 		this.messageResponder.subscribeCallbackToResponseType({
+            expectedRequestId,
 			callback: onResponse,
-			responseMessageBodyType
+            responseMessageBodyType,
+            responseTypeCallback
 		});
 		this.messageSender.sendMessage({ message });
 	};

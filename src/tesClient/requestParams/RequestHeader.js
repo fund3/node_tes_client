@@ -2,7 +2,9 @@ class RequestHeader {
   constructor({ clientId,
                 senderCompId,
                 accessToken = undefined,
-                requestId = 0 }) {
+                // RequestID defaults to -1 to prevent acting on unintentional
+                // messages with TES default requestId = 0.
+                requestId = -1 }) {
     /**
      * @param clientId: (int) clientId assigned by Fund3.
      * @param senderCompId: (String) Unique uuid machine Id for TES to route

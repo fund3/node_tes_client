@@ -5,36 +5,52 @@ import MessageParser from './MessageParser'
 
 class MessageResponder {
 
-	constructor({ tesSocket }) {
-		this.tesSocket = tesSocket;
-		this.listenForResponses();
-	}
+    constructor({ tesSocket }) {
+        this.tesSocket = tesSocket;
+        this.listenForResponses();
+    }
 
-	listenForResponses = () => {
-		this.messageObserver = new Observable((observer) => {
-			this.tesSocket.setOnMessage({
-				onMessage: message => {
-					const { messageBodyType, parsedMessageBodyContents } =
-						MessageParser.parseMessage({ message });
-					observer.next({
-						messageBodyType,
-						parsedMessageBodyContents
-					});
-				}
-			});
-		}).pipe(share())
-	}
+    listenForResponses = () => {
+        this.messageObserver = new Observable((observer) => {
+            this.tesSocket.setOnMessage({
+                onMessage: message => {
+                    const {
+                        incomingRequestId,
+                        messageBodyType,
+                        messageBodyContents
+                    } =
+                        MessageParser.parseMessage({ message });
+                    observer.next({
+                        incomingRequestId,
+                        messageBodyType,
+                        messageBodyContents
+                    });
+                }
+            });
+        }).pipe(share())
+    }
 
-	subscribeCallbackToResponseType =
-        ({ callback, responseMessageBodyType }) => {
-	        this.messageObserver.subscribe(({
-                messageBodyType,
-                parsedMessageBodyContents
-		    }) => {
-			    if(messageBodyType !== responseMessageBodyType) return;
-			    callback(parsedMessageBodyContents);
-		    })
-	    }
+    subscribeCallbackToResponseType = ({
+        expectedRequestId,
+        callback,
+        responseMessageBodyType,
+        responseTypeCallback
+    }) => {
+        let subscriber = this.messageObserver.subscribe(({
+            incomingRequestId,
+            messageBodyType,
+            messageBodyContents
+        }) => {
+            if(incomingRequestId === expectedRequestId) {
+                callback(messageBodyContents);
+                subscriber.unsubscribe();
+            } else if (responseMessageBodyType !== undefined &&
+                       responseTypeCallback !== undefined &&
+                       responseMessageBodyType === messageBodyType) {
+                responseTypeCallback(messageBodyContents);
+            }
+        })
+    }
 }
 
 export default MessageResponder;

@@ -44,36 +44,51 @@ const client =
     });
 
 function setAccessToken( logonAck ) {
+    console.log(logonAck);
     if (logonAck.success){
         const newAccessToken = logonAck.authorizationGrant.accessToken;
         client.updateAccessToken({newAccessToken});
     }
 }
 
-setTimeout(() => client.sendLogonMessage({
-    logonParams: new LogonParams({
-        clientSecret: process.env.CLIENT_SECRET,
-        credentials: client.accountCredentialsList
-    }),
-    onResponse: setAccessToken}), 3000);
+function incrementRequestId() {
+    client.defaultRequestHeader.requestID += 1;
+}
 
-client.defaultRequestHeader.requestID = 1
-const getAccountBalancesParams = new GetAccountBalancesParams({
-                accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})
-setTimeout(
-    () =>
-        client.sendGetAccountBalancesMessage({
-            getAccountBalancesParams,
-            onResponse: response => console.log(response)
-        }), 3000);
+function logon() {
+    incrementRequestId();
+    client.sendLogonMessage({
+        logonParams: new LogonParams({
+            clientSecret: process.env.CLIENT_SECRET,
+            credentials: client.accountCredentialsList
+        }),
+        onResponse: setAccessToken
+    })
+}
+
+function logoff() {
+    incrementRequestId();
+    client.sendLogoffMessage(
+        { onResponse: response => console.log(response) })
+}
+
+function getBalances({getAccountBalancesParams}) {
+    incrementRequestId();
+    client.sendGetAccountBalancesMessage({
+        getAccountBalancesParams,
+        onResponse: response => console.log(response)
+    })
+}
+
+setTimeout(() => logon(), 3000);
 
 setTimeout(
-    () =>
-        client.sendGetAccountBalancesMessage({
-            getAccountBalancesParams: new GetAccountBalancesParams({
-                accountId: process.env.GEMINI_ACCOUNT_ID}),
-            onResponse: response => console.log(response)
-        }), 10000);
+    () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
+            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 4000);
+
+setTimeout(
+    () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
+            accountId: process.env.GEMINI_ACCOUNT_ID})}), 6000);
 
 let geminiOrderId1 = 1111;
 let coinbasePrimeOrderId1 = 2222;
@@ -220,5 +235,4 @@ let coinbasePrimeOrderId1 = 2222;
 //         }
 // }), 10000);
 
-setTimeout(() => client.sendLogoffMessage(
-    { onResponse: response => console.log(response) }), 10000);
+setTimeout(() => logoff(), 10000);
