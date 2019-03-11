@@ -44,7 +44,7 @@ const client =
 
 client.sendLogonMessage({ onResponse: response => console.log(response)});
 
-setTimeout(() => client.sendPlaceOrderMessage({
+setTimeout(() => client.sendPlaceSingleOrderMessage({
     onResponse: ({ order_id }) => (console.log(order_id)),
     accountId: ACCOUNT_INFO,
     clientOrderId: 1111,
