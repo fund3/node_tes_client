@@ -3,146 +3,146 @@ import { messageTypes } from "~/tesClient/constants";
 
 class MessageFactory {
 
-	buildMessage = ({ requestHeader, messageBody }) => ({
+    buildMessage = ({ requestHeader, messageBody }) => ({
         ...requestHeader,
-		body: messageBody
-	});
+        body: messageBody
+    });
 
-	buildMessageContainer = ({ message, messageType }) => {
-		switch (messageType) {
-			case messageTypes.REQUEST:
-				return { type: { [messageTypes.REQUEST]: message } };
+    buildMessageContainer = ({ message, messageType }) => {
+        switch (messageType) {
+            case messageTypes.REQUEST:
+                return { type: { [messageTypes.REQUEST]: message } };
 
-			case messageTypes.RESPONSE:
-				return { type: { [messageTypes.RESPONSE]: message } };
+            case messageTypes.RESPONSE:
+                return { type: { [messageTypes.RESPONSE]: message } };
 
-			default:
-				return {};
-		}
-	};
+            default:
+                return {};
+        }
+    };
 
-	buildRequestMessage = ({ requestHeader, messageBody }) => {
-		const message = this.buildMessage({ requestHeader, messageBody});
-		return this.buildMessageContainer({ message,
+    buildRequestMessage = ({ requestHeader, messageBody }) => {
+        const message = this.buildMessage({ requestHeader, messageBody});
+        return this.buildMessageContainer({ message,
             messageType: messageTypes.REQUEST });
-	};
+    };
 
-	buildHeartbeatMessage = ({ requestHeader }) => {
-		const messageBody = MessageBodyFactory.buildHeartbeatMessageBody();
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+    buildHeartbeatMessage = ({ requestHeader }) => {
+        const messageBody = MessageBodyFactory.buildHeartbeatMessageBody();
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildTestMessage = ({ requestHeader, testMessageParams }) => {
-		const messageBody = MessageBodyFactory.buildTestMessageBody({
+    buildTestMessage = ({ requestHeader, testMessageParams }) => {
+        const messageBody = MessageBodyFactory.buildTestMessageBody({
             testMessageParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetServerTimeMessage = ({ requestHeader }) => {
-		const messageBody = MessageBodyFactory.buildGetServerTimeMessageBody();
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+    buildGetServerTimeMessage = ({ requestHeader }) => {
+        const messageBody = MessageBodyFactory.buildGetServerTimeMessageBody();
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildLogonMessage = ({ requestHeader, logonParams }) => {
-		const messageBody = MessageBodyFactory.buildLogonMessageBody({
+    buildLogonMessage = ({ requestHeader, logonParams }) => {
+        const messageBody = MessageBodyFactory.buildLogonMessageBody({
             logonParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildLogoffMessage = ({ requestHeader }) => {
-		const messageBody = MessageBodyFactory.buildLogoffMessageBody();
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+    buildLogoffMessage = ({ requestHeader }) => {
+        const messageBody = MessageBodyFactory.buildLogoffMessageBody();
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildPlaceSingleOrderMessage = ({
+    buildPlaceSingleOrderMessage = ({
         requestHeader,
-		placeOrderParams
-	 }) => {
-		const messageBody =
-			MessageBodyFactory.buildPlaceSingleOrderMessageBody({
-				placeOrderParams
-			});
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        placeOrderParams
+     }) => {
+        const messageBody =
+            MessageBodyFactory.buildPlaceSingleOrderMessageBody({
+                placeOrderParams
+            });
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildReplaceOrderMessage = ({
+    buildReplaceOrderMessage = ({
         requestHeader,
-		replaceOrderParams
-	 }) => {
-		const messageBody =
-			MessageBodyFactory.buildReplaceOrderMessageBody({
-				replaceOrderParams
-			});
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        replaceOrderParams
+     }) => {
+        const messageBody =
+            MessageBodyFactory.buildReplaceOrderMessageBody({
+                replaceOrderParams
+            });
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildCancelOrderMessage = ({ requestHeader, cancelOrderParams }) => {
-		const messageBody = MessageBodyFactory.buildCancelOrderMessageBody({
+    buildCancelOrderMessage = ({ requestHeader, cancelOrderParams }) => {
+        const messageBody = MessageBodyFactory.buildCancelOrderMessageBody({
             cancelOrderParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetOrderStatusMessage = ({ requestHeader, getOrderStatusParams }) => {
-		const messageBody = MessageBodyFactory.buildGetOrderStatusMessageBody({
-			getOrderStatusParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+    buildGetOrderStatusMessage = ({ requestHeader, getOrderStatusParams }) => {
+        const messageBody = MessageBodyFactory.buildGetOrderStatusMessageBody({
+            getOrderStatusParams });
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetAccountDataMessage = ({ requestHeader, getAccountDataParams }) => {
-		const messageBody = MessageBodyFactory.buildGetAccountDataMessageBody({
+    buildGetAccountDataMessage = ({ requestHeader, getAccountDataParams }) => {
+        const messageBody = MessageBodyFactory.buildGetAccountDataMessageBody({
             getAccountDataParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetAccountBalancesMessage = ({
+    buildGetAccountBalancesMessage = ({
         requestHeader,
         getAccountBalancesParams
-	}) => {
-		const messageBody =
+    }) => {
+        const messageBody =
             MessageBodyFactory.buildGetAccountBalancesMessageBody({
                 getAccountBalancesParams
             });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetOpenPositionsMessage = ({
+    buildGetOpenPositionsMessage = ({
         requestHeader,
         getOpenPositionsParams
-	}) => {
-		const messageBody =
+    }) => {
+        const messageBody =
             MessageBodyFactory.buildGetOpenPositionsMessageBody({
                 getOpenPositionsParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetWorkingOrdersMessage = ({
+    buildGetWorkingOrdersMessage = ({
         requestHeader, getWorkingOrderParams
-	}) => {
-		const messageBody =
+    }) => {
+        const messageBody =
             MessageBodyFactory.buildGetWorkingOrdersMessageBody({
                 getWorkingOrderParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetCompletedOrdersMessage = ({
+    buildGetCompletedOrdersMessage = ({
         requestHeader,
         getCompletedOrdersParams
-	}) => {
-		const messageBody =
+    }) => {
+        const messageBody =
             MessageBodyFactory.buildGetCompletedOrdersMessageBody(
             { getCompletedOrdersParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 
-	buildGetExchangePropertiesMessage = ({
+    buildGetExchangePropertiesMessage = ({
         requestHeader,
         getExchangePropertiesParams
-	}) => {
-		const messageBody =
+    }) => {
+        const messageBody =
             MessageBodyFactory.buildGetExchangePropertiesMessageBody(
             { getExchangePropertiesParams });
-		return this.buildRequestMessage({ requestHeader, messageBody });
-	};
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
 }
 
 export default MessageFactory;
