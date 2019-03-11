@@ -1,10 +1,10 @@
 class AccountInfo {
   constructor({
       accountId,
-      exchange,
-      accountType,
-      exchangeAccountId,
-      exchangeClientId
+      exchange = undefined,
+      accountType = undefined,
+      exchangeAccountId = undefined,
+      exchangeClientId = undefined
   }) {
     /**
      * @param accountId: (int) id corresponding to an account on an exchange
@@ -19,10 +19,18 @@ class AccountInfo {
      *    empty in client request.
     */
     this.accountID = accountId;
-    this.exchange = String(exchange);
-    this.accountType = String(accountType);
-    this.exchangeAccountID = String(exchangeAccountId);
-    this.exchangeClientID = String(exchangeClientId);
+    if (exchange !== undefined) {
+        this.exchange = exchange;
+    }
+    if (accountType !== undefined) {
+        this.accountType = accountType;
+    }
+    if (exchange !== undefined) {
+        this.exchangeAccountID = exchangeAccountId;
+    }
+    if (exchange !== undefined) {
+        this.exchangeClientID = exchangeClientId;
+    }
   }
 }
 
