@@ -3,9 +3,10 @@ require("@babel/polyfill");
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 
-import Client from '~/tesClient/Client'
-import AccountInfo from '~/tesClient/account/AccountInfo'
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
+import AccountInfo from '~/tesClient/account/AccountInfo'
+import Client from '~/tesClient/Client'
+import LogonParams from '~/tesClient/requestParams/LogonParams'
 
 const geminiAccountInfo = new AccountInfo(
     { accountId: process.env.GEMINI_ACCOUNT_ID });
@@ -42,7 +43,19 @@ const client =
         backendSocketEndpoint: process.env.INPROC_ADDRESS
     });
 
-client.sendLogonMessage({ onResponse: response => console.log(response)});
+function setAccessToken( logonAck ) {
+    if (logonAck.success){
+        const newAccessToken = logonAck.authorizationGrant.accessToken;
+        client.updateAccessToken({newAccessToken});
+    }
+}
+
+setTimeout(() => client.sendLogonMessage({
+    logonParams: new LogonParams({
+        clientSecret: process.env.CLIENT_SECRET,
+        credentials: client.accountCredentialsList
+    }),
+    onResponse: setAccessToken}), 3000);
 
 // setTimeout(
 //     () =>
@@ -63,7 +76,7 @@ let coinbasePrimeOrderId1 = 2222;
 
 // setTimeout(
 // 	() =>
-// 		client.sendPlaceOrderMessage({
+// 		client.sendPlaceSingleOrderMessage({
 //             onResponse: ({ orderId }) => (geminiOrderId1 = orderId),
 // 			accountInfo: geminiAccountInfo,
 // 			clientOrderId: 1111,
@@ -78,7 +91,7 @@ let coinbasePrimeOrderId1 = 2222;
 
 // setTimeout(
 // 	() =>
-// 		client.sendPlaceOrderMessage({
+// 		client.sendPlaceSingleOrderMessage({
 //             onResponse: ({ orderId }) => (coinbasePrimeOrderId1 = orderId),
 // 			accountInfo: coinbasePrimeAccountInfo,
 // 			clientOrderId: 2222,
@@ -125,13 +138,13 @@ let coinbasePrimeOrderId1 = 2222;
 //         }
 // }), 6000);
 
-setTimeout(() =>
-    client.sendGetWorkingOrdersMessage({
-        accountId: geminiAccountInfo.accountId,
-        onResponse: (response) => {
-            console.log(response)
-        }
-}), 2000);
+// setTimeout(() =>
+//     client.sendGetWorkingOrdersMessage({
+//         accountId: geminiAccountInfo.accountId,
+//         onResponse: (response) => {
+//             console.log(response)
+//         }
+// }), 2000);
 
 // setTimeout(() =>
 //     client.sendGetWorkingOrdersMessage({
