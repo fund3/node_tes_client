@@ -50,6 +50,7 @@ class Messenger {
 	cleanupSockets = () => {
 		this.cleanupSocket({ socket: this.tesSocket.get() });
 		this.cleanupSocket({ socket: this.backendSocket.get() });
+		this.cleanupSocket({ socket: this.messageSocket.get() });
 	};
 
 	cleanupSocket = ({ socket }) => {
