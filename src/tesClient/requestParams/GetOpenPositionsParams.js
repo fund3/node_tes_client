@@ -1,7 +1,7 @@
 import AccountInfo from "~/tesClient/account/AccountInfo";
 
 
-class GetAccountBalancesParams {
+class GetOpenPositionsParams {
   constructor({ accountId }) {
     /**
      * @param accountInfo: (int) accountInfo corresponding to an account
@@ -11,4 +11,4 @@ class GetAccountBalancesParams {
   }
 }
 
-export default GetAccountBalancesParams;
+export default GetOpenPositionsParams;

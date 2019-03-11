@@ -1,6 +1,6 @@
 class RequestHeader {
-  constructor({ clientId = undefined,
-                senderCompId = undefined,
+  constructor({ clientId,
+                senderCompId,
                 accessToken = undefined,
                 requestId = 0 }) {
     /**
@@ -11,16 +11,10 @@ class RequestHeader {
      *     authenticated with clientSecret.
      * @param requestId: (int) Optional id to link request and response.
     */
-    if (clientId !== undefined) {
-        this.clientId = clientId
-    }
-    if (senderCompId !== undefined) {
-        this.senderCompId = senderCompId
-    }
-    if (accessToken !== undefined) {
-        this.accessToken = accessToken
-    }
-    this.requestId = requestId;
+    this.clientID = clientId;
+    this.senderCompID = senderCompId;
+    this.accessToken = accessToken;
+    this.requestID = requestId;
   }
 }
 
