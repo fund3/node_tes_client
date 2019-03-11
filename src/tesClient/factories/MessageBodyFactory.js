@@ -11,16 +11,23 @@ class MessageBodyFactory {
 			case messageBodyTypes.TEST:
 				return { [messageBodyTypes.TEST]: messageBodyContents };
 
-			case messageBodyTypes.LOGON_REQUEST:
-				return {
-					[messageBodyTypes.LOGON_REQUEST]: messageBodyContents
-				};
+			case messageBodyTypes.GET_SERVER_TIME:
+				return { [messageBodyTypes.GET_SERVER_TIME]:
+                    messageBodyContents};
+
+            case messageBodyTypes.LOGON:
+				return { [messageBodyTypes.LOGON]: messageBodyContents};
 
 			case messageBodyTypes.LOGOFF:
 				return { [messageBodyTypes.LOGOFF]: "" };
 
-			case messageBodyTypes.PLACE_ORDER:
-				return { [messageBodyTypes.PLACE_ORDER]: messageBodyContents };
+            case messageBodyTypes.AUTHORIZATION_REFRESH:
+				return { [messageBodyTypes.AUTHORIZATION_REFRESH]:
+                    messageBodyContents};
+
+			case messageBodyTypes.PLACE_SINGLE_ORDER:
+				return { [messageBodyTypes.PLACE_SINGLE_ORDER]:
+                    messageBodyContents };
 
 			case messageBodyTypes.REPLACE_ORDER:
 				return { [messageBodyTypes.REPLACE_ORDER]:
@@ -32,10 +39,6 @@ class MessageBodyFactory {
 
 			case messageBodyTypes.GET_ORDER_STATUS:
 				return { [messageBodyTypes.GET_ORDER_STATUS]:
-					messageBodyContents };
-
-			case messageBodyTypes.GET_ORDER_MASS_STATUS:
-				return { [messageBodyTypes.GET_ORDER_MASS_STATUS]:
 					messageBodyContents };
 
 			case messageBodyTypes.GET_ACCOUNT_DATA:
@@ -72,33 +75,23 @@ class MessageBodyFactory {
 		return MessageBodyFactory.buildMessageBody({ messageBodyType });
 	};
 
-	static buildLogonMessageBody = ({ accountCredentialsList }) => {
-		const messageBodyType = messageBodyTypes.LOGON_REQUEST;
-		const messageBodyContents = { credentials: accountCredentialsList };
+	static buildTestMessageBody = ({ testMessageParams }) => {
+		const messageBodyType = messageBodyTypes.TEST;
 		return MessageBodyFactory.buildMessageBody({
-			messageBodyType,
-			messageBodyContents
-		});
+            messageBodyType, messageBodyContents: testMessageParams });
 	};
 
-	static buildGetAccountBalancesMessageBody = ({ accountId }) => {
-		const messageBodyType = messageBodyTypes.GET_ACCOUNT_BALANCES;
-		const messageBodyContents = {
-			accountInfo: new AccountInfo({ accountId }) };
-		return MessageBodyFactory.buildMessageBody({
-			messageBodyType,
-			messageBodyContents
-		});
+	static buildGetServerTimeMessageBody = () => {
+		const messageBodyType = messageBodyTypes.GET_SERVER_TIME;
+		return MessageBodyFactory.buildMessageBody({ messageBodyType });
 	};
 
-	static buildGetAccountDataMessageBody = ({ accountId }) => {
-		const messageBodyType = messageBodyTypes.GET_ACCOUNT_DATA;
-		const messageBodyContents = {
-			accountInfo: new AccountInfo({ accountId }) };
-		return MessageBodyFactory.buildMessageBody({
-			messageBodyType,
-			messageBodyContents
-		});
+	static buildLogonMessageBody = ({ logonParams }) => {
+		    const messageBodyType = messageBodyTypes.LOGON;
+		    return MessageBodyFactory.buildMessageBody({
+                messageBodyType,
+                messageBodyContents: logonParams
+		    });
 	};
 
 	static buildLogoffMessageBody = () => {
@@ -106,93 +99,95 @@ class MessageBodyFactory {
 		return MessageBodyFactory.buildMessageBody({ messageBodyType });
 	};
 
-	static buildPlaceOrderMessageBody = ({ 
-		accountInfo,
-		clientOrderId,
-		symbol,
-		side,
-		quantity,
-		orderType,
-		price,
-		timeInForce,
-		leverageType,
-		leverage,
-		clientOrderLinkId
+	static buildPlaceSingleOrderMessageBody = ({
+		placeOrderParams
 	 }) => {
-		const messageBodyType = messageBodyTypes.PLACE_ORDER;
-		let messageBodyContents = {
-			accountInfo: accountInfo,
-			clientOrderID: clientOrderId,
-			symbol,
-			side,
-			quantity,
-			orderType: orderType,
-			price,
-			timeInForce: timeInForce,
-			leverageType: leverageType,
-			leverage,
-			clientOrderLinkID: clientOrderLinkId
-		};
+		const messageBodyType = messageBodyTypes.PLACE_SINGLE_ORDER;
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
-			messageBodyContents
+			messageBodyContents: placeOrderParams
 		});
 	};
 
-	static buildGetOrderStatusMessageBody = ({ accountInfo, orderId }) => {
-		const messageBodyType = messageBodyTypes.GET_ORDER_STATUS;
-		const messageBodyContents = {
-			accountInfo: accountInfo, orderID: orderId };
+	static buildReplaceOrderMessageBody = ({
+		replaceOrderParams
+	 }) => {
+		const messageBodyType = messageBodyTypes.REPLACE_ORDER;
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
-			messageBodyContents
+			messageBodyContents: replaceOrderParams
 		});
 	};
 
-	static buildGetWorkingOrdersMessageBody = ({ accountId }) => {
-		const messageBodyType = messageBodyTypes.GET_WORKING_ORDERS;
-		const messageBodyContents = {
-			accountInfo: new AccountInfo({ accountId }) };
-		return MessageBodyFactory.buildMessageBody({
-			messageBodyType,
-			messageBodyContents
-		});
-	};
-
-	static buildCancelOrderMessageBody = ({ accountId, orderId }) => {
+	static buildCancelOrderMessageBody = ({ cancelOrderParams }) => {
 		const messageBodyType = messageBodyTypes.CANCEL_ORDER;
-		const messageBodyContents = {
-			accountInfo: new AccountInfo({ accountId }),
-			orderID:  orderId};
+
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
-			messageBodyContents
+			messageBodyContents: cancelOrderParams
 		});
 	};
 
-	static buildGetCompletedOrdersMessageBody = (
-		{ accountId, count, since }) => {
-			const messageBodyType = messageBodyTypes.GET_COMPLETED_ORDERS;
-			let messageBodyContents = {
-				accountInfo: new AccountInfo({ accountId }) };
-			if (!isNil(count)) {
-				messageBodyContents.count = count;
-			}
-			if (!isNil(since)) {
-				messageBodyContents.since = since;
-			}
-			return MessageBodyFactory.buildMessageBody({
-				messageBodyType,
-				messageBodyContents
-			});
-	};
+	static buildGetOrderStatusMessageBody = ({ getOrderStatusParams }) => {
+        const messageBodyType = messageBodyTypes.GET_ORDER_STATUS;
+        return MessageBodyFactory.buildMessageBody({
+            messageBodyType,
+            messageBodyContents: getOrderStatusParams
+        });
+    };
 
-	static buildGetExchangePropertiesMessageBody = ({ exchange }) => {
-		const messageBodyType = messageBodyTypes.GET_EXCHANGE_PROPERTIES;
-		const messageBodyContents = { exchange: exchange };
+	static buildGetAccountDataMessageBody = ({ getAccountDataParams }) => {
+		const messageBodyType = messageBodyTypes.GET_ACCOUNT_DATA;
 		return MessageBodyFactory.buildMessageBody({
 			messageBodyType,
-			messageBodyContents
+			messageBodyContents: getAccountDataParams
+		});
+	};
+
+	static buildGetAccountBalancesMessageBody = ({
+        getAccountBalancesParams
+	}) => {
+		const messageBodyType = messageBodyTypes.GET_ACCOUNT_BALANCES;
+		return MessageBodyFactory.buildMessageBody({
+			messageBodyType,
+			messageBodyContents: getAccountBalancesParams
+		});
+	};
+
+	static buildGetOpenPositionsMessageBody = ({ getOpenPositionsParams }) => {
+		const messageBodyType = messageBodyTypes.GET_OPEN_POSITIONS;
+		return MessageBodyFactory.buildMessageBody({
+			messageBodyType,
+			messageBodyContents: getOpenPositionsParams
+		});
+	};
+
+	static buildGetWorkingOrdersMessageBody = ({ getWorkingOrderParams }) => {
+		const messageBodyType = messageBodyTypes.GET_WORKING_ORDERS;
+		return MessageBodyFactory.buildMessageBody({
+			messageBodyType,
+			messageBodyContents: getWorkingOrderParams
+		});
+	};
+
+	static buildGetCompletedOrdersMessageBody = ({
+        getCompletedOrdersParams
+	}) => {
+        const messageBodyType = messageBodyTypes.GET_COMPLETED_ORDERS;
+
+        return MessageBodyFactory.buildMessageBody({
+            messageBodyType,
+            messageBodyContents: getCompletedOrdersParams
+        });
+	};
+
+	static buildGetExchangePropertiesMessageBody = ({
+        getExchangePropertiesParams
+	}) => {
+		const messageBodyType = messageBodyTypes.GET_EXCHANGE_PROPERTIES;
+		return MessageBodyFactory.buildMessageBody({
+			messageBodyType,
+			messageBodyContents: getExchangePropertiesParams
 		});
 	}
 }
