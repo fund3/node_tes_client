@@ -1,24 +1,6 @@
 // common_types.js
 
 // Enums
-const Exchange = {
-    // Exchange Names
-    // https://github.com/fund3/communication-protocol/blob/master/Exchanges.capnp
-    //
-    undefined: 0,
-    poloniex: 1,
-    kraken: 2,
-    gemini: 3,
-    bitfinex: 4,
-    bittrex: 5,
-    binance: 6,
-    coinbasePro: 7,
-    coinbasePrime: 8,
-    bitstamp: 9,
-    itBit: 10
-};
-
-
 const Side = {
     // Trading Sides
     // https://github.com/fund3/CommunicationProtocol/blob/master/TradeMessage.capnp
@@ -525,7 +507,6 @@ class ExchangePropertiesReport {
 
 export {
     // Enums
-    Exchange,
     Side,
     OrderType,
     OrderStatus,
