@@ -1,5 +1,3 @@
-import AccountInfo from "~/tesClient/account/AccountInfo";
-import isNil from "lodash/isNil";
 import { messageBodyTypes } from "~/tesClient/constants";
 
 class MessageBodyFactory {
