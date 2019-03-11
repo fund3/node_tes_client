@@ -9,7 +9,7 @@ class GetOrderStatusParams {
      * @param orderId: (String) id corresponding to an order on TES.
      *    Required.
     */
-    this.accountInfo = AccountInfo({ accountId });
+    this.accountInfo = new AccountInfo({ accountId });
     this.orderID = orderId
   }
 }

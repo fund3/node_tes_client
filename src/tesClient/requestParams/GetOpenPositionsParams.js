@@ -7,7 +7,7 @@ class GetOpenPositionsParams {
      * @param accountInfo: (int) accountInfo corresponding to an account
      *     on an exchange. Required.
     */
-    this.accountInfo = AccountInfo({ accountId });
+    this.accountInfo = new AccountInfo({ accountId });
   }
 }
 

@@ -10,7 +10,7 @@ class ReplaceOrderParams {
       price = undefined,
       stopPrice = undefined
   }) {
-        this.accountInfo = AccountInfo({ accountId });
+        this.accountInfo = new AccountInfo({ accountId });
         this.orderID = orderId;
         if (quantity !== undefined) {
             this.quantity = quantity;

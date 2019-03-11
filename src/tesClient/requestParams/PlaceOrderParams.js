@@ -18,7 +18,7 @@ class PlaceSingleOrderParams {
       leverageType = undefined,
       leverage = undefined,
   }) {
-        this.accountInfo = AccountInfo({ accountId });
+        this.accountInfo = new AccountInfo({ accountId });
         this.clientOrderID = clientOrderId;
         if (clientOrderLinkId !== undefined) {
             this.clientOrderLinkID = clientOrderLinkId;

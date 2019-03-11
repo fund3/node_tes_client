@@ -6,6 +6,7 @@ import uuidv4 from 'uuid/v4'
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
+import GetAccountBalancesParams from '~/tesClient/requestParams/GetAccountBalancesParams'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
 
 const geminiAccountInfo = new AccountInfo(
@@ -56,19 +57,23 @@ setTimeout(() => client.sendLogonMessage({
     }),
     onResponse: setAccessToken}), 3000);
 
-// setTimeout(
-//     () =>
-//         client.sendGetAccountBalancesMessage({
-//                 accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-//             onResponse: response => console.log(response)
-//         }), 3000);
-//
-// setTimeout(
-//     () =>
-//         client.sendGetAccountBalancesMessage({
-//                 accountId: process.env.GEMINI_ACCOUNT_ID,
-//             onResponse: response => console.log(response)
-//         }), 10000);
+client.defaultRequestHeader.requestID = 1
+const getAccountBalancesParams = new GetAccountBalancesParams({
+                accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})
+setTimeout(
+    () =>
+        client.sendGetAccountBalancesMessage({
+            getAccountBalancesParams,
+            onResponse: response => console.log(response)
+        }), 3000);
+
+setTimeout(
+    () =>
+        client.sendGetAccountBalancesMessage({
+            getAccountBalancesParams: new GetAccountBalancesParams({
+                accountId: process.env.GEMINI_ACCOUNT_ID}),
+            onResponse: response => console.log(response)
+        }), 10000);
 
 let geminiOrderId1 = 1111;
 let coinbasePrimeOrderId1 = 2222;
