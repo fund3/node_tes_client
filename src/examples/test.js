@@ -39,8 +39,7 @@ const client =
         senderCompId: String(uuidv4()),
         accountCredentialsList,
         curveServerKey: process.env.CURVE_SERVER_KEY,
-        tesSocketEndpoint: process.env.TCP_ADDRESS,
-        backendSocketEndpoint: process.env.INPROC_ADDRESS
+        tesSocketEndpoint: process.env.TCP_ADDRESS
     });
 
 function setAccessToken( logonAck ) {

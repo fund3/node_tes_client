@@ -1,8 +1,8 @@
-import TesSocket from "~/tesClient/sockets/TesSocket";
 import BackendSocket from "~/tesClient/sockets/BackendSocket";
-import MessageSocket from "~/tesClient/sockets/MessageSocket";
 import MessageResponder from "./MessageResponder";
 import MessageSender from "./MessageSender";
+import MessageSocket from "~/tesClient/sockets/MessageSocket";
+import TesSocket from "~/tesClient/sockets/TesSocket";
 
 class Messenger {
 	

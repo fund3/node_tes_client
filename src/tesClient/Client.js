@@ -12,8 +12,7 @@ class Client {
         accessToken = undefined,
         accountCredentialsList,
         curveServerKey,
-        tesSocketEndpoint,
-        backendSocketEndpoint
+        tesSocketEndpoint
     }) {
         this.clientId = clientId;
         this.senderCompId = senderCompId;
@@ -22,7 +21,8 @@ class Client {
         this.defaultRequestHeader = new RequestHeader({
             clientId, senderCompId, accessToken
         });
-
+        const backendSocketEndpoint = "inproc://" +
+            String(clientId) + senderCompId;
         this.messageFactory = new MessageFactory();
 
         this.messenger = new Messenger({
