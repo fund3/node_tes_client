@@ -26,8 +26,9 @@ class MessageParser {
 
     static parseMessageBodyContents =
         ({ messageBodyType, messageBodyContents }) => {
+            return messageBodyContents;
             switch (messageBodyType) {
-                case messageBodyTypes.LOGON_COMPLETE:
+                case messageBodyTypes.LOGON_ACK:
                     return MessageParser.parseLogonComplete(
                         { messageBodyContents });
 
@@ -35,7 +36,7 @@ class MessageParser {
                     return MessageParser.parseAccountBalancesReport({
                         messageBodyContents });
 
-                case messageBodyTypes.LOGOFF_COMPLETE:
+                case messageBodyTypes.LOGOFF_ACK:
                     return MessageParser.parseLogoffComplete({
                         messageBodyContents });
 
