@@ -44,10 +44,13 @@ class MessageResponder {
             if(incomingRequestId === expectedRequestId) {
                 callback(messageBodyContents);
                 subscriber.unsubscribe();
-            } else if (responseMessageBodyType !== undefined &&
-                       responseTypeCallback !== undefined &&
-                       responseMessageBodyType === messageBodyType) {
-                responseTypeCallback(messageBodyContents);
+            } else if (incomingRequestId === 0 || incomingRequestId === -1) {
+                // Only fallback when requestId is default value.
+                if (responseMessageBodyType !== undefined &&
+                    responseTypeCallback !== undefined &&
+                    responseMessageBodyType === messageBodyType) {
+                    responseTypeCallback(messageBodyContents);
+                }
             }
         })
     }
