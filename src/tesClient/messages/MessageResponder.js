@@ -32,7 +32,7 @@ class MessageResponder {
 
     subscribeCallbackToResponseType = ({
         expectedRequestId,
-        callback,
+        requestIdCallback,
         responseMessageBodyType,
         responseTypeCallback
     }) => {
@@ -41,16 +41,16 @@ class MessageResponder {
             messageBodyType,
             messageBodyContents
         }) => {
-            if(incomingRequestId === expectedRequestId) {
-                callback(messageBodyContents);
-                subscriber.unsubscribe();
-            } else if (incomingRequestId === 0 || incomingRequestId === -1) {
+            if (incomingRequestId === 0 || incomingRequestId === -1) {
                 // Only fallback when requestId is default value.
                 if (responseMessageBodyType !== undefined &&
                     responseTypeCallback !== undefined &&
                     responseMessageBodyType === messageBodyType) {
                     responseTypeCallback(messageBodyContents);
                 }
+            } else if(incomingRequestId === expectedRequestId) {
+                requestIdCallback(messageBodyContents);
+                subscriber.unsubscribe();
             }
         })
     }

@@ -18,13 +18,13 @@ class Messenger {
 	sendMessage = ({
         message,
         expectedRequestId,
-        onResponse,
-        responseMessageBodyType = undefined,
-        responseTypeCallback = undefined
+        requestIdCallback,
+        responseMessageBodyType,
+        responseTypeCallback
 	}) => {
 		this.messageResponder.subscribeCallbackToResponseType({
             expectedRequestId,
-			callback: onResponse,
+			requestIdCallback,
             responseMessageBodyType,
             responseTypeCallback
 		});
