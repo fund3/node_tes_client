@@ -44,7 +44,6 @@ const client =
     });
 
 function setAccessToken( logonAck ) {
-    console.log(logonAck);
     if (logonAck.success){
         const newAccessToken = logonAck.authorizationGrant.accessToken;
         client.updateAccessToken({newAccessToken});
