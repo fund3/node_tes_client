@@ -1,4 +1,5 @@
 import messageBodyTypes from './messageBodyTypes'
 import messageTypes from './messageTypes'
+import exchanges from './exchanges'
 
-export { messageBodyTypes, messageTypes };
+export { exchanges, messageBodyTypes, messageTypes };

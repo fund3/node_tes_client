@@ -1,14 +1,19 @@
 import request from "request";
 
-import { exchanges } from "~/tes_client/constants";
+import { exchanges } from "~/tesClient/constants";
 
 class TickerFactory {
-    static getTicker = ({ exchange, pair, sandbox, onResponse }) => {
+    static getLastPrice = ({ exchange, pair, sandbox = false, onResponse }) => {
         switch(exchange) {
             case exchanges.COINBASE_PRIME:
-                return TickerFactory.getTickerFromCoinbasePrime({ pair, sandbox, onResponse });
+                return TickerFactory.getTickerFromCoinbasePrime({
+                    pair, sandbox, onResponse });
             case exchanges.GEMINI:
-                return TickerFactory.getTickerFromGemini({ pair, sandbox, onResponse });
+                return TickerFactory.getTickerFromGemini({
+                    pair, sandbox, onResponse });
+            case exchanges.KRAKEN:
+                return TickerFactory.getTickerFromKraken({
+                    pair, onResponse });
         }
     }
 
@@ -20,7 +25,8 @@ class TickerFactory {
             url = 'https://api.prime.coinbase.com/products/';
         }
         const options = {
-            url: url + pair + '/ticker',
+            url: url + pair + '/ticker', // Format: 'BTC-USD'
+            method: 'GET',
             headers: {
                 'User-Agent': 'request'
             },
@@ -37,7 +43,7 @@ class TickerFactory {
             url = 'https://api.gemini.com/v1/pubticker/';
         }
         const options = {
-            url: url + pair,
+            url: url + pair,  // Format: 'btcusd'
             headers: {
                 'User-Agent': 'request'
             },
@@ -46,17 +52,28 @@ class TickerFactory {
         request(options, onResponse);
     }
 
-    static formatTickerFromCoinbasePrime = ({  }) => {
-
+    static getTickerFromKraken = ({pair, onResponse}) => {
+        const url = 'https://api.kraken.com/0/public/Ticker?pair=';
+        const options = {
+            url: url + pair,  // Format: 'XXBTZUSD'
+            headers: {
+                'User-Agent': 'request'
+            },
+            json: true
+        };
+        request(options, onResponse);
     }
 
-    static formatTickerFromGemini = ({  }) => {
-
+    static formatTickerFromCoinbasePrime = ({ body }) => {
+        return parseFloat(body.price);
     }
 
-    static getLastPrice = ({ exchange, pair, sandbox }) => {
-        const ticker =  TickerFactory.getTicker({ exchange, pair, sandbox, onResponse })
+    static formatTickerFromGemini = ({ body }) => {
+        return parseFloat(body.last);
+    }
 
+    static formatTickerFromKraken = ({ body }) => {
+        return parseFloat(body.result.XXBTZUSD.c[0])
     }
 }
 
