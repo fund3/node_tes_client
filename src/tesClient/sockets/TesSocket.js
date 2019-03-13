@@ -11,10 +11,8 @@ class TesSocket {
 
   authenticate = ({ curveServerKey }) => {
     const curveKeypair = zmq.curveKeypair();
-    console.log(curveKeypair)
     this.socket.curve_publickey = curveKeypair.public;
     this.socket.curve_secretkey = curveKeypair.secret;
-    console.log(curveServerKey)
     this.socket.curve_serverkey = curveServerKey;
   }
 
