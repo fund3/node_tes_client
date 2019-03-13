@@ -1,8 +1,14 @@
 import request from "request";
 
 import { exchanges } from "~/tesClient/constants";
+const KrakenClient = require('kraken-api');
 
 class TickerFactory {
+
+    constructor(key, secret){
+        this.krakenApi = new KrakenClient(key, secret, {});
+    }
+
     static getLastPrice = ({ exchange, pair, sandbox = false, onResponse }) => {
         switch(exchange) {
             case exchanges.COINBASE_PRIME:
@@ -74,6 +80,25 @@ class TickerFactory {
 
     static formatTickerFromKraken = ({ body }) => {
         return parseFloat(body.result.XXBTZUSD.c[0])
+    }
+
+    getFeesFromKraken = ({ pair, onResponse }) => {
+        this.krakenApi.api(
+            'TradeVolume',
+            {"pair": pair},
+            function(error, data) {
+                if(error) {
+                    console.log(error);
+                }
+                else {
+                    const taker_fee = parseFloat(data.result.fees[pair].fee);
+                    const maker_fee = parseFloat(
+                        data.result.fees_maker[pair].fee);
+                    onResponse(
+                        {'maker_fee': maker_fee, 'taker_fee': taker_fee});
+                }
+});
+
     }
 }
 
