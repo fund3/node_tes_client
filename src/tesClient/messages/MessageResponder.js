@@ -41,7 +41,7 @@ class MessageResponder {
             messageBodyType,
             messageBodyContents
         }) => {
-            if (incomingRequestId === 0 || incomingRequestId === -1) {
+            if (incomingRequestId === 0) {
                 // Only fallback when requestId is default value.
                 if (responseMessageBodyType !== undefined &&
                     responseTypeCallback !== undefined &&
