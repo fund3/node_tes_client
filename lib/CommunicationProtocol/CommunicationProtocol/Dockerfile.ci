@@ -1,0 +1,19 @@
+FROM ubuntu:bionic
+
+RUN \
+  apt-get update && apt-get install -y \
+    autoconf automake libtool pkg-config g++ git make wget \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://capnproto.org/capnproto-c++-0.7.0.tar.gz && \
+    tar zxf capnproto-c++-0.7.0.tar.gz && \
+    cd capnproto-c++-0.7.0 && \
+    ./configure && \
+    make -j8 check && \
+    make install
+
+WORKDIR /src
+
+COPY . .
+
+RUN find *.capnp | xargs capnp compile -oc++ 
