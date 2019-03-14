@@ -49,5 +49,5 @@ setTimeout(() => client.sendGetAccountBalancesMessage({
     onResponse: response => console.log(response)
 }), 3000);
 
-setInterval(client.sendLogoffMessage(
+setInterval(() => client.sendLogoffMessage(
     { onResponse: response => console.log(response) }), 7000);
