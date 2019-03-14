@@ -6,7 +6,7 @@ import uuidv4 from 'uuid/v4'
 import Client from '~/tesClient/Client'
 import AccountInfo from '~/tesClient/account/AccountInfo'
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
-
+import LogonParams from "~/tesClient/requestParams/LogonParams";
 
 const CLIENT_ID = 123;
 const SENDER_COMP_ID = String(uuidv4());
@@ -20,34 +20,42 @@ const SECRET_KEY = process.env.GEMINI_SECRET_KEY;
 const PASSPHRASE = process.env.GEMINI_PASSPHRASE; // Optional, only required on some exchanges
 
 const ACCOUNT_INFO = new AccountInfo({ accountId: ACCOUNT_ID });
-const EXCHANGE_ACCOUNT_CREDENTIALS =
-    new AccountCredentials({
-        accountInfo: ACCOUNT_INFO,
-        apiKey: API_KEY,
-        secretKey: SECRET_KEY
-    });
+const geminiAccountCredentials = new AccountCredentials({
+	accountId: process.env.GEMINI_ACCOUNT_ID,
+	apiKey: process.env.GEMINI_API_KEY,
+	secretKey: process.env.GEMINI_SECRET_KEY,
+	passphrase: process.env.GEMINI_PASSPHRASE
+});
 
-const ACCOUNT_CREDENTIALS_LIST = [
-    EXCHANGE_ACCOUNT_CREDENTIALS
-];
+const accountCredentialsList = [geminiAccountCredentials];
 
-const client =
-    new Client({
-        clientId: parseInt(CLIENT_ID),
-        senderCompId: SENDER_COMP_ID,
-        accountCredentialsList: ACCOUNT_CREDENTIALS_LIST,
-        curveServerKey: CURVE_SERVER_KEY,
-        tesSocketEndpoint: TES_ENDPOINT,
-        backendSocketEndpoint: INPROC_ENDPOINT
-    });
+const client = new Client({
+	clientId: parseInt(process.env.CLIENT_ID),
+	senderCompId: String(uuidv4()),
+	accountCredentialsList,
+	curveServerKey: process.env.CURVE_SERVER_KEY,
+	tesSocketEndpoint: process.env.TCP_ADDRESS
+});
 
+client.sendLogonMessage({
+    logonParams: new LogonParams({
+        clientSecret: process.env.CLIENT_SECRET,
+        credentials: client.accountCredentialsList
+    }),
+    requestIdCallback: logonAck => console.log(logonAck)
+});
 
-client.sendLogonMessage({ onResponse: response => console.log(response)});
+setTimeout(
+	() =>
+		client.sendGetAccountBalancesMessage({
+            accountId: process.env.GEMINI_ACCOUNT_ID,
+			requestIdCallback: response => console.log(response)
+		}),
+	3000
+);
 
-setTimeout(() => client.sendGetAccountBalancesMessage({
-    accountId: ACCOUNT_ID,
-    onResponse: response => console.log(response)
-}), 3000);
-
-setInterval(() => client.sendLogoffMessage(
-    { onResponse: response => console.log(response) }), 7000);
+setInterval(
+    () => client.sendLogoffMessage(
+        { requestIdCallback: response => console.log(response) }),
+	7000
+);
