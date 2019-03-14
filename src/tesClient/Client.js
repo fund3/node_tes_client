@@ -32,6 +32,32 @@ class Client {
         });
     }
 
+    sendMessage = ({
+            expectedRequestId,
+            responseMessageBodyType,
+            message,
+            requestIdCallback,
+            responseTypeCallback
+    }) => {
+        this.generateNewRequestId();
+        this.messenger.sendMessage({
+            expectedRequestId,
+            responseMessageBodyType,
+            message,
+            requestIdCallback,
+            responseTypeCallback
+        });
+    };
+
+    getRandomInt = ({ max }) => {
+        return Math.floor(Math.random() * Math.floor(max));
+    };
+
+    generateNewRequestId = () => {
+        this.defaultRequestHeader.requestId = this.getRandomInt({
+            max: 1000000000 });
+    };
+
     updateAccessToken = ({ newAccessToken }) => {
         this.accessToken = newAccessToken;
         this.defaultRequestHeader.accessToken = newAccessToken;
@@ -40,17 +66,19 @@ class Client {
     sendHeartbeatMessage = ({
         requestHeader = this.defaultRequestHeader,
         onResponse,
+        requestIdCallback,
         responseTypeCallback = undefined
     }) => {
         const heartbeatMessage =
             this.messageFactory.buildHeartbeatMessage({
                 requestHeader
             });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.HEARTBEAT,
             message: heartbeatMessage,
-            onResponse
+            requestIdCallback,
+            responseTypeCallback
         });
     };
 
@@ -65,7 +93,7 @@ class Client {
                 requestHeader,
                 testMessageParams
             });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.TEST,
             message: testMessage,
@@ -83,7 +111,7 @@ class Client {
             this.messageFactory.buildGetServerTimeMessage({
                 requestHeader
             });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.SERVER_TIME,
             message: getServerTimeMessage,
@@ -100,11 +128,17 @@ class Client {
     }) => {
         const logonMessage = this.messageFactory.buildLogonMessage({
             requestHeader, logonParams });
-        this.messenger.sendMessage({
+
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.LOGON_ACK,
             message: logonMessage,
-            requestIdCallback,
+            requestIdCallback: (logonAck) => {
+                this.updateAccessToken({
+                    newAccessToken: logonAck.authorizationGrant.accessToken
+                });
+                requestIdCallback(logonAck);
+            },
             responseTypeCallback
         });
     };
@@ -117,7 +151,7 @@ class Client {
         const logoffMessage = this.messageFactory.buildLogoffMessage({
             requestHeader
         });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.LOGOFF_ACK,
             message: logoffMessage,
@@ -136,7 +170,7 @@ class Client {
             this.messageFactory.buildPlaceSingleOrderMessage({
                 requestHeader, placeOrderParams });
 
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: placeOrderMessage,
@@ -155,7 +189,7 @@ class Client {
             this.messageFactory.buildReplaceOrderMessage({
                 requestHeader, replaceOrderParams });
 
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: replaceOrderMessage,
@@ -174,7 +208,7 @@ class Client {
             this.messageFactory.buildCancelOrderMessage({
                 requestHeader, cancelOrderParams});
 
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: cancelOrderMessage,
@@ -192,7 +226,7 @@ class Client {
         const getOrderStatusMessage =
             this.messageFactory.buildGetOrderStatusMessage({
                 requestHeader, getOrderStatusParams });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: getOrderStatusMessage,
@@ -210,7 +244,7 @@ class Client {
         const getAccountDataMessage =
             this.messageFactory.buildGetAccountDataMessage({
                 requestHeader, getAccountDataParams });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.ACCOUNT_DATA_REPORT,
             message: getAccountDataMessage,
@@ -228,7 +262,7 @@ class Client {
         const getAccountBalancesMessage =
             this.messageFactory.buildGetAccountBalancesMessage({
                 requestHeader, getAccountBalancesParams});
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType:
                 messageBodyTypes.ACCOUNT_BALANCES_REPORT,
@@ -247,7 +281,7 @@ class Client {
         const getOpenPositionsMessage =
             this.messageFactory.buildGetOpenPositionsMessage({
                 requestHeader, getOpenPositionsParams });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.OPEN_POSITIONS_REPORT,
             message: getOpenPositionsMessage,
@@ -265,7 +299,7 @@ class Client {
         const getWorkingOrdersMessage =
             this.messageFactory.buildGetWorkingOrdersMessage({
                 requestHeader, getWorkingOrderParams });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.WORKING_ORDERS_REPORT,
             message: getWorkingOrdersMessage,
@@ -283,7 +317,7 @@ class Client {
             const getCompletedOrdersMessage =
                 this.messageFactory.buildGetCompletedOrdersMessage({
                     requestHeader, getCompletedOrdersParams });
-            this.messenger.sendMessage({
+            this.sendMessage({
             expectedRequestId: requestHeader.requestID,
                 responseMessageBodyType:
                     messageBodyTypes.COMPLETED_ORDERS_REPORT,
@@ -304,7 +338,7 @@ class Client {
                 requestHeader,
                 getExchangePropertiesParams
             });
-        this.messenger.sendMessage({
+        this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType:
                 messageBodyTypes.EXCHANGE_PROPERTIES_REPORT,
