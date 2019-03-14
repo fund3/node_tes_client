@@ -24,11 +24,12 @@
   "homepage": "https://github.com/fund3/node_tes_client#readme",
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "@fund3/communicationprotocol": "^1.0.0",
     "capnp": "^0.3.1",
     "capnp-js": "^0.2.11",
     "dotenv": "^6.2.0",
-    "lodash": "^4.17.11",
     "kraken-api": "^1.0.0",
+    "lodash": "^4.17.11",
     "request": "^2.88.0",
     "rxjs": "^6.3.3",
     "uuid": "^3.3.2",

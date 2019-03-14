@@ -1,5 +1,5 @@
 const capnp = require("capnp");
-const msgsCapnp = require("~/CommunicationProtocol/TradeMessage.capnp");
+const msgsCapnp = require("@fund3/communicationprotocol/TradeMessage.capnp");
 
 class MessageSender {
 
