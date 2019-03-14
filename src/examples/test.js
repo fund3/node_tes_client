@@ -1,8 +1,8 @@
 //index.js
+require("dotenv").config();
 import CancelOrderParams from "../tesClient/requestParams/CancelOrderParams";
 
 require("@babel/polyfill");
-require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
@@ -20,7 +20,7 @@ const geminiAccountInfo = new AccountInfo(
     { accountId: process.env.GEMINI_ACCOUNT_ID });
 const geminiAccountCredentials =
     new AccountCredentials({
-        accountInfo: geminiAccountInfo,
+        accountId: process.env.GEMINI_ACCOUNT_ID,
         apiKey: process.env.GEMINI_API_KEY,
         secretKey: process.env.GEMINI_SECRET_KEY,
         passphrase: process.env.GEMINI_PASSPHRASE 
@@ -28,13 +28,12 @@ const geminiAccountCredentials =
 
 const coinbasePrimeAccountInfo = new AccountInfo(
     { accountId: process.env.COINBASE_PRIME_ACCOUNT_ID });
-const coinbasePrimeAccountCredentials =
-    new AccountCredentials({
-        accountInfo: coinbasePrimeAccountInfo,
-        apiKey: process.env.COINBASE_PRIME_API_KEY,
-        secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
-        passphrase: process.env.COINBASE_PRIME_PASSPHRASE 
-    });
+const coinbasePrimeAccountCredentials = new AccountCredentials({
+	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+	apiKey: process.env.COINBASE_PRIME_API_KEY,
+	secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
+	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
+});
 
 // console.log(geminiAccountInfo.accountID, coinbasePrimeAccountInfo.accountID);
 
@@ -130,38 +129,6 @@ setTimeout(
 		}),
 	8000
 );
-
-// setTimeout(
-// 	() =>
-// 		client.sendPlaceSingleOrderMessage({
-//             placeOrderParams: new PlaceOrderParams({
-//                 accountId: coinbasePrimeAccountInfo.accountID,
-//                 clientOrderId: 2222,
-//                 symbol: "BTC/USD",
-//                 side: "buy",
-//                 quantity: 1.17,
-//                 orderType: 'market'
-//             }),
-//             requestIdCallback: ({ orderId }) => (
-//                 coinbasePrimeOrderId1 = orderId),
-// 		}),
-// 	8000
-// );
-
-// setTimeout(
-// 	() =>
-// 		client.sendPlaceSingleOrderMessage({
-//             onResponse: ({ orderId }) => (coinbasePrimeOrderId1 = orderId),
-// 			accountInfo: coinbasePrimeAccountInfo,
-// 			clientOrderId: 2222,
-// 			symbol: "ETH/USD",
-// 			side: "buy",
-// 			quantity: 5.0,
-// 			price: 10.0,
-//             orderType: 'limit'
-// 		}),
-// 	3000
-// );
 
 setTimeout(() =>
     client.sendGetOrderStatusMessage({
