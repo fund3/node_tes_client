@@ -1,13 +1,15 @@
+import AccountInfo from "~/tesClient/account/AccountInfo";
+
 class AccountCredentials {
   constructor({
-      accountInfo,
+      accountId,
       apiKey,
       secretKey,
       passphrase = ''
   }) {
     /**
     AccountCredentials object is used for logon
-    * @param accountInfo: AccountInfo object containing accountID
+    * @param accountId: accountId assigned by Fund3
     * @param apiKey: String apiKey for connecting to exchange API
     *    associated with accountID
     * @param secretKey: String secretKey for connecting to exchange API
@@ -15,7 +17,7 @@ class AccountCredentials {
     * @param passphrase: String (optional) passphrase for connecting to API
     *    associated with accountID
     */
-    this.accountInfo = accountInfo;
+    this.accountInfo = new AccountInfo({ accountId });
     this.apiKey = String(apiKey);
     this.secretKey = String(secretKey);
     this.passphrase = String(passphrase);
