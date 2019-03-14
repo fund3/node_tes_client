@@ -39,9 +39,9 @@ class Client {
             requestIdCallback,
             responseTypeCallback
     }) => {
-        this.generateNewRequestId();
+        this.generateNewRequestId({ message });
         this.messenger.sendMessage({
-            expectedRequestId,
+            expectedRequestId: message.type.request.requestID,
             responseMessageBodyType,
             message,
             requestIdCallback,
@@ -53,9 +53,11 @@ class Client {
         return Math.floor(Math.random() * Math.floor(max));
     };
 
-    generateNewRequestId = () => {
-        this.defaultRequestHeader.requestId = this.getRandomInt({
+    generateNewRequestId = ({ message }) => {
+        const newRequestId = this.getRandomInt({
             max: 1000000000 });
+        this.defaultRequestHeader.requestID = newRequestId;
+        message.type.request.requestID = newRequestId;
     };
 
     updateAccessToken = ({ newAccessToken }) => {
