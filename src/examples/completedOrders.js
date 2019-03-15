@@ -7,12 +7,13 @@ import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
+import GetCompletedOrdersParams from "../tesClient/requestParams/GetCompletedOrdersParams";
 
 const geminiAccountInfo = new AccountInfo(
     { accountId: process.env.GEMINI_ACCOUNT_ID });
 const geminiAccountCredentials =
     new AccountCredentials({
-        accountId: process.env.GEMINI_ACCOUNT_ID,
+        accountId: geminiAccountInfo.accountID,
         apiKey: process.env.GEMINI_API_KEY,
         secretKey: process.env.GEMINI_SECRET_KEY,
         passphrase: process.env.GEMINI_PASSPHRASE
@@ -20,12 +21,13 @@ const geminiAccountCredentials =
 
 const coinbasePrimeAccountInfo = new AccountInfo(
     { accountId: process.env.COINBASE_PRIME_ACCOUNT_ID });
-const coinbasePrimeAccountCredentials = new AccountCredentials({
-	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-	apiKey: process.env.COINBASE_PRIME_API_KEY,
-	secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
-	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
-});
+const coinbasePrimeAccountCredentials =
+    new AccountCredentials({
+        accountId: coinbasePrimeAccountInfo.accountID,
+        apiKey: process.env.COINBASE_PRIME_API_KEY,
+        secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
+        passphrase: process.env.COINBASE_PRIME_PASSPHRASE
+    });
 
 const accountCredentialsList = [
     geminiAccountCredentials,
@@ -41,8 +43,8 @@ const client =
         tesSocketEndpoint: process.env.TCP_ADDRESS
     });
 
+
 function logon() {
-    // incrementRequestId();
     client.sendLogonMessage({
         logonParams: new LogonParams({
             clientSecret: process.env.CLIENT_SECRET,
@@ -53,14 +55,21 @@ function logon() {
 }
 
 function logoff() {
-    // incrementRequestId();
     client.sendLogoffMessage(
         { requestIdCallback: response => console.log(response) })
 }
 
 setTimeout(() => logon(), 3000);
 
-setTimeout(() => client.sendHeartbeatMessage({
-    requestIdCallback: response => console.log(response) }), 7000);
+setTimeout(() =>
+    client.sendGetCompletedOrdersMessage({
+        getCompletedOrdersParams: new GetCompletedOrdersParams({
+            accountId: geminiAccountInfo.accountID,
+            count: 1,
+        }),
+        requestIdCallback: response => {
+				console.log(response)
+        }
+}), 7000);
 
-setTimeout(() => logoff(), 10000);
+setTimeout(() => logoff(), 13000);

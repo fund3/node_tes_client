@@ -1,58 +1,110 @@
 //index.js
+import AccountCredentials from '~/tesClient/account/AccountCredentials'
+import AccountInfo from '~/tesClient/account/AccountInfo'
+import Client from '~/tesClient/Client'
+import LogonParams from '~/tesClient/requestParams/LogonParams'
+import PlaceOrderParams from '~/tesClient/requestParams/PlaceOrderParams'
+import GetOrderStatusParams from '~/tesClient/requestParams/GetOrderStatusParams'
+import CancelOrderParams from '~/tesClient/requestParams/CancelOrderParams'
+
 require("@babel/polyfill");
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 
-import Client from '~/tesClient/Client'
-import AccountInfo from '~/tesClient/account/AccountInfo'
-import AccountCredentials from '~/tesClient/account/AccountCredentials'
-
-
-const CLIENT_ID = 123;
-const SENDER_COMP_ID = String(uuidv4());
-const CURVE_SERVER_KEY = process.env.CURVE_SERVER_KEY;
-const TES_ENDPOINT = process.env.TCP_ADDRESS;
-const INPROC_ENDPOINT = process.env.INPROC_ENDPOINT;
-
-const ACCOUNT_ID = 321;
-const API_KEY = process.env.GEMINI_API_KEY;
-const SECRET_KEY = process.env.GEMINI_SECRET_KEY;
-const PASSPHRASE = process.env.GEMINI_PASSPHRASE; // Optional, only required on some exchanges
-
-const ACCOUNT_INFO = new AccountInfo({ accountId: ACCOUNT_ID });
-const EXCHANGE_ACCOUNT_CREDENTIALS =
+const geminiAccountInfo = new AccountInfo(
+    { accountId: process.env.GEMINI_ACCOUNT_ID });
+const geminiAccountCredentials =
     new AccountCredentials({
-        accountInfo: ACCOUNT_INFO,
-        apiKey: API_KEY,
-        secretKey: SECRET_KEY
+        accountId: process.env.GEMINI_ACCOUNT_ID,
+        apiKey: process.env.GEMINI_API_KEY,
+        secretKey: process.env.GEMINI_SECRET_KEY,
+        passphrase: process.env.GEMINI_PASSPHRASE
     });
 
-const ACCOUNT_CREDENTIALS_LIST = [
-    EXCHANGE_ACCOUNT_CREDENTIALS
+const coinbasePrimeAccountInfo = new AccountInfo(
+    { accountId: process.env.COINBASE_PRIME_ACCOUNT_ID });
+const coinbasePrimeAccountCredentials = new AccountCredentials({
+	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+	apiKey: process.env.COINBASE_PRIME_API_KEY,
+	secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
+	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
+});
+
+const accountCredentialsList = [
+    geminiAccountCredentials,
+    coinbasePrimeAccountCredentials
 ];
 
 const client =
     new Client({
-        clientId: parseInt(CLIENT_ID),
-        senderCompId: SENDER_COMP_ID,
-        accountCredentialsList: ACCOUNT_CREDENTIALS_LIST,
-        curveServerKey: CURVE_SERVER_KEY,
-        tesSocketEndpoint: TES_ENDPOINT,
-        backendSocketEndpoint: INPROC_ENDPOINT
+        clientId: parseInt(process.env.CLIENT_ID),
+        senderCompId: String(uuidv4()),
+        accountCredentialsList,
+        curveServerKey: process.env.CURVE_SERVER_KEY,
+        tesSocketEndpoint: process.env.TCP_ADDRESS
     });
 
+function logon() {
+    // incrementRequestId();
+    client.sendLogonMessage({
+        logonParams: new LogonParams({
+            clientSecret: process.env.CLIENT_SECRET,
+            credentials: client.accountCredentialsList
+        }),
+        requestIdCallback: logonAck => console.log(logonAck)
+    })
+}
 
-client.sendLogonMessage({ requestIdCallback: response => console.log(response)});
+function logoff() {
+    // incrementRequestId();
+    client.sendLogoffMessage(
+        { requestIdCallback: response => console.log(response) })
+}
 
-setTimeout(() => client.sendPlaceSingleOrderMessage({
-    requestIdCallback: (response) => (console.log(response.orderID)),
-    accountId: ACCOUNT_ID,
-    clientOrderId: 1111,
-    symbol: "ETH/USD",
-    side: "buy",
-    quantity: 5.0,
-    price: 10.0,
-    orderType: 'limit'
-}), 3000);
+let geminiOrderId1 = 1111;
 
-setInterval(client.sendLogoffMessage({ requestIdCallback: response => console.log(response) }), 7000);
+setTimeout(() => logon(), 3000);
+
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: geminiAccountInfo.accountID,
+                clientOrderId: 1111,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 5.0,
+                price: 1.0,
+                orderType: 'limit'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+                geminiOrderId1 = response.orderID;
+            },
+		}),
+	8000
+);
+
+setTimeout(() =>
+    client.sendGetOrderStatusMessage({
+        getOrderStatusParams: new GetOrderStatusParams({
+            accountId: geminiAccountInfo.accountID,
+            orderId: geminiOrderId1,
+        }),
+        requestIdCallback: (response) => {
+            console.log(response)
+        }
+}), 13000);
+
+setTimeout(() =>
+    client.sendCancelOrderMessage({
+        cancelOrderParams: new CancelOrderParams({
+            accountId: geminiAccountInfo.accountID,
+            orderId: geminiOrderId1
+        }),
+        requestIdCallback: (response) => {
+            console.log(response)
+        }
+}), 20000);
+
+setTimeout(() => logoff(), 24000);

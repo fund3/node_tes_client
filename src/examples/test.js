@@ -35,8 +35,6 @@ const coinbasePrimeAccountCredentials = new AccountCredentials({
 	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
 });
 
-// console.log(geminiAccountInfo.accountID, coinbasePrimeAccountInfo.accountID);
-
 const accountCredentialsList = [
     geminiAccountCredentials,
     coinbasePrimeAccountCredentials
@@ -50,17 +48,6 @@ const client =
         curveServerKey: process.env.CURVE_SERVER_KEY,
         tesSocketEndpoint: process.env.TCP_ADDRESS
     });
-
-function setAccessToken( logonAck ) {
-    if (logonAck.success){
-        const newAccessToken = logonAck.authorizationGrant.accessToken;
-        client.updateAccessToken({newAccessToken});
-    }
-}
-
-function incrementRequestId() {
-    client.defaultRequestHeader.requestID += 1;
-}
 
 function logon() {
     // incrementRequestId();
