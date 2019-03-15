@@ -80,6 +80,24 @@ setTimeout(
 	10000
 );
 
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+                clientOrderId: 1112,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 1.0,
+                orderType: 'market'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+            },
+		}),
+	8000
+);
+
 setTimeout(() =>
     client.sendCancelOrderMessage({
         cancelOrderParams: new CancelOrderParams({

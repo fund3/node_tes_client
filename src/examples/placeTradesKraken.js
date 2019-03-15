@@ -58,7 +58,7 @@ setTimeout(
                 clientOrderId: 1111,
                 symbol: "BTC/USD",
                 side: "buy",
-                quantity: 1.0,
+                quantity: 0.01,
                 price: 1.0,
                 orderType: 'limit'
             }),
@@ -68,6 +68,62 @@ setTimeout(
             },
 		}),
 	10000
+);
+
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: process.env.KRAKEN_ACCOUNT_ID,
+                clientOrderId: 1115,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 0.01,
+                orderType: 'market'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+            },
+		}),
+	8000
+);
+
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: process.env.KRAKEN_ACCOUNT_ID,
+                clientOrderId: 1116,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 0.01,
+                stopPrice: 1.0,
+                orderType: 'stopLoss'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+            },
+		}),
+	8000
+);
+
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: process.env.KRAKEN_ACCOUNT_ID,
+                clientOrderId: 1117,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 0.01,
+                stopPrice: 1.0,
+                orderType: 'takeProfit'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+            },
+		}),
+	8000
 );
 
 setTimeout(() =>
