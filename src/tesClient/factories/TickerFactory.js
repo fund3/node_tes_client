@@ -78,8 +78,8 @@ class TickerFactory {
         return parseFloat(body.last);
     }
 
-    static formatTickerFromKraken = ({ body }) => {
-        return parseFloat(body.result.XXBTZUSD.c[0])
+    static formatTickerFromKraken = ({ body, pair }) => {
+        return parseFloat(body.result[pair].c[0])
     }
 
     getFeesFromKraken = ({ pair, onResponse }) => {
