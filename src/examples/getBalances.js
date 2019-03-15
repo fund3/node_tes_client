@@ -1,4 +1,6 @@
 //index.js
+import GetAccountBalancesParams from "../tesClient/requestParams/GetAccountBalancesParams";
+
 require("@babel/polyfill");
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
@@ -48,13 +50,15 @@ client.sendLogonMessage({
 setTimeout(
 	() =>
 		client.sendGetAccountBalancesMessage({
-            accountId: process.env.GEMINI_ACCOUNT_ID,
+            getAccountBalancesParams: new GetAccountBalancesParams({
+				accountId: process.env.GEMINI_ACCOUNT_ID
+            }),
 			requestIdCallback: response => console.log(response)
 		}),
 	3000
 );
 
-setInterval(
+setTimeout(
     () => client.sendLogoffMessage(
         { requestIdCallback: response => console.log(response) }),
 	7000

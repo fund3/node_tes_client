@@ -42,11 +42,11 @@ const client =
     });
 
 
-client.sendLogonMessage({ onResponse: response => console.log(response)});
+client.sendLogonMessage({ requestIdCallback: response => console.log(response)});
 
 setTimeout(() => client.sendPlaceSingleOrderMessage({
-    onResponse: ({ order_id }) => (console.log(order_id)),
-    accountId: ACCOUNT_INFO,
+    requestIdCallback: (response) => (console.log(response.orderID)),
+    accountId: ACCOUNT_ID,
     clientOrderId: 1111,
     symbol: "ETH/USD",
     side: "buy",
@@ -55,4 +55,4 @@ setTimeout(() => client.sendPlaceSingleOrderMessage({
     orderType: 'limit'
 }), 3000);
 
-setInterval(client.sendLogoffMessage({ onResponse: response => console.log(response) }), 7000);
+setInterval(client.sendLogoffMessage({ requestIdCallback: response => console.log(response) }), 7000);

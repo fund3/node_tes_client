@@ -1,3 +1,4 @@
+require("dotenv").config();
 import TickerFactory from "~/tesClient/factories/TickerFactory"
 
 TickerFactory.getLastPrice({
@@ -22,9 +23,8 @@ TickerFactory.getLastPrice({
     onResponse: (err, res, body) =>
         console.log(TickerFactory.formatTickerFromKraken({ body }))
 });
-
-const key = 'key';
-const secret = 'secret';
+const key = process.env.KRAKEN_API_KEY;
+const secret = process.env.KRAKEN_SECRET_KEY;
 let tickerFactory = new TickerFactory(key, secret);
 
 tickerFactory.getFeesFromKraken({

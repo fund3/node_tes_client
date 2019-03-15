@@ -89,6 +89,9 @@ function getBalances({getAccountBalancesParams}) {
 
 setTimeout(() => logon(), 3000);
 
+setTimeout(() => client.sendHeartbeatMessage({
+    requestIdCallback: response => console.log(response) }), 7000);
+
 // setTimeout(
 //     () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
 //             accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 4000);

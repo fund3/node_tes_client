@@ -67,7 +67,6 @@ class Client {
 
     sendHeartbeatMessage = ({
         requestHeader = this.defaultRequestHeader,
-        onResponse,
         requestIdCallback,
         responseTypeCallback = undefined
     }) => {
