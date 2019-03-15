@@ -1,0 +1,84 @@
+//index.js
+import AccountCredentials from '~/tesClient/account/AccountCredentials'
+import AccountInfo from '~/tesClient/account/AccountInfo'
+import Client from '~/tesClient/Client'
+import LogonParams from '~/tesClient/requestParams/LogonParams'
+import PlaceOrderParams from '~/tesClient/requestParams/PlaceOrderParams'
+import GetOrderStatusParams from '~/tesClient/requestParams/GetOrderStatusParams'
+import CancelOrderParams from '~/tesClient/requestParams/CancelOrderParams'
+
+require("@babel/polyfill");
+require("dotenv").config();
+import uuidv4 from 'uuid/v4'
+
+const krakenAccountCredentials = new AccountCredentials({
+	accountId: process.env.KRAKEN_ACCOUNT_ID,
+	apiKey: process.env.KRAKEN_API_KEY,
+	secretKey: process.env.KRAKEN_SECRET_KEY,
+	passphrase: process.env.KRAKEN_PASSPHRASE
+});
+
+const accountCredentialsList = [
+    krakenAccountCredentials
+];
+
+const client =
+    new Client({
+        clientId: parseInt(process.env.KRAKEN_CLIENT_ID),
+        senderCompId: String(uuidv4()),
+        accountCredentialsList,
+        curveServerKey: process.env.CURVE_SERVER_KEY,
+        tesSocketEndpoint: process.env.TCP_ADDRESS
+    });
+
+function logon() {
+    client.sendLogonMessage({
+        logonParams: new LogonParams({
+            clientSecret: process.env.KRAKEN_CLIENT_SECRET,
+            credentials: client.accountCredentialsList
+        }),
+        requestIdCallback: logonAck => console.log(logonAck)
+    })
+}
+
+function logoff() {
+    client.sendLogoffMessage(
+        { requestIdCallback: response => console.log(response) })
+}
+
+setTimeout(() => logon(), 3000);
+
+let orderId = 0;
+
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: process.env.KRAKEN_ACCOUNT_ID,
+                clientOrderId: 1111,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 1.0,
+                price: 1.0,
+                orderType: 'limit'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+                orderId = response.orderID;
+            },
+		}),
+	10000
+);
+
+setTimeout(() =>
+    client.sendCancelOrderMessage({
+        cancelOrderParams: new CancelOrderParams({
+            accountId: process.env.KRAKEN_ACCOUNT_ID,
+            orderId: orderId
+        }),
+        requestIdCallback: (response) => {
+            console.log(response)
+        }
+}), 15000);
+
+setTimeout(() => logoff(), 30000);

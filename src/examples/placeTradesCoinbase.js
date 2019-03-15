@@ -1,5 +1,6 @@
 //index.js
-import GetWorkingOrdersParams from "../tesClient/requestParams/GetWorkingOrdersParams";
+import PlaceOrderParams from "../tesClient/requestParams/PlaceOrderParams";
+import CancelOrderParams from "../tesClient/requestParams/CancelOrderParams";
 
 require("@babel/polyfill");
 require("dotenv").config();
@@ -8,7 +9,6 @@ import uuidv4 from 'uuid/v4'
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
-import PlaceOrderParams from "../tesClient/requestParams/PlaceOrderParams";
 
 const geminiAccountCredentials =
     new AccountCredentials({
@@ -58,14 +58,37 @@ function logoff() {
 
 setTimeout(() => logon(), 3000);
 
+let orderId = 0;
+
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+                clientOrderId: 1111,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 1.0,
+                price: 1.0,
+                orderType: 'limit'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+                orderId = response.orderID;
+            },
+		}),
+	10000
+);
+
 setTimeout(() =>
-    client.sendGetWorkingOrdersMessage({
-        getWorkingOrderParams: new GetWorkingOrdersParams({
-            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID
+    client.sendCancelOrderMessage({
+        cancelOrderParams: new CancelOrderParams({
+            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+            orderId: orderId
         }),
         requestIdCallback: (response) => {
             console.log(response)
         }
-}), 7000);
+}), 15000);
 
-setTimeout(() => logoff(), 20000);
+setTimeout(() => logoff(), 30000);
