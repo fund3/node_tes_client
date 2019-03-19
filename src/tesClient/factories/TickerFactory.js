@@ -124,13 +124,29 @@ class TickerFactory {
         return parseFloat(body.open);
     }
 
-    // get24HrPriceFromGemini = ({ pair, onResponse }) => {
-    //
-    // };
+    static get24HrPriceFromGemini = ({ sandbox, pair, onResponse }) => {
+        let url;
+        if (sandbox) {
+            url = 'https://api.sandbox.gemini.com/v1/trades/';
+        } else {
+            url = 'https://api.gemini.com/v1/trades/';
+        }
+        const currentTimestamp = Math.floor(Date.now());
+        url = url + pair + '?limit_trades=1&since=' +
+            String(currentTimestamp - 86400000) + '&pair=';
+        const options = {
+            url: url + pair,  // Format: 'btcusd'
+            headers: {
+                'User-Agent': 'request'
+            },
+            json: true
+        };
+        request(options, onResponse);
+    };
 
     static format24HrPriceFromGemini = ({ body }) => {
-        return parseFloat(body.open);
-    }
+        return parseFloat(body[0]['price']);
+    };
 
     static get24HrPriceFromKraken = ({ pair, onResponse }) => {
         const currentTimestamp = Math.floor(Date.now()/1000);
