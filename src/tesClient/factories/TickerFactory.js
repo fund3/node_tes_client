@@ -128,19 +128,27 @@ class TickerFactory {
     //
     // };
 
-    // get24HrPriceFromKraken = ({ pair, onResponse }) => {
-    //     const currentTimestamp = int(Date.now()/1000);
-    //     const url = 'https://api.kraken.com/0/public/OHLC?interval=5&since=' +
-    //         String(currentTimestamp - 1440) + '&pair=';
-    //     const options = {
-    //         url: url + pair,  // Format: 'XXBTZUSD'
-    //         headers: {
-    //             'User-Agent': 'request'
-    //         },
-    //         json: true
-    //     };
-    //     request(options, onResponse);
-    // };
+    static format24HrPriceFromGemini = ({ body }) => {
+        return parseFloat(body.open);
+    }
+
+    static get24HrPriceFromKraken = ({ pair, onResponse }) => {
+        const currentTimestamp = Math.floor(Date.now()/1000);
+        const url = 'https://api.kraken.com/0/public/OHLC?interval=5&since=' +
+            String(currentTimestamp - 86400) + '&pair=';
+        const options = {
+            url: url + pair,  // Format: 'XXBTZUSD'
+            headers: {
+                'User-Agent': 'request'
+            },
+            json: true
+        };
+        request(options, onResponse);
+    };
+
+    static format24HrPriceFromKraken = ({ body }) => {
+        return parseFloat(body.result['XXBTZUSD'][0][1]);
+    }
 }
 
 export default TickerFactory;
