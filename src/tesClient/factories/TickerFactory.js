@@ -71,14 +71,34 @@ class TickerFactory {
     };
 
     static formatTickerFromCoinbasePrime = ({ body }) => {
+        if (body === undefined || body === null){
+            return 0.0
+        }
         return parseFloat(body.price);
     };
 
     static formatTickerFromGemini = ({ body }) => {
+        if (body === undefined || body === null){
+            return 0.0
+        }
         return parseFloat(body.last);
     };
 
     static formatTickerFromKraken = ({ body, pair }) => {
+        if (body === undefined || body === null){
+            return 0.0
+        }
+        if (body.result === undefined || body.result === null){
+            return 0.0
+        }
+        if (body.result[pair] === undefined || body.result[pair] === null){
+            return 0.0
+        }
+        if (!Array.isArray(body.result[pair].c) ||
+            !body.result[pair].c.length
+        ){
+            return 0.0
+        }
         return parseFloat(body.result[pair].c[0])
     };
 
@@ -121,6 +141,9 @@ class TickerFactory {
     };
 
     static format24HrPriceFromCoinbasePrime = ({ body }) => {
+        if (body === undefined || body === null){
+            return 0.0
+        }
         return parseFloat(body.open);
     }
 
@@ -145,6 +168,12 @@ class TickerFactory {
     };
 
     static format24HrPriceFromGemini = ({ body }) => {
+        if (!Array.isArray(body) || !body.length){
+            return 0.0
+        }
+        if (body[0] === undefined || body[0] === null){
+            return 0.0
+        }
         return parseFloat(body[0]['price']);
     };
 
@@ -162,8 +191,27 @@ class TickerFactory {
         request(options, onResponse);
     };
 
-    static format24HrPriceFromKraken = ({ body }) => {
-        return parseFloat(body.result['XXBTZUSD'][0][1]);
+    static format24HrPriceFromKraken = ({ pair, body }) => {
+        if (body === undefined || body === null){
+            return 0.0
+        }
+        if (body.result === undefined || body.result === null){
+            return 0.0
+        }
+        if (body.result[pair] === undefined || body.result[pair] === null){
+            return 0.0
+        }
+        if (!Array.isArray(body.result[pair]) ||
+            !body.result[pair].length
+        ){
+            return 0.0
+        }
+        if (!Array.isArray(body.result[pair][0]) ||
+            !body.result[pair][0].length
+        ){
+            return 0.0
+        }
+        return parseFloat(body.result[pair][0][1]);
     }
 }
 
