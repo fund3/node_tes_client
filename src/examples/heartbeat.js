@@ -60,7 +60,7 @@ function logoff() {
 
 setTimeout(() => logon(), 3000);
 
-setTimeout(() => client.sendHeartbeatMessage({
-    requestIdCallback: response => console.log(response) }), 7000);
+setInterval(() => client.sendHeartbeatMessage({
+    requestIdCallback: response => console.log(response) }), 5000);
 
-setTimeout(() => logoff(), 10000);
+setTimeout(() => logoff(), 60000);
