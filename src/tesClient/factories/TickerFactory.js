@@ -68,26 +68,26 @@ class TickerFactory {
             json: true
         };
         request(options, onResponse);
-    }
+    };
 
     static formatTickerFromCoinbasePrime = ({ body }) => {
         return parseFloat(body.price);
-    }
+    };
 
     static formatTickerFromGemini = ({ body }) => {
         return parseFloat(body.last);
-    }
+    };
 
     static formatTickerFromKraken = ({ body, pair }) => {
         return parseFloat(body.result[pair].c[0])
-    }
+    };
 
     getFeesFromKraken = ({ pair, onResponse }) => {
         this.krakenApi.api(
             'TradeVolume',
             {"pair": pair},
             function(error, data) {
-                if(error) {
+                if (error) {
                     console.log(error);
                 }
                 else {
@@ -97,8 +97,73 @@ class TickerFactory {
                     onResponse(
                         {'maker_fee': maker_fee, 'taker_fee': taker_fee});
                 }
-});
+            }
+        );
 
+    };
+
+    static get24HrPriceFromCoinbasePrime = ({ sandbox, pair, onResponse }) => {
+        let url;
+        if (sandbox) {
+            url = 'https://api-public.sandbox.prime.coinbase.com/products/';
+        } else {
+            url = 'https://api.prime.coinbase.com/products/';
+        }
+        const options = {
+            url: url + pair + '/stats', // Format: 'BTC-USD'
+            method: 'GET',
+            headers: {
+                'User-Agent': 'request'
+            },
+            json: true
+        };
+        request(options, onResponse);
+    };
+
+    static format24HrPriceFromCoinbasePrime = ({ body }) => {
+        return parseFloat(body.open);
+    }
+
+    static get24HrPriceFromGemini = ({ sandbox, pair, onResponse }) => {
+        let url;
+        if (sandbox) {
+            url = 'https://api.sandbox.gemini.com/v1/trades/';
+        } else {
+            url = 'https://api.gemini.com/v1/trades/';
+        }
+        const currentTimestamp = Math.floor(Date.now());
+        url = url + pair + '?limit_trades=1&since=' +
+            String(currentTimestamp - 86400000) + '&pair=';
+        const options = {
+            url: url + pair,  // Format: 'btcusd'
+            headers: {
+                'User-Agent': 'request'
+            },
+            json: true
+        };
+        request(options, onResponse);
+    };
+
+    static format24HrPriceFromGemini = ({ body }) => {
+        return parseFloat(body[0]['price']);
+    };
+
+    static get24HrPriceFromKraken = ({ pair, onResponse }) => {
+        const currentTimestamp = Math.floor(Date.now()/1000);
+        const url = 'https://api.kraken.com/0/public/OHLC?interval=5&since=' +
+            String(currentTimestamp - 86400) + '&pair=';
+        const options = {
+            url: url + pair,  // Format: 'XXBTZUSD'
+            headers: {
+                'User-Agent': 'request'
+            },
+            json: true
+        };
+        request(options, onResponse);
+    };
+
+    static format24HrPriceFromKraken = ({ body }) => {
+        return parseFloat(body.result['XXBTZUSD'][0][1]);
     }
 }
 

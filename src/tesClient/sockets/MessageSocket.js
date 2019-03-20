@@ -12,6 +12,8 @@ class MessageSocket {
 
   sendSerializedMessage = ({ serializedMessage }) =>
       this.socket.send(serializedMessage);
+
+   get = () => this.socket;
 }
 
 export default MessageSocket;
