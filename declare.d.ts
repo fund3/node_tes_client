@@ -1,0 +1,1 @@
+declare module 'fund3__node_tes_client'

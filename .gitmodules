@@ -1,3 +1,0 @@
-[submodule "src/CommunicationProtocol"]
-	path = src/CommunicationProtocol
-	url = git@github.com:fund3/CommunicationProtocol
