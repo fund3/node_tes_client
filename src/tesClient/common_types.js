@@ -1,4 +1,7 @@
 // common_types.js
+/*
+ ****** NOT UPDATED, REFER TO COMMUNICATIONS PROTOCOL FOR LATEST VERSION******
+ */
 
 // Enums
 const Side = {
