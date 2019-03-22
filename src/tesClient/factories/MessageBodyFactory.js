@@ -160,11 +160,11 @@ class MessageBodyFactory {
         });
     };
 
-    static buildGetWorkingOrdersMessageBody = ({ getWorkingOrderParams }) => {
+    static buildGetWorkingOrdersMessageBody = ({ getWorkingOrdersParams }) => {
         const messageBodyType = messageBodyTypes.GET_WORKING_ORDERS;
         return MessageBodyFactory.buildMessageBody({
             messageBodyType,
-            messageBodyContents: getWorkingOrderParams
+            messageBodyContents: getWorkingOrdersParams
         });
     };
 

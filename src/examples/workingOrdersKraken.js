@@ -49,7 +49,7 @@ setTimeout(() => logon(), 3000);
 
 setTimeout(() =>
     client.sendGetWorkingOrdersMessage({
-        getWorkingOrderParams: new GetWorkingOrdersParams({
+        getWorkingOrdersParams: new GetWorkingOrdersParams({
             accountId: process.env.KRAKEN_ACCOUNT_ID
         }),
         requestIdCallback: (response) => {

@@ -116,11 +116,11 @@ class MessageFactory {
     };
 
     buildGetWorkingOrdersMessage = ({
-        requestHeader, getWorkingOrderParams
+        requestHeader, getWorkingOrdersParams
     }) => {
         const messageBody =
             MessageBodyFactory.buildGetWorkingOrdersMessageBody({
-                getWorkingOrderParams });
+                getWorkingOrdersParams });
         return this.buildRequestMessage({ requestHeader, messageBody });
     };
 

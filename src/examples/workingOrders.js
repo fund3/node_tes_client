@@ -64,7 +64,7 @@ setTimeout(() => logon(), 3000);
 
 setTimeout(() =>
     client.sendGetWorkingOrdersMessage({
-        getWorkingOrderParams: new GetWorkingOrdersParams({
+        getWorkingOrdersParams: new GetWorkingOrdersParams({
             accountId: geminiAccountInfo.accountID
         }),
         requestIdCallback: (response) => {

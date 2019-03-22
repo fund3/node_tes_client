@@ -293,13 +293,13 @@ class Client {
 
     sendGetWorkingOrdersMessage = ({
         requestHeader = this.defaultRequestHeader,
-        getWorkingOrderParams,
+        getWorkingOrdersParams,
         requestIdCallback,
         responseTypeCallback = undefined
     }) => {
         const getWorkingOrdersMessage =
             this.messageFactory.buildGetWorkingOrdersMessage({
-                requestHeader, getWorkingOrderParams });
+                requestHeader, getWorkingOrdersParams });
         this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.WORKING_ORDERS_REPORT,
