@@ -9,8 +9,7 @@
   "scripts": {
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "build": "npm run build_client && npm run bundle_protocol",
-    "build_client": "./node_modules/.bin/babel src -d lib/",
-    "bundle_protocol": "cp -R src/CommunicationProtocol lib/CommunicationProtocol"
+    "build_client": "./node_modules/.bin/babel src -d lib/"
   },
   "repository": {
     "type": "git",
