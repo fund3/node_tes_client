@@ -75,12 +75,12 @@ setTimeout(
 		client.sendPlaceSingleOrderMessage({
             placeOrderParams: new PlaceOrderParams({
                 accountId: process.env.KRAKEN_ACCOUNT_ID,
-                clientOrderId: 1115,
-                symbol: "BTC/USD",
+                clientOrderId: 1111,
+                symbol: "ETH/USD",
                 side: "buy",
-                quantity: 0.01,
-                orderType: 'market'
-            }),
+                quantity: 0.02,
+                orderType: 'market'}
+            ),
             requestIdCallback: (response) => {
                 console.log(response);
             },
