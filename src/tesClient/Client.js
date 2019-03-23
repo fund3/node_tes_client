@@ -2,7 +2,8 @@ import RequestHeader from "./requestParams/RequestHeader"
 import MessageFactory from "./factories/MessageFactory";
 import Messenger from "./messages/Messenger";
 
-import { messageBodyTypes } from "~/tesClient/constants";
+import { messageBodyTypes } from "./constants/index";
+import { validateArguments } from "./utils/errors";
 
 class Client {
 
@@ -14,6 +15,8 @@ class Client {
         curveServerKey,
         tesSocketEndpoint
     }) {
+        validateArguments(clientId, senderCompId, accountCredentialsList);
+
         this.clientId = clientId;
         this.senderCompId = senderCompId;
         this.accountCredentialsList = accountCredentialsList;

@@ -1,4 +1,4 @@
-import AccountInfo from "~/tesClient/account/AccountInfo";
+import AccountInfo from "../account/AccountInfo";
 
 
 class GetOrderStatusParams {

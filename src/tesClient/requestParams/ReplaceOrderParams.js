@@ -1,5 +1,6 @@
-import AccountInfo from "~/tesClient/account/AccountInfo";
-import { leverageType, timeInForce } from "~/tesClient/constants";
+import AccountInfo from "../account/AccountInfo";
+// (!) Import of non-existent exports
+// import { leverageType, timeInForce } from "../constants/index";
 
 
 class ReplaceOrderParams {

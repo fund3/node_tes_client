@@ -1,35 +1,35 @@
 require("@babel/polyfill");
-import Client from "~/tes_client/Client";
+import Client from "./tesClient/Client";
 
-import AccountInfo from "~/tes_client/account/AccountInfo";
-import AccountCredentials from "~/tes_client/account/AccountCredentials";
+import AccountInfo from "./tesClient/account/AccountInfo";
+import AccountCredentials from "./tesClient/account/AccountCredentials";
 
-import MessageBodyFactory from "~/tes_client/factories/MessageBodyFactory";
-import MessageFactory from "~/tes_client/factories/MessageFactory";
-import TickerFactory from "~/tes_client/factories/TickerFactory";
+import MessageBodyFactory from "./tesClient/factories/MessageBodyFactory";
+import MessageFactory from "./tesClient/factories/MessageFactory";
+import TickerFactory from "./tesClient/factories/TickerFactory";
 
-import MessageParser from '~/tes_client/messages/MessageParser'
-import MessageResponder from "~/tes_client/messages/MessageResponder";
-import MessageSender from "~/tes_client/messages/MessageSender";
-import Messenger from "~/tes_client/messages/Messenger";
+import MessageParser from './tesClient/messages/MessageParser'
+import MessageResponder from "./tesClient/messages/MessageResponder";
+import MessageSender from "./tesClient/messages/MessageSender";
+import Messenger from "./tesClient/messages/Messenger";
 
-import AuthorizationRefreshParams from '~/tes_client/requestParams/AuthorizationRefreshParams'
-import CancelOrderParams from "~/tes_client/requestParams/CancelOrderParams";
-import GetAccountBalancesParams from "~/tes_client/requestParams/GetAccountBalancesParams";
-import GetAccountDataParams from "~/tes_client/requestParams/GetAccountDataParams";
-import GetCompletedOrderParams from "~/tes_client/requestParams/GetCompletedOrderParams";
-import GetExchangePropertiesParams from "~/tes_client/requestParams/GetExchangePropertiesParams";
-import GetOpenPositionsParams from "~/tes_client/requestParams/GetOpenPositionsParams";
-import GetOrderStatusParams from "~/tes_client/requestParams/GetOrderStatusParams";
-import GetWorkingOrdersParams from "~/tes_client/requestParams/GetWorkingOrdersParams";
-import LogonParams from "~/tes_client/requestParams/LogonParams";
-import PlaceOrderParams from "~/tes_client/requestParams/PlaceOrderParams";
-import ReplaceOrderParams from "~/tes_client/requestParams/ReplaceOrderParams";
-import RequestHeader from "~/tes_client/requestParams/RequestHeader";
-import TestMessageParams from "~/tes_client/requestParams/RequestHeader";
-import BackendSocket from '~/tes_client/sockets/BackendSocket'
-import MessageSocket from '~/tes_client/sockets/MessageSocket'
-import TesSocket from '~/tes_client/sockets/TesSocket'
+import AuthorizationRefreshParams from './tesClient/requestParams/AuthorizationRefreshParams'
+import CancelOrderParams from "./tesClient/requestParams/CancelOrderParams";
+import GetAccountBalancesParams from "./tesClient/requestParams/GetAccountBalancesParams";
+import GetAccountDataParams from "./tesClient/requestParams/GetAccountDataParams";
+import GetCompletedOrdersParams from "./tesClient/requestParams/GetCompletedOrdersParams";
+import GetExchangePropertiesParams from "./tesClient/requestParams/GetExchangePropertiesParams";
+import GetOpenPositionsParams from "./tesClient/requestParams/GetOpenPositionsParams";
+import GetOrderStatusParams from "./tesClient/requestParams/GetOrderStatusParams";
+import GetWorkingOrdersParams from "./tesClient/requestParams/GetWorkingOrdersParams";
+import LogonParams from "./tesClient/requestParams/LogonParams";
+import PlaceOrderParams from "./tesClient/requestParams/PlaceOrderParams";
+import ReplaceOrderParams from "./tesClient/requestParams/ReplaceOrderParams";
+import RequestHeader from "./tesClient/requestParams/RequestHeader";
+import TestMessageParams from "./tesClient/requestParams/RequestHeader";
+import BackendSocket from './tesClient/sockets/BackendSocket'
+import MessageSocket from './tesClient/sockets/MessageSocket'
+import TesSocket from './tesClient/sockets/TesSocket'
 
 export {
 	Client,
@@ -46,7 +46,7 @@ export {
     CancelOrderParams,
     GetAccountBalancesParams,
     GetAccountDataParams,
-    GetCompletedOrderParams,
+    GetCompletedOrdersParams,
     GetExchangePropertiesParams,
     GetOpenPositionsParams,
     GetOrderStatusParams,

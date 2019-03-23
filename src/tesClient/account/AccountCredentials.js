@@ -1,4 +1,4 @@
-import AccountInfo from "~/tesClient/account/AccountInfo";
+import AccountInfo from "./AccountInfo";
 
 class AccountCredentials {
   constructor({

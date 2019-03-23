@@ -1,3 +1,5 @@
+import { validatePresenceOf } from "../utils/errors";
+
 class AccountInfo {
   constructor({
       accountId,
@@ -18,6 +20,7 @@ class AccountInfo {
      * @param exchangeClientId: (String) exchange client (customer) ID,
      *    empty in client request.
     */
+    validatePresenceOf(accountId);
     this.accountID = accountId;
     if (exchange !== undefined) {
         this.exchange = exchange;

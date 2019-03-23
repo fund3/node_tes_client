@@ -1,6 +1,6 @@
 import request from "request";
 
-import { exchanges } from "~/tesClient/constants";
+import { exchanges } from "../constants/index";
 const KrakenClient = require('kraken-api');
 
 class TickerFactory {

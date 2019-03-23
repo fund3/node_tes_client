@@ -1,5 +1,5 @@
 import MessageBodyFactory from "./MessageBodyFactory";
-import { messageTypes } from "~/tesClient/constants";
+import { messageTypes } from "../constants/index";
 
 class MessageFactory {
 

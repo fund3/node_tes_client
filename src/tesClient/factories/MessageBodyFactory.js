@@ -1,4 +1,4 @@
-import { messageBodyTypes } from "~/tesClient/constants";
+import { messageBodyTypes } from "../constants/index";
 
 class MessageBodyFactory {
     static buildMessageBody = ({ messageBodyType, messageBodyContents }) => {
