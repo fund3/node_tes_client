@@ -8,13 +8,13 @@ const errors = {
 /**
  * Validates array of arguments
  * @param  {...any} args - list of arguments
+ * Array.prototype.some - executes fn unless fn returns true
  */
 const validateArguments = (...args) => {
-    Array.from(args).forEach(argument => {
-        if (!argument) {
-            throw new Error(errors.ArgumentMissing(argument))
-        }
-    });
+    const hasInvalidArgument = args.some((argument) => !argument);
+    if (hasInvalidArgument) {
+        throw new Error(errors.InvalidArgument(argument))
+    }
 }
 
 /**
@@ -23,8 +23,8 @@ const validateArguments = (...args) => {
  */
 const validatePresenceOf = (argument) => {
     if (!argument) {
-        throw new Error(errors.ArgumentMissing(argument));
+        throw new Error(errors.InvalidArgument(argument));
     }
 }
 
-export { validateArguments, validatePresenceOf }
+export { validateArguments, validatePresenceOf };

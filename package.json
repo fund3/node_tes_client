@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \\\"Error: no test specified\\\" && exit 1",
+    "test": "mocha --require @babel/register",
     "build": "rollup --config",
     "build_examples": "./node_modules/.bin/babel src/examples -d lib/examples"
   },
@@ -39,9 +39,12 @@
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/preset-env": "^7.2.3",
+    "@babel/register": "^7.4.0",
     "babel-plugin-root-import": "^6.1.0",
+    "mocha": "^6.0.2",
     "rollup": "^1.6.0",
+    "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-auto-external": "^2.0.0"
+    "should": "^13.2.3"
   }
 }
