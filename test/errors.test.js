@@ -3,7 +3,7 @@
  */
 const should = require('should');
 const target = require('../src/tesClient/utils/errors');
-const { validateArguments, validatePresenceOf } = target;
+const { validateArguments, validatePresenceOf, validesOneOf } = target;
 
 describe('Validations', () => {
   describe('.validateArguments', () => {
@@ -30,9 +30,24 @@ describe('Validations', () => {
         }.should.not.throw());
       });
 
-      it('undefined, string, objects', () => {
+      it('undefined', () => {
         (function() {
           validatePresenceOf(undefined);
+        }.should.throw());
+      });
+    });
+  });
+  describe('.validesOneOf', () => {
+    context('default behavior', () => {
+      it('nulls and numbers', () => {
+        (function() {
+          validesOneOf(null, 10);
+        }.should.not.throw());
+      });
+
+      it('undefined', () => {
+        (function() {
+          validesOneOf(undefined, null);
         }.should.throw());
       });
     });

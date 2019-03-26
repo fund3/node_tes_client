@@ -2,7 +2,8 @@
  * We should validate presence of some argumennts
  */
 const errors = {
-    InvalidArgument: (f) => `Argument error: ${f} is required but it is undefined/null`
+    InvalidArgument: (f) => `Argument error: ${f} is required but it is undefined/null`,
+    NoValidArguments: 'No valid arguments present'
 };
 
 /**
@@ -26,5 +27,14 @@ const validatePresenceOf = (argument) => {
         throw new Error(errors.InvalidArgument(argument));
     }
 }
+/**
+ * 
+ */
+const validesOneOf = (...args) => {
+    const InvalidArgumentsCount = args.filter((f) => !f).length;
+    if (InvalidArgumentsCount === args.length) {
+        throw new Error(errors.NoValidArguments);
+    }
+}
 
-export { validateArguments, validatePresenceOf };
+export { validateArguments, validatePresenceOf, validesOneOf };
