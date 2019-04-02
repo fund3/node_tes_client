@@ -67,7 +67,7 @@ class Client {
 
     sendHeartbeatMessage = ({
         requestHeader = this.defaultRequestHeader,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const heartbeatMessage =
@@ -86,7 +86,7 @@ class Client {
     sendTestMessage = ({
         requestHeader = this.defaultRequestHeader,
         testMessageParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const testMessage =
@@ -105,7 +105,7 @@ class Client {
 
     sendGetServerTimeMessage = ({
         requestHeader = this.defaultRequestHeader,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getServerTimeMessage =
@@ -124,7 +124,7 @@ class Client {
     sendLogonMessage = ({
         requestHeader = this.defaultRequestHeader,
         logonParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const logonMessage = this.messageFactory.buildLogonMessage({
@@ -164,7 +164,7 @@ class Client {
     sendPlaceSingleOrderMessage = ({
         requestHeader = this.defaultRequestHeader,
         placeOrderParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const placeOrderMessage =
@@ -183,7 +183,7 @@ class Client {
     sendReplaceOrderMessage = ({
         requestHeader = this.defaultRequestHeader,
         replaceOrderParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const replaceOrderMessage =
@@ -202,7 +202,7 @@ class Client {
     sendCancelOrderMessage = ({
         requestHeader = this.defaultRequestHeader,
         cancelOrderParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const cancelOrderMessage =
@@ -221,7 +221,7 @@ class Client {
     sendGetOrderStatusMessage = ({
         requestHeader = this.defaultRequestHeader,
         getOrderStatusParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getOrderStatusMessage =
@@ -239,7 +239,7 @@ class Client {
     sendGetAccountDataMessage = ({
         requestHeader = this.defaultRequestHeader,
         getAccountDataParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getAccountDataMessage =
@@ -257,7 +257,7 @@ class Client {
     sendGetAccountBalancesMessage = ({
         requestHeader = this.defaultRequestHeader,
         getAccountBalancesParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getAccountBalancesMessage =
@@ -276,7 +276,7 @@ class Client {
     sendGetOpenPositionsMessage = ({
         requestHeader = this.defaultRequestHeader,
         getOpenPositionsParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getOpenPositionsMessage =
@@ -294,7 +294,7 @@ class Client {
     sendGetWorkingOrdersMessage = ({
         requestHeader = this.defaultRequestHeader,
         getWorkingOrdersParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getWorkingOrdersMessage =
@@ -312,7 +312,7 @@ class Client {
     sendGetCompletedOrdersMessage = ({
         requestHeader = this.defaultRequestHeader,
         getCompletedOrdersParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
             const getCompletedOrdersMessage =
@@ -331,7 +331,7 @@ class Client {
     sendGetExchangePropertiesMessage = ({
         requestHeader = this.defaultRequestHeader,
         getExchangePropertiesParams,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getExchangePropertiesMessage =

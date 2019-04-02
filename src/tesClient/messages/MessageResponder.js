@@ -48,7 +48,8 @@ class MessageResponder {
                     responseMessageBodyType === messageBodyType) {
                     responseTypeCallback(messageBodyContents);
                 }
-            } else if(incomingRequestId === expectedRequestId) {
+            } else if(incomingRequestId === expectedRequestId &&
+                      requestIdCallback !== undefined) {
                 requestIdCallback(messageBodyContents);
                 subscriber.unsubscribe();
             }
