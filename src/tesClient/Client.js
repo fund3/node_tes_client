@@ -149,7 +149,7 @@ class Client {
 
     sendLogoffMessage = ({
         requestHeader = this.defaultRequestHeader,
-        requestIdCallback,
+        requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const logoffMessage = this.messageFactory.buildLogoffMessage({

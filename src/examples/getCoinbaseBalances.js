@@ -49,7 +49,8 @@ function logon() {
 
 function logoff() {
     client.sendLogoffMessage(
-        { requestIdCallback: response => console.log(response) })
+        { requestIdCallback: response => console.log(response),
+            requestTypeCallback: response => console.log(response) })
 }
 
 function getBalances({getAccountBalancesParams}) {
@@ -59,10 +60,11 @@ function getBalances({getAccountBalancesParams}) {
     })
 }
 
+logoff()
 setTimeout(() => logon(), 3000);
 
 setTimeout(
     () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
             accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 5000);
 
-setTimeout(() => logoff(), 10000);
+// setTimeout(() => logoff(), 30000);
