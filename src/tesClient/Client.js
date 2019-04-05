@@ -138,9 +138,10 @@ class Client {
             responseMessageBodyType: messageBodyTypes.LOGON_ACK,
             message: logonMessage,
             requestIdCallback: (logonAck) => {
-                this.updateAccessToken({
-                    newAccessToken: logonAck.authorizationGrant.accessToken
-                });
+                const newAccessToken = logonAck && logonAck.authorizationGrant && logonAck.authorizationGrant.accessToken;
+                if (newAccessToken) {
+                    this.updateAccessToken({ newAccessToken });
+                }
                 requestIdCallback(logonAck);
             },
             responseTypeCallback
