@@ -30,7 +30,25 @@ class Client {
             tesSocketEndpoint,
             backendSocketEndpoint
         });
+        this.accountDataUpdated = false;
+        this.accountDataSystemError = false;
+        this.pendingAccountIds = new Set([]);
+        this.erroneousAccountIds = new Set([]);
     }
+
+    checkAccountData = (resolve, reject) => {
+        if (this.accountDataUpdated) {
+            return resolve();
+        } else if (this.accountDataSystemError) {
+            return reject(this.erroneousAccountIds);
+        } else {
+            setTimeout(() => this.checkAccountData(resolve, reject), 100);
+        }
+    };
+
+    ready = async () => new Promise((resolve, reject) => {
+        this.checkAccountData(resolve, reject);
+    });
 
     sendMessage = ({
             expectedRequestId,
@@ -63,6 +81,36 @@ class Client {
     updateAccessToken = ({ newAccessToken }) => {
         this.accessToken = newAccessToken;
         this.defaultRequestHeader.accessToken = newAccessToken;
+    };
+
+    processAccountId = ({ accountId }) => {
+        this.pendingAccountIds.delete(accountId);
+        if (this.pendingAccountIds.size === 0){
+            if (!this.accountDataSystemError) {
+                this.accountDataUpdated = true;
+            }
+            this.messenger.unsubscribeCallbackFromResponseType({
+                responseMessageBodyType:
+                    messageBodyTypes.ACCOUNT_DATA_REPORT
+            });
+            this.messenger.unsubscribeCallbackFromResponseType({
+                responseMessageBodyType:
+                    messageBodyTypes.SYSTEM
+            });
+        }
+    };
+
+    receiveSystemMessage = ( systemMessage ) => {
+        this.accountDataSystemError = true;
+        const accountId = systemMessage.accountInfo.accountID;
+        this.erroneousAccountIds.add(accountId);
+        this.processAccountId({ accountId });
+    };
+
+    receiveInitialAccountDataReport = ( accountDataReport ) => {
+        this.processAccountId({
+            accountId: accountDataReport.accountInfo.accountID
+        });
     };
 
     sendHeartbeatMessage = ({
@@ -129,13 +177,33 @@ class Client {
     }) => {
         const logonMessage = this.messageFactory.buildLogonMessage({
             requestHeader, logonParams });
-
+        logonParams.credentials.forEach(
+            (accountCredentials) =>
+                this.pendingAccountIds.add(
+                    accountCredentials.accountInfo.accountID)
+        );
         this.sendMessage({
             expectedRequestId: requestHeader.requestID,
             responseMessageBodyType: messageBodyTypes.LOGON_ACK,
             message: logonMessage,
             requestIdCallback: (logonAck) => {
-                const newAccessToken = logonAck && logonAck.authorizationGrant && logonAck.authorizationGrant.accessToken;
+                if (logonAck.success) {
+                    this.messenger.subscribeCallbackToResponseType({
+                        responseMessageBodyType:
+                            messageBodyTypes.ACCOUNT_DATA_REPORT,
+                        responseTypeCallback:
+                            this.receiveInitialAccountDataReport
+                    });
+                    this.messenger.subscribeCallbackToResponseType({
+                        responseMessageBodyType:
+                            messageBodyTypes.SYSTEM,
+                        responseTypeCallback:
+                            this.receiveSystemMessage
+                    })
+                }
+                const newAccessToken = logonAck &&
+                    logonAck.authorizationGrant &&
+                    logonAck.authorizationGrant.accessToken;
                 if (newAccessToken) {
                     this.updateAccessToken({ newAccessToken });
                 }

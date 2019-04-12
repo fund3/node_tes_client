@@ -22,14 +22,30 @@ class Messenger {
         responseMessageBodyType,
         responseTypeCallback
 	}) => {
-		this.messageResponder.subscribeCallbackToResponseType({
+        this.messageResponder.subscribeCallbackToRequestId({
             expectedRequestId,
-			requestIdCallback,
+            requestIdCallback,
             responseMessageBodyType,
             responseTypeCallback
-		});
-		this.messageSender.sendMessage({ message });
-	};
+        });
+        this.messageSender.sendMessage({ message });
+    };
+
+    subscribeCallbackToResponseType = ({
+        responseMessageBodyType,
+        responseTypeCallback
+    }) => {
+        this.messageResponder.subscribeCallbackToResponseType({
+            responseMessageBodyType,
+            responseTypeCallback
+        });
+    };
+
+    unsubscribeCallbackFromResponseType = ({ responseMessageBodyType }) => {
+        this.messageResponder.unsubscribeCallbackFromResponseType({
+            responseMessageBodyType
+        });
+    };
 
 	initializeSockets = ({ curveServerKey, tesSocketEndpoint,
 							 backendSocketEndpoint }) => {

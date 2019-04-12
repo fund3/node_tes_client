@@ -8,6 +8,7 @@ class MessageResponder {
     constructor({ tesSocket }) {
         this.tesSocket = tesSocket;
         this.listenForResponses();
+        this.responseTypeSubscriberDict = {};
     }
 
     listenForResponses = () => {
@@ -28,9 +29,9 @@ class MessageResponder {
                 }
             });
         }).pipe(share())
-    }
+    };
 
-    subscribeCallbackToResponseType = ({
+    subscribeCallbackToRequestId = ({
         expectedRequestId,
         requestIdCallback,
         responseMessageBodyType,
@@ -54,7 +55,33 @@ class MessageResponder {
                 subscriber.unsubscribe();
             }
         })
-    }
+    };
+
+    subscribeCallbackToResponseType = ({
+        responseMessageBodyType,
+        responseTypeCallback
+    }) => {
+        let subscriber = this.messageObserver.subscribe(({
+            incomingRequestId,
+            messageBodyType,
+            messageBodyContents
+        }) => {
+            if (incomingRequestId === 0) {
+                // Only fallback when requestId is default value.
+                if (responseMessageBodyType !== undefined &&
+                    responseTypeCallback !== undefined &&
+                    responseMessageBodyType === messageBodyType) {
+                    responseTypeCallback(messageBodyContents);
+                }
+            }
+        });
+        this.responseTypeSubscriberDict[responseMessageBodyType] = subscriber;
+    };
+
+    unsubscribeCallbackFromResponseType = ({ responseMessageBodyType }) => {
+        this.responseTypeSubscriberDict[responseMessageBodyType].unsubscribe();
+        delete this.responseTypeSubscriberDict[responseMessageBodyType];
+    };
 }
 
 export default MessageResponder;
