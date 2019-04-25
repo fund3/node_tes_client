@@ -79,14 +79,15 @@ In the case that both callbacks are subscribed to a message, the `requestIdCallb
 `requestHeader`, `requestIdCallback` are optional parameters to all client requests.  `responseTypeCallback` will be deprecated and it is not advised to pass it as a parameter. 
 
 `requestHeader` object properties:
+```
 {   
     clientId: 87654321,  // Assigned by Fund3.
     senderCompId: "6da1aca2-22f9-445e-92f8-ebbdf031bb81",  // uuid in String format.
     accessToken: "Z2C3MmVkZ7AtYTd3IW00MjE3ETg3N1",  // Assigned by Omega on logon and authorizationRefresh
     requestId: 1001 
 }
-
-Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  The client library handles the updates of `accessToken` and also generates `requestId` for all requests.  Feature to use user generated requestIds can be added later by request.  In most cases, it is anticipated that the default `requestHeader` in the `Client` class is used.sss
+```
+Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  The client library handles the updates of `accessToken` and also generates `requestId` for all requests.  Features for user generated requestIds can be added later by request.  In most cases, it is anticipated that the default `requestHeader` in the `Client` class is used.
 
 #### System Requests
 - sendHeartbeatMessage
@@ -147,8 +148,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   {
       accountId: 12345678,
       apiKey: "apiKey",
-      secretKey: "secretKey',
-      passphrase = 'passphrase' // Empty string for exchanges that do not use passphrases.
+      secretKey: "secretKey",
+      passphrase = "passphrase" // Empty string for exchanges that do not use passphrases.
   }
   ```
   
@@ -320,7 +321,7 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
       since = undefined  // Optional, UNIX timestamp, only the orders after this timestamp will be returned if it is set. 
   }
   ```
-  If both 'count' and 'since' are omitted, orders for last 24h will be  returned.
+  If both 'count' and 'since' are omitted, orders for last 24h will be returned.
 
   Expected response type: `completedOrdersReport`.
   
