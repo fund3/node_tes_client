@@ -32,7 +32,7 @@ There are two ways to attach callbacks to Omega responses:
         responseTypeCallback: accountDataReport => console.log(accountDataReport)
     })
     ```
-    - The `responseTypeCallback` parameter in all `sendSomethingMessage` functions will be deprecated and is not should not be used.
+    - The `responseTypeCallback` parameter in all `sendSomethingMessage` functions will be deprecated and should not be used.
     - Only one `responseTypeCallback` is allowed to be attached to each responseType at any given time; if new callbacks to the same type are registered without unsubscribing, the old callback will be unsubscribed and replaced with the new one.  Callbacks can be unsubscribed via:
     ```
     client.unsubscribeCallbackFromResponseType({
@@ -40,7 +40,7 @@ There are two ways to attach callbacks to Omega responses:
     })
     ```
     
-In the case that both callbacks are subscribed to a message, the `requestIdCallback` will be fired in response to the request that's sent from the client side, and responseTypeCallback will be fired in response to messages sent from server side that are not triggered by a client request. 
+In the case that both callbacks are subscribed to a message, the `requestIdCallback` will be fired in response to the request that's sent from client side, and responseTypeCallback will be fired in response to messages sent from server side that are not triggered by a client request. 
 
 ## Methods
 ### Client Methods
@@ -75,6 +75,19 @@ In the case that both callbacks are subscribed to a message, the `requestIdCallb
   Unsubscribes a callback that's currently attached to a response type. Returns true if the callback is unsubscribed; false if there was no callback registered in the first place.
 
 ### Client Requests
+
+`requestHeader`, `requestIdCallback` are optional parameters to all client requests.  `responseTypeCallback` will be deprecated and it is not advised to pass it as a parameter. 
+
+`requestHeader` object properties:
+{   
+    clientId: 87654321,  // Assigned by Fund3.
+    senderCompId: "6da1aca2-22f9-445e-92f8-ebbdf031bb81",  // uuid in String format.
+    accessToken: "Z2C3MmVkZ7AtYTd3IW00MjE3ETg3N1",  // Assigned by Omega on logon and authorizationRefresh
+    requestId: 1001 
+}
+
+Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  The client library handles the updates of `accessToken` and also generates `requestId` for all requests.  Feature to use user generated requestIds can be added later by request.  In most cases, it is anticipated that the default `requestHeader` in the `Client` class is used.sss
+
 #### System Requests
 - sendHeartbeatMessage
   
@@ -86,12 +99,7 @@ In the case that both callbacks are subscribed to a message, the `requestIdCallb
   Sends a `heartbeat` message to Omega.  
    
   Expected response type: `heartbeat`.
-  
-  `heartbeat` message content:
-  ```
-  {}
-  ```
-    
+
 - sendTestMessage
   - requestHeader = this.defaultRequestHeader
   - testMessageParams
@@ -102,9 +110,11 @@ In the case that both callbacks are subscribed to a message, the `requestIdCallb
   
   Expected response type: `test`.
   
-  `test` message content:
+  Example `TestMessageParams` parameter object properties:
   ```
-  {string: "test message"}
+  {
+      string: "test message",
+  }
   ```
 
 - sendGetServerTimeMessage
@@ -113,80 +123,218 @@ In the case that both callbacks are subscribed to a message, the `requestIdCallb
   - responseTypeCallback = undefined
   
   Sends a `getServerTime` request to Omega.
+  
+  Expected response type: `serverTime`.
 
 #### Logon-Logoff Requests
-- sendLogonMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        logonParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendLogoffMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-    
+- sendLogonMessage
+  - requestHeader = this.defaultRequestHeader
+  - logonParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Expected response type: `logonAck`.
+
+  Example `LogonParams` parameter object properties:
+  ```
+  {
+      clientSecret: "exampleClientSecretToken",
+      credentials: Array[AccountCredentials]
+  }
+  ```
+  Example `AccountCredentials` object properties:
+  ```
+  {
+      accountId: 12345678,
+      apiKey: "apiKey",
+      secretKey: "secretKey',
+      passphrase = 'passphrase' // Empty string for exchanges that do not use passphrases.
+  }
+  ```
+  
+  If `logon` is successful, `authorizationGrant` will be a property in `logonAck`. The internal logic in the client library code will update the `accessToken` within the `Client` object for authorization purpose.
+
+- sendLogoffMessage
+  - requestHeader = this.defaultRequestHeader
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Expected response type: `logoffAck`.
+
 #### Trading Requests
-- sendPlaceSingleOrderMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        placeOrderParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendReplaceOrderMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        replaceOrderParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendCancelOrderMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        cancelOrderParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendGetOrderStatusMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        getOrderStatusParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
+- sendPlaceSingleOrderMessage
+  - requestHeader = this.defaultRequestHeader
+  - placeOrderParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+  
+  Example `PlaceSingleOrderParams` object properties:
+  ```
+  {
+      accountId = 12345678,  // Assigned by Fund3.
+      clientOrderId = "clientOrderId",  // ID generated on the client side to keep track of the order.
+      clientOrderLinkId = "clientOrderLinkId",  // Optional, used to group orders, e.g. orders being placed by a particular algorithm when multiple algos are trading on the same account.
+      symbol = "BTC/USD",
+      side = "buy",
+      orderType = "limit",  // See OrderType in TradeMessage proto.
+      quantity = 10.5,
+      price = 1000.8,  //Optional, only required for limit, stopLossLimit, takeProfitLimit.
+      stopPrice = undefined,  // Optional, only required for stopLoss, takeProfit, stopLossLimit, takeProfitLimit.
+      timeInForce = "gtc",  // Optional, default to GTC, see TimeInForce in TradeMessage proto.
+      expireAt = undefined,  // Optional, required for GTT only
+      leverageType = undefined,  // Optional, default to None, see LeverageType in TradeMessage proto.
+      leverage = undefined  // Optional, default to 0.
+  }
+  ```
+  Expected response type: `executionReport`.
+  
+  Once a `placeSingleOrderMessage` is received, Omega responds with an `ExecutionReport` with an order status of `working`. Subsequently, when an event that changes the status of the order (e.g. order being `filled` or `rejected`), Omega sends an updated `executionReport` from server side without a client request.
+  
+- sendReplaceOrderMessage
+  - requestHeader = this.defaultRequestHeader
+  - replaceOrderParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+  
+  Example `ReplaceOrderParams` object properties:
+  ```
+  {
+      accountId = 12345678,  // Assigned by Fund3.
+      orderId = "orderId235Aasdf",  // OrderId coming back from Omega so that Omega can identify the desirable order to be replaced. 
+      quantity = 5.5,  // Optional
+      price = 5000.1,  // Optional
+      stopPrice = 3000.0  // Optional
+  }
+  ```
+  
+  Expected response type: `executionReport`.
+  
+  Behavior of `sendReplaceOrderMessage`, if successfully received and validated (e.g. the order still exists and is not filled), is identical to that of `placeSingleOrderMessage`. 
+
+- sendCancelOrderMessage
+  - requestHeader = this.defaultRequestHeader
+  - cancelOrderParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Example `CancelOrderParams` object properties:
+  ```
+  { 
+      accountId = 12345678,  // Assigned by Fund3.
+      orderId = "orderId235Aasdf",  // OrderId coming back from Omega so that Omega can identify the desirable order to be cancelled. 
+  }
+  ```
+
+  Expected response type: `executionReport`.
+  
+  Behavior of `sendCancelOrderMessage`, if successfully received and validated (e.g. the order still exists and is not filled), is different from that of `placeSingleOrderMessage` and `sendReplaceOrderMessage`; only one `executionReport` will come back with order status `canceled`. 
+  
+- sendGetOrderStatusMessage
+  - requestHeader = this.defaultRequestHeader
+  - getOrderStatusParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Example `GetOrderStatusParams` object properties:
+  ```
+  { 
+      accountId = 12345678,  // Assigned by Fund3.
+      orderId = "orderId235Aasdf",  // OrderId coming back from Omega so that Omega can identify the desirable order to be fetched. 
+  }
+  ```
+
+  Expected response type: `executionReport`.
 
 #### Account Requests
-- sendGetAccountDataMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        getAccountDataParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendGetAccountBalancesMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        getAccountBalancesParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendGetOpenPositionsMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        getOpenPositionsParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendGetWorkingOrdersMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        getWorkingOrdersParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendGetCompletedOrdersMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        getCompletedOrdersParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
-- sendGetExchangePropertiesMessage = ({
-        requestHeader = this.defaultRequestHeader,
-        getExchangePropertiesParams,
-        requestIdCallback = undefined,
-        responseTypeCallback = undefined
-    })
+- sendGetAccountDataMessage
+  - requestHeader = this.defaultRequestHeader
+  - getAccountDataParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Example `GetAccountDataParams` object properties:
+  ```
+  { 
+      accountId = 12345678,  // Assigned by Fund3.
+  }
+  ```
+
+  Expected response type: `accountDataReport`.
+  
+- sendGetAccountBalancesMessage
+  - requestHeader = this.defaultRequestHeader
+  - getAccountBalancesParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+  
+  Example `GetAccountBalancesParams` object properties:
+  ```
+  { 
+      accountId = 12345678,  // Assigned by Fund3.
+  }
+  ```
+
+  Expected response type: `accountBalancesReport`.
+  
+- sendGetOpenPositionsMessage
+  - requestHeader = this.defaultRequestHeader
+  - getOpenPositionsParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Example `GetOpenPositionsParams` object properties:
+  ```
+  { 
+      accountId = 12345678,  // Assigned by Fund3.
+  }
+  ```
+
+  Expected response type: `openPositionsReport`.
+
+- sendGetWorkingOrdersMessage
+  - requestHeader = this.defaultRequestHeader
+  - getWorkingOrdersParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Example `GetWorkingOrdersParams` object properties:
+  ```
+  { 
+      accountId = 12345678,  // Assigned by Fund3.
+  }
+  ```
+
+  Expected response type: `workingOrdersReport`.
+
+- sendGetCompletedOrdersMessage
+  - requestHeader = this.defaultRequestHeader
+  - getCompletedOrdersParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Example `GetCompletedOrdersParams` object properties:
+  ```
+  { 
+      accountId = 12345678,  // Assigned by Fund3.
+      count = undefined,  // Optional, number of returned orders (most recent ones).
+      since = undefined  // Optional, UNIX timestamp, only the orders after this timestamp will be returned if it is set. 
+  }
+  ```
+  If both 'count' and 'since' are omitted, orders for last 24h will be  returned.
+
+  Expected response type: `completedOrdersReport`.
+  
+- sendGetExchangePropertiesMessage
+  - requestHeader = this.defaultRequestHeader
+  - getExchangePropertiesParams
+  - requestIdCallback = undefined
+  - responseTypeCallback = undefined
+
+  Example `GetExchangePropertiesParams` object properties:
+  ```
+  { 
+      exchange = "kraken",  // See Exchange proto.
+  }
+  ```
+
+  Expected response type: `exchangePropertiesReport`.
