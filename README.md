@@ -25,18 +25,18 @@ There are two ways to attach callbacks to Omega responses:
     ```
     The callback will only fire when the response to this specific request is received and then unregistered.
  2. Response type
-    - Alternatively, a `responseTypeCallback` can be registered to listen to responses of a specific type (e.g. the same callback will fire when `accountBalance` type messages are received).
+    - Alternatively, a `responseTypeCallback` can be registered to listen to responses of a specific type (e.g. the same callback will fire when `accountBalancesReport` type messages are received).
     ```
     client.subscribeCallbackToResponseType({
-        responseMessageBodyType: messageBodyTypes.ACCOUNT_DATA_REPORT,
-        responseTypeCallback: accountDataReport => console.log(accountDataReport)
+        responseMessageBodyType: messageBodyTypes.ACCOUNT_BALANCES_REPORT,
+        responseTypeCallback: accountBalancesReport => console.log(accountBalancesReport)
     })
     ```
     - The `responseTypeCallback` parameter in all `sendSomethingMessage` functions will be deprecated and should not be used.
     - Only one `responseTypeCallback` is allowed to be attached to each responseType at any given time; if new callbacks to the same type are registered without unsubscribing, the old callback will be unsubscribed and replaced with the new one.  Callbacks can be unsubscribed via:
     ```
     client.unsubscribeCallbackFromResponseType({
-        responseMessageBodyType:messageBodyTypes.ACCOUNT_DATA_REPORT
+        responseMessageBodyType:messageBodyTypes.ACCOUNT_BALANCES_REPORT
     })
     ```
     
@@ -57,7 +57,7 @@ In the case that both callbacks are subscribed to a message, the `requestIdCallb
   ```  
   Currently the only errorValue that will be sent is a list of erroneousAccountIds.
   
-  Once Omega receives a `logon` message from the client, it responds with a `logonAck` message. If `logonAck.success` is true, the client will wait for `accountDataReport` for each account internally and update the status of `ready`, otherwise `ready` will block because no accountDataReport will be received.  Before `ready` resolves, the client state is not up to date; it is not advised to subscribe to any requestId or responseType before `ready` resolves.
+  Once Omega receives a `logon` message from the client, it responds with a `logonAck` message. If `logonAck.success` is `true`, the client will wait for `accountDataReport` for each account internally and update the status of `ready`, otherwise `ready` will block because no `accountDataReport` will be received.  Before `ready` resolves, the client state is not up to date; it is not advised to subscribe to any `requestId` or `responseType` before `ready` resolves.
 
 - subscribeCallbackToResponseType
   
@@ -89,12 +89,14 @@ In the case that both callbacks are subscribed to a message, the `requestIdCallb
 ```
 Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  The client library handles the updates of `accessToken` and also generates `requestId` for all requests.  Features for user generated requestIds can be added later by request.  In most cases, it is anticipated that the default `requestHeader` in the `Client` class is used.
 
+For requests that take a parameter object as argument (e.g. `testMessageParams` in `sendTestMessage`), see `requestParams` dir.
+
 #### System Requests
 - sendHeartbeatMessage
   
   Arguments:
-  - requestHeader = this.defaultRequestHeader,
-  - requestIdCallback = undefined,
+  - requestHeader = this.defaultRequestHeader
+  - requestIdCallback = undefined
   - responseTypeCallback = undefined
   
   Sends a `heartbeat` message to Omega.  
@@ -102,6 +104,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Expected response type: `heartbeat`.
 
 - sendTestMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - testMessageParams
   - requestIdCallback = undefined
@@ -114,13 +118,15 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Example `TestMessageParams` parameter object properties:
   ```
   {
-      string: "test message",
+      string: "test message"
   }
   ```
 
 - sendGetServerTimeMessage
-  - requestHeader = this.defaultRequestHeader,
-  - requestIdCallback = undefined,
+  
+  Arguments:
+  - requestHeader = this.defaultRequestHeader
+  - requestIdCallback = undefined
   - responseTypeCallback = undefined
   
   Sends a `getServerTime` request to Omega.
@@ -129,6 +135,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
 
 #### Logon-Logoff Requests
 - sendLogonMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - logonParams
   - requestIdCallback = undefined
@@ -156,6 +164,7 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   If `logon` is successful, `authorizationGrant` will be a property in `logonAck`. The internal logic in the client library code will update the `accessToken` within the `Client` object for authorization purpose.
 
 - sendLogoffMessage
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - requestIdCallback = undefined
   - responseTypeCallback = undefined
@@ -164,6 +173,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
 
 #### Trading Requests
 - sendPlaceSingleOrderMessage
+  
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - placeOrderParams
   - requestIdCallback = undefined
@@ -192,6 +203,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Once a `placeSingleOrderMessage` is received, Omega responds with an `ExecutionReport` with an order status of `working`. Subsequently, when an event that changes the status of the order (e.g. order being `filled` or `rejected`), Omega sends an updated `executionReport` from server side without a client request.
   
 - sendReplaceOrderMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - replaceOrderParams
   - requestIdCallback = undefined
@@ -213,6 +226,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Behavior of `sendReplaceOrderMessage`, if successfully received and validated (e.g. the order still exists and is not filled), is identical to that of `placeSingleOrderMessage`. 
 
 - sendCancelOrderMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - cancelOrderParams
   - requestIdCallback = undefined
@@ -231,6 +246,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Behavior of `sendCancelOrderMessage`, if successfully received and validated (e.g. the order still exists and is not filled), is different from that of `placeSingleOrderMessage` and `sendReplaceOrderMessage`; only one `executionReport` will come back with order status `canceled`. 
   
 - sendGetOrderStatusMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - getOrderStatusParams
   - requestIdCallback = undefined
@@ -248,6 +265,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
 
 #### Account Requests
 - sendGetAccountDataMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - getAccountDataParams
   - requestIdCallback = undefined
@@ -256,13 +275,15 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Example `GetAccountDataParams` object properties:
   ```
   { 
-      accountId = 12345678,  // Assigned by Fund3.
+      accountId = 12345678  // Assigned by Fund3.
   }
   ```
 
   Expected response type: `accountDataReport`.
   
 - sendGetAccountBalancesMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - getAccountBalancesParams
   - requestIdCallback = undefined
@@ -271,13 +292,15 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Example `GetAccountBalancesParams` object properties:
   ```
   { 
-      accountId = 12345678,  // Assigned by Fund3.
+      accountId = 12345678  // Assigned by Fund3.
   }
   ```
 
   Expected response type: `accountBalancesReport`.
   
 - sendGetOpenPositionsMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - getOpenPositionsParams
   - requestIdCallback = undefined
@@ -286,13 +309,15 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Example `GetOpenPositionsParams` object properties:
   ```
   { 
-      accountId = 12345678,  // Assigned by Fund3.
+      accountId = 12345678  // Assigned by Fund3.
   }
   ```
 
   Expected response type: `openPositionsReport`.
 
 - sendGetWorkingOrdersMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - getWorkingOrdersParams
   - requestIdCallback = undefined
@@ -301,13 +326,15 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Example `GetWorkingOrdersParams` object properties:
   ```
   { 
-      accountId = 12345678,  // Assigned by Fund3.
+      accountId = 12345678  // Assigned by Fund3.
   }
   ```
 
   Expected response type: `workingOrdersReport`.
 
 - sendGetCompletedOrdersMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - getCompletedOrdersParams
   - requestIdCallback = undefined
@@ -317,7 +344,7 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   ```
   { 
       accountId = 12345678,  // Assigned by Fund3.
-      count = undefined,  // Optional, number of returned orders (most recent ones).
+      count = undefined,  // Optional, number of most recent orders to return.
       since = undefined  // Optional, UNIX timestamp, only the orders after this timestamp will be returned if it is set. 
   }
   ```
@@ -326,6 +353,8 @@ Currently, `clientId` and `senderCompId` are passed into `Client` constructor.  
   Expected response type: `completedOrdersReport`.
   
 - sendGetExchangePropertiesMessage
+
+  Arguments:
   - requestHeader = this.defaultRequestHeader
   - getExchangePropertiesParams
   - requestIdCallback = undefined
