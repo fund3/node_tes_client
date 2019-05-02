@@ -23,8 +23,8 @@
   "homepage": "https://github.com/fund3/node_tes_client#readme",
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "@fund3/communicationprotocol": "git+https://sharpfuryz:zograt-5dihMu-fedzeg@github.com/fund3/communicationprotocol.git",
-    "capnp": "https://github.com/capnproto/node-capnp.git#eae9c1c54be876bc8dec6a057cd9b38d6a0270e8",
+    "@fund3/communicationprotocol": "^1.0.0",
+    "capnp": "^0.3.1",
     "capnp-js": "^0.2.11",
     "dotenv": "^6.2.0",
     "kraken-api": "^1.0.0",
@@ -42,7 +42,7 @@
     "@babel/register": "^7.4.0",
     "babel-plugin-root-import": "^6.1.0",
     "mocha": "^6.0.2",
-    "rollup": "^1.6.0",
+    "rollup": "^1.10.1",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-babel": "^4.3.2",
     "should": "^13.2.3"
