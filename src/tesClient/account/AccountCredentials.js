@@ -9,12 +9,12 @@ class AccountCredentials {
   }) {
     /**
     AccountCredentials object is used for logon
-    * @param accountId: accountId assigned by Fund3
-    * @param apiKey: String apiKey for connecting to exchange API
+    * @param accountId: (int) accountId assigned by Fund3
+    * @param apiKey: (String) apiKey for connecting to exchange API
     *    associated with accountID
-    * @param secretKey: String secretKey for connecting to exchange API
+    * @param secretKey: (String) secretKey for connecting to exchange API
     *    associated with accountID
-    * @param passphrase: String (optional) passphrase for connecting to API
+    * @param passphrase: (String) optional passphrase for connecting to API
     *    associated with accountID
     */
     this.accountInfo = new AccountInfo({ accountId });

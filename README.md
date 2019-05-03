@@ -344,8 +344,9 @@ For requests that take a parameter object as argument (e.g. `testMessageParams` 
   ```
   { 
       accountId = 12345678,  // Assigned by Fund3.
-      count = undefined,  // Optional, number of most recent orders to return.
-      since = undefined  // Optional, UNIX timestamp, only the orders after this timestamp will be returned if it is set. 
+      count = 50,  // Optional, number of most recent orders to return.
+      since = 1556189965.0  // Optional, UNIX timestamp, only the orders after this timestamp will be returned if it is set. 
+
   }
   ```
   If both 'count' and 'since' are omitted, orders for last 24h will be returned.

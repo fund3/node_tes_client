@@ -40,15 +40,14 @@ class Client {
         if (this.accountDataUpdated) {
             return resolve();
         } else if (this.accountDataSystemError) {
-            return reject(this.erroneousAccountIds);
+            return reject({
+                errorMessage: "Error occurred on some exchange accounts.",
+                erroneousAccountIds: this.erroneousAccountIds
+            });
         } else {
             setTimeout(() => this.checkAccountData(resolve, reject), 100);
         }
     };
-
-    ready = async () => new Promise((resolve, reject) => {
-        this.checkAccountData(resolve, reject);
-    });
 
     sendMessage = ({
             expectedRequestId,
@@ -110,6 +109,30 @@ class Client {
     receiveInitialAccountDataReport = ( accountDataReport ) => {
         this.processAccountId({
             accountId: accountDataReport.accountInfo.accountID
+        });
+    };
+
+    ready = async () => new Promise((resolve, reject) => {
+        this.checkAccountData(resolve, reject);
+    });
+
+    close = () => {
+        this.messenger.cleanup();
+    };
+
+    subscribeCallbackToResponseType = ({
+        responseMessageBodyType,
+        responseTypeCallback
+    }) => {
+        this.messenger.subscribeCallbackToResponseType({
+            responseMessageBodyType: responseMessageBodyType,
+            responseTypeCallback: responseTypeCallback
+        })
+    };
+
+    unsubscribeCallbackFromResponseType = ({ responseMessageBodyType }) => {
+        this.messenger.unsubscribeCallbackFromResponseType({
+            responseMessageBodyType
         });
     };
 
