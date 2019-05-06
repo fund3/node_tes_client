@@ -47,45 +47,46 @@ class Messenger {
         });
     };
 
-	initializeSockets = ({ curveServerKey, tesSocketEndpoint,
-							 backendSocketEndpoint }) => {
-		this.tesSocket = new TesSocket({
-			curveServerKey,
-			socketEndpoint: tesSocketEndpoint
-		});
+    initializeSockets = ({
+        curveServerKey,
+        tesSocketEndpoint,
+        backendSocketEndpoint
+    }) => {
+        this.tesSocket = new TesSocket({
+            curveServerKey,
+            socketEndpoint: tesSocketEndpoint
+        });
 
-		this.backendSocket = new BackendSocket({
-			tesSocket: this.tesSocket,
-			socketEndpoint: backendSocketEndpoint
-		});
+        // Although there is no explicit reference to backend socket, messages
+        // get sent to backendSocket from messageSocket via inproc address and
+        // then the message gets routed to TES
+        this.backendSocket = new BackendSocket({
+            tesSocket: this.tesSocket,
+            socketEndpoint: backendSocketEndpoint
+        });
 
-		this.messageSocket = new MessageSocket({
-			socketEndpoint: backendSocketEndpoint
-		});
+        this.messageSocket = new MessageSocket({
+            socketEndpoint: backendSocketEndpoint
+        });
 
-		process.on("SIGINT", () => {
-			this.cleanupSockets();
-			process.exit();
-		});
+        this.connectSockets();
+    };
 
-		this.connectSockets();
+    cleanup = () => {
+        this.cleanupSockets();
 	};
 
-	cleanupSockets = () => {
-		this.cleanupSocket({ socket: this.tesSocket.get() });
-		this.cleanupSocket({ socket: this.backendSocket.get() });
-		this.cleanupSocket({ socket: this.messageSocket.get() });
-	};
+    cleanupSockets = () => {
+        this.tesSocket.close();
+        this.backendSocket.close();
+        this.messageSocket.close();
+    };
 
-	cleanupSocket = ({ socket }) => {
-		socket.emit("close_zmq_sockets");
-	};
-
-	connectSockets = () => {
-		this.tesSocket.connect();
-		this.backendSocket.connect();
-		this.messageSocket.connect();
-	};
+    connectSockets = () => {
+        this.tesSocket.connect();
+        this.backendSocket.connect();
+        this.messageSocket.connect();
+    };
 }
 
 export default Messenger;
