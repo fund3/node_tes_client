@@ -1,8 +1,9 @@
-import RequestHeader from "./requestParams/RequestHeader"
+import RequestHeader from "./requestParams/RequestHeader";
 import MessageFactory from "./factories/MessageFactory";
 import Messenger from "./messages/Messenger";
-
 import { messageBodyTypes } from "~/tesClient/constants";
+
+
 
 class Client {
 
@@ -30,6 +31,7 @@ class Client {
             tesSocketEndpoint,
             backendSocketEndpoint
         });
+
         this.accountDataUpdated = false;
         this.accountDataSystemError = false;
         this.pendingAccountIds = new Set([]);
@@ -56,25 +58,13 @@ class Client {
             requestIdCallback,
             responseTypeCallback
     }) => {
-        this.generateNewRequestId({ message });
         this.messenger.sendMessage({
-            expectedRequestId: message.type.request.requestID,
+            expectedRequestId,
             responseMessageBodyType,
             message,
             requestIdCallback,
             responseTypeCallback
         });
-    };
-
-    getRandomInt = ({ max }) => {
-        return Math.floor(Math.random() * Math.floor(max));
-    };
-
-    generateNewRequestId = ({ message }) => {
-        const newRequestId = this.getRandomInt({
-            max: 1000000000 });
-        this.defaultRequestHeader.requestID = newRequestId;
-        message.type.request.requestID = newRequestId;
     };
 
     updateAccessToken = ({ newAccessToken }) => {
@@ -125,8 +115,8 @@ class Client {
         responseTypeCallback
     }) => {
         this.messenger.subscribeCallbackToResponseType({
-            responseMessageBodyType: responseMessageBodyType,
-            responseTypeCallback: responseTypeCallback
+            responseMessageBodyType,
+            responseTypeCallback
         })
     };
 
@@ -137,16 +127,15 @@ class Client {
     };
 
     sendHeartbeatMessage = ({
-        requestHeader = this.defaultRequestHeader,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const heartbeatMessage =
             this.messageFactory.buildHeartbeatMessage({
-                requestHeader
+                requestHeader: this.defaultRequestHeader
             });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: heartbeatMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.HEARTBEAT,
             message: heartbeatMessage,
             requestIdCallback,
@@ -155,18 +144,17 @@ class Client {
     };
 
     sendTestMessage = ({
-        requestHeader = this.defaultRequestHeader,
         testMessageParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const testMessage =
             this.messageFactory.buildTestMessage({
-                requestHeader,
+                requestHeader: this.defaultRequestHeader,
                 testMessageParams
             });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: testMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.TEST,
             message: testMessage,
             requestIdCallback,
@@ -175,16 +163,15 @@ class Client {
     };
 
     sendGetServerTimeMessage = ({
-        requestHeader = this.defaultRequestHeader,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getServerTimeMessage =
             this.messageFactory.buildGetServerTimeMessage({
-                requestHeader
+                requestHeader: this.defaultRequestHeader
             });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: getServerTimeMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.SERVER_TIME,
             message: getServerTimeMessage,
             requestIdCallback,
@@ -193,20 +180,19 @@ class Client {
     };
 
     sendLogonMessage = ({
-        requestHeader = this.defaultRequestHeader,
         logonParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const logonMessage = this.messageFactory.buildLogonMessage({
-            requestHeader, logonParams });
+            requestHeader: this.defaultRequestHeader, logonParams });
         logonParams.credentials.forEach(
             (accountCredentials) =>
                 this.pendingAccountIds.add(
                     accountCredentials.accountInfo.accountID)
         );
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: logonMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.LOGON_ACK,
             message: logonMessage,
             requestIdCallback: (logonAck) => {
@@ -222,7 +208,19 @@ class Client {
                             messageBodyTypes.SYSTEM,
                         responseTypeCallback:
                             this.receiveSystemMessage
-                    })
+                    });
+                    // If there is no subscriber to the observable, it seems
+                    // like a subscription will be automatically added to the
+                    // observable if a message is sent from .  Eventually
+                    // there will be a leak since too many eventlisteners are
+                    // subscribed.  This is a hack to subscribe a subscription
+                    // that listens to non-existent "null" messageTypes so that
+                    // at any given time there will only be one extra
+                    // subscription.
+                    this.messenger.subscribeCallbackToResponseType({
+                        responseMessageBodyType: 'null',
+                        responseTypeCallback: () => {}
+                    });
                 }
                 const newAccessToken = logonAck &&
                     logonAck.authorizationGrant &&
@@ -237,15 +235,14 @@ class Client {
     };
 
     sendLogoffMessage = ({
-        requestHeader = this.defaultRequestHeader,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const logoffMessage = this.messageFactory.buildLogoffMessage({
-            requestHeader
+            requestHeader: this.defaultRequestHeader
         });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: logoffMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.LOGOFF_ACK,
             message: logoffMessage,
             requestIdCallback,
@@ -254,17 +251,16 @@ class Client {
     };
 
     sendPlaceSingleOrderMessage = ({
-        requestHeader = this.defaultRequestHeader,
         placeOrderParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const placeOrderMessage =
             this.messageFactory.buildPlaceSingleOrderMessage({
-                requestHeader, placeOrderParams });
+                requestHeader: this.defaultRequestHeader, placeOrderParams });
 
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: placeOrderMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: placeOrderMessage,
             requestIdCallback,
@@ -273,17 +269,16 @@ class Client {
     };
 
     sendReplaceOrderMessage = ({
-        requestHeader = this.defaultRequestHeader,
         replaceOrderParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const replaceOrderMessage =
             this.messageFactory.buildReplaceOrderMessage({
-                requestHeader, replaceOrderParams });
+                requestHeader: this.defaultRequestHeader, replaceOrderParams });
 
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: replaceOrderMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: replaceOrderMessage,
             requestIdCallback,
@@ -292,17 +287,16 @@ class Client {
     };
 
     sendCancelOrderMessage = ({
-        requestHeader = this.defaultRequestHeader,
         cancelOrderParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const cancelOrderMessage =
             this.messageFactory.buildCancelOrderMessage({
-                requestHeader, cancelOrderParams});
+                requestHeader: this.defaultRequestHeader, cancelOrderParams});
 
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: cancelOrderMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: cancelOrderMessage,
             requestIdCallback,
@@ -311,16 +305,17 @@ class Client {
     };
 
     sendGetOrderStatusMessage = ({
-        requestHeader = this.defaultRequestHeader,
         getOrderStatusParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getOrderStatusMessage =
             this.messageFactory.buildGetOrderStatusMessage({
-                requestHeader, getOrderStatusParams });
+                requestHeader: this.defaultRequestHeader,
+                getOrderStatusParams
+            });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: getOrderStatusMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
             message: getOrderStatusMessage,
             requestIdCallback,
@@ -329,16 +324,17 @@ class Client {
     };
 
     sendGetAccountDataMessage = ({
-        requestHeader = this.defaultRequestHeader,
         getAccountDataParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getAccountDataMessage =
             this.messageFactory.buildGetAccountDataMessage({
-                requestHeader, getAccountDataParams });
+                requestHeader: this.defaultRequestHeader,
+                getAccountDataParams
+            });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: getAccountDataMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.ACCOUNT_DATA_REPORT,
             message: getAccountDataMessage,
             requestIdCallback,
@@ -347,16 +343,17 @@ class Client {
     };
 
     sendGetAccountBalancesMessage = ({
-        requestHeader = this.defaultRequestHeader,
         getAccountBalancesParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getAccountBalancesMessage =
             this.messageFactory.buildGetAccountBalancesMessage({
-                requestHeader, getAccountBalancesParams});
+                requestHeader: this.defaultRequestHeader,
+                getAccountBalancesParams
+            });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: getAccountBalancesMessage.type.request.requestID,
             responseMessageBodyType:
                 messageBodyTypes.ACCOUNT_BALANCES_REPORT,
             message: getAccountBalancesMessage,
@@ -366,16 +363,17 @@ class Client {
     };
 
     sendGetOpenPositionsMessage = ({
-        requestHeader = this.defaultRequestHeader,
         getOpenPositionsParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getOpenPositionsMessage =
             this.messageFactory.buildGetOpenPositionsMessage({
-                requestHeader, getOpenPositionsParams });
+                requestHeader: this.defaultRequestHeader,
+                getOpenPositionsParams
+            });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: getOpenPositionsMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.OPEN_POSITIONS_REPORT,
             message: getOpenPositionsMessage,
             requestIdCallback,
@@ -384,16 +382,17 @@ class Client {
     };
 
     sendGetWorkingOrdersMessage = ({
-        requestHeader = this.defaultRequestHeader,
         getWorkingOrdersParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getWorkingOrdersMessage =
             this.messageFactory.buildGetWorkingOrdersMessage({
-                requestHeader, getWorkingOrdersParams });
+                requestHeader: this.defaultRequestHeader,
+                getWorkingOrdersParams
+            });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId: getWorkingOrdersMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.WORKING_ORDERS_REPORT,
             message: getWorkingOrdersMessage,
             requestIdCallback,
@@ -402,37 +401,39 @@ class Client {
     };
 
     sendGetCompletedOrdersMessage = ({
-        requestHeader = this.defaultRequestHeader,
         getCompletedOrdersParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
-            const getCompletedOrdersMessage =
-                this.messageFactory.buildGetCompletedOrdersMessage({
-                    requestHeader, getCompletedOrdersParams });
-            this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
-                responseMessageBodyType:
-                    messageBodyTypes.COMPLETED_ORDERS_REPORT,
-                message: getCompletedOrdersMessage,
-                requestIdCallback,
-            responseTypeCallback
+        const getCompletedOrdersMessage =
+            this.messageFactory.buildGetCompletedOrdersMessage({
+                requestHeader: this.defaultRequestHeader,
+                getCompletedOrdersParams
             });
+        this.sendMessage({
+            expectedRequestId:
+                getCompletedOrdersMessage.type.request.requestID,
+            responseMessageBodyType:
+                messageBodyTypes.COMPLETED_ORDERS_REPORT,
+            message: getCompletedOrdersMessage,
+            requestIdCallback,
+            responseTypeCallback
+        });
     };
 
     sendGetExchangePropertiesMessage = ({
-        requestHeader = this.defaultRequestHeader,
         getExchangePropertiesParams,
         requestIdCallback = undefined,
         responseTypeCallback = undefined
     }) => {
         const getExchangePropertiesMessage =
             this.messageFactory.buildGetExchangePropertiesMessage({
-                requestHeader,
+                requestHeader: this.defaultRequestHeader,
                 getExchangePropertiesParams
             });
         this.sendMessage({
-            expectedRequestId: requestHeader.requestID,
+            expectedRequestId:
+                getExchangePropertiesMessage.type.request.requestID,
             responseMessageBodyType:
                 messageBodyTypes.EXCHANGE_PROPERTIES_REPORT,
             message: getExchangePropertiesMessage,

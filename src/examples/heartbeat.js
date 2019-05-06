@@ -58,9 +58,26 @@ function logoff() {
         { requestIdCallback: response => console.log(response) })
 }
 
+function heartbeat() {
+    client.sendHeartbeatMessage({
+        requestIdCallback: response => console.log(response) });
+}
+
+function cleanup(interval) {
+    client.close();
+    clearInterval(interval);
+}
+
+const waitForClientToBeReady = async (readyCallback) => {
+    await client.ready().catch((err) => console.log(err));
+    console.log('Client is ready!');
+};
+
+// waitForClientToBeReady();
+
 setTimeout(() => logon(), 3000);
 
-setInterval(() => client.sendHeartbeatMessage({
-    requestIdCallback: response => console.log(response) }), 5000);
+const interval = setInterval(() => heartbeat(), 3200);
 
-setTimeout(() => logoff(), 60000);
+setTimeout(() => logoff(), 20000);
+setTimeout(() => cleanup(interval), 22000);

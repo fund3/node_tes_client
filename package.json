@@ -26,6 +26,7 @@
     "@fund3/communicationprotocol": "^1.0.0",
     "capnp": "^0.3.1",
     "capnp-js": "^0.2.11",
+    "debug": "^4.1.1",
     "dotenv": "^6.2.0",
     "kraken-api": "^1.0.0",
     "lodash": "^4.17.11",

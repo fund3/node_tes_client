@@ -1,7 +1,10 @@
+import Debug from "debug";
 import { Observable } from "rxjs";
 import { share, takeWhile } from 'rxjs/operators';
 
 import MessageParser from './MessageParser'
+
+const debug = Debug("MessageResponder");
 
 class MessageResponder {
 
@@ -14,6 +17,7 @@ class MessageResponder {
 
     listenForResponses = () => {
         this.messageObserver = new Observable((observer) => {
+            debug('set on message');
             this.tesSocket.setOnMessage({
                 onMessage: message => {
                     const {
@@ -22,7 +26,8 @@ class MessageResponder {
                         messageBodyContents
                     } =
                         MessageParser.parseMessage({ message });
-                    console.log('in parse: ' + incomingRequestId + messageBodyType + messageBodyContents);
+                    debug('in parse: ' + incomingRequestId + ' ' +
+                        messageBodyType + ' ' + messageBodyContents);
                     observer.next({
                         incomingRequestId,
                         messageBodyType,
@@ -47,7 +52,8 @@ class MessageResponder {
             messageBodyType,
             messageBodyContents
         }) => {
-            console.log('in callback: ' + expectedRequestId + incomingRequestId + messageBodyType + messageBodyContents);
+            debug('in id callback: ' + expectedRequestId +
+                incomingRequestId + messageBodyType + messageBodyContents);
             if (incomingRequestId === 0) {
                 // Only fallback when requestId is default value.
                 if (responseMessageBodyType !== undefined &&
@@ -79,6 +85,8 @@ class MessageResponder {
             messageBodyType,
             messageBodyContents
         }) => {
+            debug('in response callback: ' + incomingRequestId + ' ' +
+                messageBodyType + ' ' + responseMessageBodyType);
             if (incomingRequestId === 0) {
                 // Only fallback when requestId is default value.
                 if (responseMessageBodyType !== undefined &&
