@@ -1,8 +1,8 @@
+import AuthorizationRefreshParams from "./requestParams/AuthorizationRefreshParams";
 import RequestHeader from "./requestParams/RequestHeader";
 import MessageFactory from "./factories/MessageFactory";
 import Messenger from "./messages/Messenger";
 import { messageBodyTypes } from "~/tesClient/constants";
-
 
 
 class Client {
@@ -10,7 +10,6 @@ class Client {
     constructor({
         clientId,
         senderCompId,
-        accessToken = undefined,
         accountCredentialsList,
         curveServerKey,
         tesSocketEndpoint
@@ -18,9 +17,10 @@ class Client {
         this.clientId = clientId;
         this.senderCompId = senderCompId;
         this.accountCredentialsList = accountCredentialsList;
-        this.accessToken = accessToken;
+        this.accessToken = undefined;
+        this.refreshToken = undefined;
         this.defaultRequestHeader = new RequestHeader({
-            clientId, senderCompId, accessToken
+            clientId, senderCompId
         });
         const backendSocketEndpoint = "inproc://" +
             String(clientId) + senderCompId;
@@ -72,6 +72,38 @@ class Client {
         this.defaultRequestHeader.accessToken = newAccessToken;
     };
 
+    internalAuthorizationGrantCallback = (authorizationGrant) => {
+        if (authorizationGrant) {
+            if (authorizationGrant.success) {
+                this.updateAuthorization({ authorizationGrant });
+            } else {
+                this.scheduleAuthorizationRefresh({ delayInSeconds: 60 })
+            }
+        }
+    };
+
+    refreshAuthorization = () => {
+        this.sendAuthorizationRefreshMessage({
+            authorizationRefreshParams: new AuthorizationRefreshParams({
+                refreshToken: this.refreshToken
+            }),
+            requestIdCallback: this.internalAuthorizationGrantCallback
+        })
+    };
+
+    scheduleAuthorizationRefresh = ({ delayInSeconds }) => {
+        setTimeout(() => this.refreshAuthorization, delayInSeconds);
+    };
+
+    updateAuthorization = ({ authorizationGrant }) => {
+        this.refreshToken = authorizationGrant.refreshToken;
+        this.updateAccessToken({ newAccessToken:
+            authorizationGrant.accessToken});
+        this.scheduleAuthorizationRefresh({
+            delayInSeconds: authorizationGrant.expireAt - Date.now() - 120
+        });
+    };
+
     processAccountId = ({ accountId }) => {
         this.pendingAccountIds.delete(accountId);
         if (this.pendingAccountIds.size === 0){
@@ -79,12 +111,10 @@ class Client {
                 this.accountDataUpdated = true;
             }
             this.messenger.unsubscribeCallbackFromResponseType({
-                responseMessageBodyType:
-                    messageBodyTypes.ACCOUNT_DATA_REPORT
+                responseMessageBodyType: messageBodyTypes.ACCOUNT_DATA_REPORT
             });
             this.messenger.unsubscribeCallbackFromResponseType({
-                responseMessageBodyType:
-                    messageBodyTypes.SYSTEM
+                responseMessageBodyType: messageBodyTypes.SYSTEM
             });
         }
     };
@@ -179,6 +209,43 @@ class Client {
         });
     };
 
+    subscribeLogonCallbacks = () => {
+        this.messenger.subscribeCallbackToResponseType({
+            responseMessageBodyType:
+                messageBodyTypes.ACCOUNT_DATA_REPORT,
+            responseTypeCallback:
+                this.receiveInitialAccountDataReport
+        });
+        this.messenger.subscribeCallbackToResponseType({
+            responseMessageBodyType:
+                messageBodyTypes.SYSTEM,
+            responseTypeCallback:
+                this.receiveSystemMessage
+        });
+        // If there is no subscriber to the observable, it seems
+        // like a subscription will be automatically added to the
+        // observable if a message is sent from .  Eventually
+        // there will be a leak since too many eventlisteners are
+        // subscribed.  This is a hack to subscribe a subscription
+        // that listens to non-existent "null" messageTypes so that
+        // at any given time there will only be one extra
+        // subscription.
+        this.messenger.subscribeCallbackToResponseType({
+            responseMessageBodyType: 'null',
+            responseTypeCallback: () => {}
+        });
+    };
+
+    internalLogonAckCallback = ({ logonAck }) => {
+        if (logonAck && logonAck.success) {
+            this.subscribeLogonCallbacks();
+            if (logonAck.authorizationGrant) {
+                this.internalAuthorizationGrantCallback(
+                    logonAck.authorizationGrant);
+            }
+        }
+    };
+
     sendLogonMessage = ({
         logonParams,
         requestIdCallback = undefined,
@@ -196,38 +263,7 @@ class Client {
             responseMessageBodyType: messageBodyTypes.LOGON_ACK,
             message: logonMessage,
             requestIdCallback: (logonAck) => {
-                if (logonAck.success) {
-                    this.messenger.subscribeCallbackToResponseType({
-                        responseMessageBodyType:
-                            messageBodyTypes.ACCOUNT_DATA_REPORT,
-                        responseTypeCallback:
-                            this.receiveInitialAccountDataReport
-                    });
-                    this.messenger.subscribeCallbackToResponseType({
-                        responseMessageBodyType:
-                            messageBodyTypes.SYSTEM,
-                        responseTypeCallback:
-                            this.receiveSystemMessage
-                    });
-                    // If there is no subscriber to the observable, it seems
-                    // like a subscription will be automatically added to the
-                    // observable if a message is sent from .  Eventually
-                    // there will be a leak since too many eventlisteners are
-                    // subscribed.  This is a hack to subscribe a subscription
-                    // that listens to non-existent "null" messageTypes so that
-                    // at any given time there will only be one extra
-                    // subscription.
-                    this.messenger.subscribeCallbackToResponseType({
-                        responseMessageBodyType: 'null',
-                        responseTypeCallback: () => {}
-                    });
-                }
-                const newAccessToken = logonAck &&
-                    logonAck.authorizationGrant &&
-                    logonAck.authorizationGrant.accessToken;
-                if (newAccessToken) {
-                    this.updateAccessToken({ newAccessToken });
-                }
+                this.internalLogonAckCallback({ logonAck });
                 requestIdCallback(logonAck);
             },
             responseTypeCallback
@@ -245,6 +281,27 @@ class Client {
             expectedRequestId: logoffMessage.type.request.requestID,
             responseMessageBodyType: messageBodyTypes.LOGOFF_ACK,
             message: logoffMessage,
+            requestIdCallback,
+            responseTypeCallback
+        });
+    };
+
+    sendAuthorizationRefreshMessage = ({
+        authorizationRefreshParams,
+        requestIdCallback = undefined,
+        responseTypeCallback = undefined
+    }) => {
+        const authorizationRefreshMessage =
+            this.messageFactory.buildAuthorizationRefreshMessage({
+                requestHeader: this.defaultRequestHeader,
+                authorizationRefreshParams
+            });
+        this.sendMessage({
+            expectedRequestId:
+                authorizationRefreshMessage.type.request.requestID,
+            responseMessageBodyType:
+                messageBodyTypes.AUTHORIZATION_GRANT,
+            message: authorizationRefreshMessage,
             requestIdCallback,
             responseTypeCallback
         });

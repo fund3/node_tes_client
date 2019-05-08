@@ -70,6 +70,16 @@ class MessageFactory {
         return this.buildRequestMessage({ requestHeader, messageBody });
     };
 
+    buildAuthorizationRefreshMessage = ({
+        requestHeader,
+        authorizationRefreshParams
+    }) => {
+        const messageBody =
+            MessageBodyFactory.buildAuthorizationRefreshMessageBody({
+                authorizationRefreshParams });
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
+
     buildPlaceSingleOrderMessage = ({
         requestHeader,
         placeOrderParams

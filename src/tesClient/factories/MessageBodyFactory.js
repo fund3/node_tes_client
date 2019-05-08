@@ -6,65 +6,11 @@ class MessageBodyFactory {
             case messageBodyTypes.HEARTBEAT:
                 return { [messageBodyTypes.HEARTBEAT]: "" };
 
-            case messageBodyTypes.TEST:
-                return { [messageBodyTypes.TEST]: messageBodyContents };
-
-            case messageBodyTypes.GET_SERVER_TIME:
-                return { [messageBodyTypes.GET_SERVER_TIME]:
-                    messageBodyContents};
-
-            case messageBodyTypes.LOGON:
-                return { [messageBodyTypes.LOGON]: messageBodyContents};
-
             case messageBodyTypes.LOGOFF:
                 return { [messageBodyTypes.LOGOFF]: "" };
 
-            case messageBodyTypes.AUTHORIZATION_REFRESH:
-                return { [messageBodyTypes.AUTHORIZATION_REFRESH]:
-                    messageBodyContents};
-
-            case messageBodyTypes.PLACE_SINGLE_ORDER:
-                return { [messageBodyTypes.PLACE_SINGLE_ORDER]:
-                    messageBodyContents };
-
-            case messageBodyTypes.REPLACE_ORDER:
-                return { [messageBodyTypes.REPLACE_ORDER]:
-                    messageBodyContents };
-
-            case messageBodyTypes.CANCEL_ORDER:
-                return { [messageBodyTypes.CANCEL_ORDER]:
-                    messageBodyContents };
-
-            case messageBodyTypes.GET_ORDER_STATUS:
-                return { [messageBodyTypes.GET_ORDER_STATUS]:
-                    messageBodyContents };
-
-            case messageBodyTypes.GET_ACCOUNT_DATA:
-                return { [messageBodyTypes.GET_ACCOUNT_DATA]:
-                    messageBodyContents };
-
-            case messageBodyTypes.GET_ACCOUNT_BALANCES:
-                return { [messageBodyTypes.GET_ACCOUNT_BALANCES]:
-                    messageBodyContents };
-
-            case messageBodyTypes.GET_OPEN_POSITIONS:
-                return { [messageBodyTypes.GET_OPEN_POSITIONS]:
-                    messageBodyContents };
-
-            case messageBodyTypes.GET_WORKING_ORDERS:
-                return { [messageBodyTypes.GET_WORKING_ORDERS]:
-                    messageBodyContents };
-
-            case messageBodyTypes.GET_COMPLETED_ORDERS:
-                return { [messageBodyTypes.GET_COMPLETED_ORDERS]:
-                    messageBodyContents };
-
-            case messageBodyTypes.GET_EXCHANGE_PROPERTIES:
-                return { [messageBodyTypes.GET_EXCHANGE_PROPERTIES]:
-                    messageBodyContents };
-
             default:
-                return {};
+                return { [messageBodyType]: messageBodyContents};
         }
     };
 
@@ -85,16 +31,26 @@ class MessageBodyFactory {
     };
 
     static buildLogonMessageBody = ({ logonParams }) => {
-            const messageBodyType = messageBodyTypes.LOGON;
-            return MessageBodyFactory.buildMessageBody({
-                messageBodyType,
-                messageBodyContents: logonParams
-            });
+        const messageBodyType = messageBodyTypes.LOGON;
+        return MessageBodyFactory.buildMessageBody({
+            messageBodyType,
+            messageBodyContents: logonParams
+        });
     };
 
     static buildLogoffMessageBody = () => {
         const messageBodyType = messageBodyTypes.LOGOFF;
         return MessageBodyFactory.buildMessageBody({ messageBodyType });
+    };
+
+    static buildAuthorizationRefreshMessageBody = ({
+        authorizationRefreshParams
+    }) => {
+        const messageBodyType = messageBodyTypes.AUTHORIZATION_REFRESH;
+        return MessageBodyFactory.buildMessageBody({
+            messageBodyType,
+            messageBodyContents: authorizationRefreshParams
+        });
     };
 
     static buildPlaceSingleOrderMessageBody = ({
