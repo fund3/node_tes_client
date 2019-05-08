@@ -56,3 +56,4 @@ setTimeout(
             accountId: process.env.KRAKEN_ACCOUNT_ID})}), 5000);
 
 setTimeout(() => logoff(), 10000);
+setTimeout(() => client.close(), 12000);

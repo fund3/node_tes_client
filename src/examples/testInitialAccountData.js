@@ -52,6 +52,7 @@ setTimeout(() =>
 const readyCallback = () => {
     client.sendLogoffMessage(
         { requestIdCallback: response => console.log(response) })
+    setTimeout(() => client.close(), 2000);
 };
 
 const waitForClientToBeReady = async (readyCallback) => {
