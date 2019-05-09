@@ -3,6 +3,9 @@ import { messageTypes } from "~/tesClient/constants";
 
 class MessageFactory {
 
+    public requestIdPrefix;
+    public requestIdMultiplier;
+
     constructor() {
         this.requestIdPrefix = 0;
         this.requestIdMultiplier = 10000000;

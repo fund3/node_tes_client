@@ -3,6 +3,8 @@ const msgsCapnp = require("omegaprotocol/TradeMessage.capnp");
 
 class MessageSender {
 
+    public messageSocket;
+
     constructor({ messageSocket }) {
         this.messageSocket = messageSocket
     };

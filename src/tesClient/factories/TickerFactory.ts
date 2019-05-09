@@ -5,6 +5,8 @@ const KrakenClient = require('kraken-api');
 
 class TickerFactory {
 
+    public krakenApi;
+
     constructor(key, secret){
         this.krakenApi = new KrakenClient(key, secret, {});
     }

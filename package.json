@@ -1,45 +1,32 @@
 {
-  "name": "@fund3/node_tes_client",
-  "version": "1.2.2",
-  "description": "NodeJS library to be used with Fund3 Omega",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "scripts": {
-    "test": "echo \\\"Error: no test specified\\\" && exit 1",
-    "build": "npm run build_client",
-    "build_client": "./node_modules/.bin/babel src -d lib/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fund3/node_tes_client.git"
-  },
-  "author": "Anthony Wittemann, Calvin Leung",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/fund3/node_tes_client/issues"
-  },
-  "homepage": "https://github.com/fund3/node_tes_client#readme",
-  "dependencies": {
-    "@babel/polyfill": "^7.2.5",
-    "capnp": "^0.3.1",
-    "capnp-js": "^0.2.11",
-    "debug": "^4.1.1",
-    "dotenv": "^6.2.0",
-    "kraken-api": "^1.0.0",
-    "lodash": "^4.17.11",
-    "omegaprotocol": "^1.0.0",
-    "request": "^2.88.0",
-    "rxjs": "^6.3.3",
-    "uuid": "^3.3.2",
-    "zeromq": "^5.1.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.2.3",
-    "@babel/preset-env": "^7.2.3",
-    "babel-plugin-root-import": "^6.1.0"
-  }
+	"name": "@fund3/node_tes_client",
+	"version": "1.2.2",
+	"description": "NodeJS library to be used with Fund3 Omega",
+	"main": "dist/index.js",
+	"module": "dist/index.es.js",
+	"files": [
+		"dist"
+	],
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "rollup -c",
+		"watch": "rollup -cw"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/fund3/node_tes_client.git"
+	},
+	"author": "Anthony Wittemann, Calvin Leung",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/fund3/node_tes_client/issues"
+	},
+	"homepage": "https://github.com/fund3/node_tes_client#readme",
+	"devDependencies": {
+		"rollup": "^1.11.3",
+		"rollup-plugin-node-resolve": "^4.2.3",
+		"rollup-plugin-typescript2": "^0.21.0",
+		"typescript": "^3.4.5"
+	},
+	"dependencies": {}
 }

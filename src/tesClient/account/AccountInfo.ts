@@ -1,4 +1,11 @@
 class AccountInfo {
+
+    public exchange;
+    public accountID;
+    public accountType;
+    public exchangeAccountID;
+    public exchangeClientID;
+
   constructor({
       accountId,
       exchange = undefined,

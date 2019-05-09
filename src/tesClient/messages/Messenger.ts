@@ -5,6 +5,12 @@ import MessageSocket from "~/tesClient/sockets/MessageSocket";
 import TesSocket from "~/tesClient/sockets/TesSocket";
 
 class Messenger {
+
+    public messageResponder;
+    public messageSender;
+    public messageSocket;
+    public tesSocket;
+    public backendSocket;
 	
 	constructor({ curveServerKey, tesSocketEndpoint, backendSocketEndpoint }) {
 		this.initializeSockets({ curveServerKey, tesSocketEndpoint,

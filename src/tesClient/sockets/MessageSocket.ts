@@ -2,6 +2,9 @@ import * as zmq from "zeromq";
 
 class MessageSocket {
 
+    public socket;
+    public socketEndpoint;
+
   constructor({ socketEndpoint }) {
     this.socket = zmq.socket("dealer");
     this.socketEndpoint = socketEndpoint;

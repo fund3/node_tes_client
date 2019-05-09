@@ -4,8 +4,20 @@ import MessageFactory from "./factories/MessageFactory";
 import Messenger from "./messages/Messenger";
 import { messageBodyTypes } from "~/tesClient/constants";
 
-
 class Client {
+
+    public clientId;
+    public senderCompId;
+    public accountCredentialsList;
+    public accessToken;
+    public refreshToken;
+    public defaultRequestHeader;
+    public messageFactory;
+    public messenger;
+    public accountDataUpdated;
+    public accountDataSystemError;
+    public pendingAccountIds;
+    public erroneousAccountIds;
 
     constructor({
         clientId,

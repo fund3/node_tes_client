@@ -1,13 +1,13 @@
 import AccountInfo from "~/tesClient/account/AccountInfo";
 
 class AccountCredentials {
-  constructor({
-      accountId,
-      apiKey,
-      secretKey,
-      passphrase = ''
-  }) {
-    /**
+	public account_info;
+	public apiKey;
+	public secretKey;
+	public passphrase;
+
+	constructor({ accountId, apiKey, secretKey, passphrase = "" }) {
+		/**
     AccountCredentials object is used for logon
     * @param accountId: (int) accountId assigned by Fund3
     * @param apiKey: (String) apiKey for connecting to exchange API
@@ -17,13 +17,13 @@ class AccountCredentials {
     * @param passphrase: (String) optional passphrase for connecting to API
     *    associated with accountID
     */
-    this.accountInfo = new AccountInfo({ accountId });
-    this.apiKey = String(apiKey);
-    this.secretKey = String(secretKey);
-    this.passphrase = String(passphrase);
-  }
+		this.account_info = new AccountInfo({ accountId });
+		this.apiKey = String(apiKey);
+		this.secretKey = String(secretKey);
+		this.passphrase = String(passphrase);
+	}
 
-  accountInfo = () => this.accountInfo;
+	accountInfo = () => this.account_info;
 }
 
 export default AccountCredentials;

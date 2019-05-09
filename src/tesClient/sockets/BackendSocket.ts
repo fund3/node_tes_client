@@ -2,6 +2,10 @@ import * as zmq from "zeromq";
 
 class BackendSocket {
 
+    public socketEndpoint;
+    public socket;
+    public tesSocket;
+
   constructor({ tesSocket, socketEndpoint }) {
     this.socketEndpoint = socketEndpoint;
     this.socket = zmq.socket("router");

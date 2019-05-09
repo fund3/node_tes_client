@@ -1,4 +1,3 @@
-require("@babel/polyfill");
 import Client from "~/tesClient/Client";
 
 import AccountInfo from "~/tesClient/account/AccountInfo";

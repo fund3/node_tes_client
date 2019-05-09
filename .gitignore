@@ -67,3 +67,5 @@ typings/
 /lib/
 /node_modules/
 *lib*
+
+*.rpt2_cache*

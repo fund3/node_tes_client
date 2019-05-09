@@ -16,7 +16,7 @@ class MessageBodyFactory {
 
     static buildHeartbeatMessageBody = () => {
         const messageBodyType = messageBodyTypes.HEARTBEAT;
-        return MessageBodyFactory.buildMessageBody({ messageBodyType });
+        return MessageBodyFactory.buildMessageBody({ messageBodyType, messageBodyContents: null });
     };
 
     static buildTestMessageBody = ({ testMessageParams }) => {
@@ -27,7 +27,10 @@ class MessageBodyFactory {
 
     static buildGetServerTimeMessageBody = () => {
         const messageBodyType = messageBodyTypes.GET_SERVER_TIME;
-        return MessageBodyFactory.buildMessageBody({ messageBodyType });
+        return MessageBodyFactory.buildMessageBody({
+			messageBodyType,
+			messageBodyContents: null
+		});
     };
 
     static buildLogonMessageBody = ({ logonParams }) => {
@@ -40,7 +43,10 @@ class MessageBodyFactory {
 
     static buildLogoffMessageBody = () => {
         const messageBodyType = messageBodyTypes.LOGOFF;
-        return MessageBodyFactory.buildMessageBody({ messageBodyType });
+        return MessageBodyFactory.buildMessageBody({
+			messageBodyType,
+			messageBodyContents: null
+		});
     };
 
     static buildAuthorizationRefreshMessageBody = ({

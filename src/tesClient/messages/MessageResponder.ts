@@ -9,6 +9,11 @@ const debug = Debug("MessageResponder");
 
 class MessageResponder {
 
+    public tesSocket;
+    public responseTypeSubscriberDict;
+    public pendingRequestIdSet;
+    public messageObserver;
+
     constructor({ tesSocket }) {
         this.tesSocket = tesSocket;
         this.listenForResponses();

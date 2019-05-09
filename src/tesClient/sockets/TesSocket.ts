@@ -1,6 +1,9 @@
 import * as zmq from "zeromq";
 
 class TesSocket {
+
+    public socketEndpoint;
+    public socket;
     
   constructor({ curveServerKey, socketEndpoint }) {
     this.socketEndpoint = socketEndpoint;
