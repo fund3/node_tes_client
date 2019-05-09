@@ -2,6 +2,8 @@ require("@babel/polyfill");
 
 import Client from "./tesClient/Client";
 
+import { messageBodyTypes } from "./tesClient/constants/index";
+
 import AccountInfo from "./tesClient/account/AccountInfo";
 import AccountCredentials from "./tesClient/account/AccountCredentials";
 
@@ -47,6 +49,7 @@ export {
     MessageResponder,
     MessageSender,
     Messenger,
+    messageBodyTypes,
     AuthorizationRefreshParams,
     CancelOrderParams,
     GetAccountBalancesParams,
