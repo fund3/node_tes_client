@@ -1,4 +1,5 @@
 import Debug from "debug";
+import { messageBodyTypes } from '~/tesClient/constants';
 import { Observable } from "rxjs";
 import { share, skipWhile, takeWhile } from 'rxjs/operators';
 
@@ -97,14 +98,18 @@ class MessageResponder {
         }) => {
             debug('in response callback: ' + incomingRequestId + ' ' +
                 messageBodyType + ' ' + responseMessageBodyType);
-            if (incomingRequestId === 0) {
+
+            if (responseMessageBodyType !== undefined &&
+                responseTypeCallback !== undefined &&
+                responseMessageBodyType === messageBodyType) {
                 // Only fallback when requestId is default value.
-                if (responseMessageBodyType !== undefined &&
-                    responseTypeCallback !== undefined &&
-                    responseMessageBodyType === messageBodyType) {
+                if (responseMessageBodyType === messageBodyTypes.EXECUTION_REPORT
+                    || incomingRequestId === 0
+                ){
                     responseTypeCallback(messageBodyContents);
                 }
             }
+
         });
         this.responseTypeSubscriberDict[responseMessageBodyType] = subscriber;
         return true;
