@@ -29,6 +29,9 @@ import PlaceContingentOrderParams from "./tesClient/requestParams/PlaceContingen
 import ReplaceOrderParams from "./tesClient/requestParams/ReplaceOrderParams";
 import RequestHeader from "./tesClient/requestParams/RequestHeader";
 import TestMessageParams from "./tesClient/requestParams/RequestHeader";
+import BatchOrdersParams from "./tesClient/requestParams/BatchOrdersParams";
+import OpoParams from "./tesClient/requestParams/OpoParams";
+import OcoParams from "./tesClient/requestParams/OcoParams";
 import BackendSocket from './tesClient/sockets/BackendSocket'
 import MessageSocket from './tesClient/sockets/MessageSocket'
 import TesSocket from './tesClient/sockets/TesSocket'
@@ -55,6 +58,9 @@ export {
     GetWorkingOrdersParams,
     LogonParams,
     PlaceOrderParams,
+    BatchOrdersParams,
+    OcoParams,
+    OpoParams,
     ReplaceOrderParams,
     PlaceContingentOrderParams,
     RequestHeader,
