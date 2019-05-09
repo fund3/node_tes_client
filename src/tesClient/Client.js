@@ -325,6 +325,27 @@ class Client {
         });
     };
 
+    sendPlaceContingentOrderMessage = ({
+        placeContingentOrderParams,
+        requestIdCallback = undefined,
+        responseTypeCallback = undefined
+    }) => {
+        const placeContingentOrderMessage =
+            this.messageFactory.buildPlaceContingentOrderMessage({
+                requestHeader: this.defaultRequestHeader,
+                placeContingentOrderParams
+            });
+
+        this.sendMessage({
+            expectedRequestId:
+                placeContingentOrderMessage.type.request.requestID,
+            responseMessageBodyType: messageBodyTypes.EXECUTION_REPORT,
+            message: placeContingentOrderMessage,
+            requestIdCallback,
+            responseTypeCallback
+        });
+    };
+
     sendReplaceOrderMessage = ({
         replaceOrderParams,
         requestIdCallback = undefined,

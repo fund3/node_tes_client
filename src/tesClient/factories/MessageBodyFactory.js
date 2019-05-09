@@ -63,6 +63,16 @@ class MessageBodyFactory {
         });
     };
 
+    static buildPlaceContingentOrderMessageBody = ({
+        placeContingentOrderParams
+     }) => {
+        const messageBodyType = messageBodyTypes.PLACE_CONTINGENT_ORDER;
+        return MessageBodyFactory.buildMessageBody({
+            messageBodyType,
+            messageBodyContents: placeContingentOrderParams
+        });
+    };
+
     static buildReplaceOrderMessageBody = ({
         replaceOrderParams
      }) => {

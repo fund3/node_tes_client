@@ -91,6 +91,17 @@ class MessageFactory {
         return this.buildRequestMessage({ requestHeader, messageBody });
     };
 
+    buildPlaceContingentOrderMessage = ({
+        requestHeader,
+        placeContingentOrderParams
+    }) => {
+        const messageBody =
+            MessageBodyFactory.buildPlaceContingentOrderMessageBody({
+                placeContingentOrderParams
+            });
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
+
     buildReplaceOrderMessage = ({
         requestHeader,
         replaceOrderParams

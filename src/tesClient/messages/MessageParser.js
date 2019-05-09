@@ -1,6 +1,6 @@
 const capnp = require("capnp");
 import { messageBodyTypes } from "~/tesClient/constants";
-const msgsCapnp = require("@fund3/communicationprotocol/TradeMessage.capnp");
+const msgsCapnp = require("omegaprotocol/TradeMessage.capnp");
 
 class MessageParser {
 
