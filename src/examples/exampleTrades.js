@@ -224,3 +224,4 @@ setTimeout(
 setTimeout(() => logoff(), 30000);
 setTimeout(() => krakenClient.sendLogoffMessage(
         { requestIdCallback: response => console.log(response) }), 30000);
+setTimeout(() => client.close(), 32000);

@@ -3,6 +3,21 @@ import { messageTypes } from "../constants/index";
 
 class MessageFactory {
 
+    constructor() {
+        this.requestIdPrefix = 0;
+        this.requestIdMultiplier = 10000000;
+    }
+
+    getRandomInt = ({ max }) => {
+        return Math.floor(Math.random() * Math.floor(max));
+    };
+
+    generateNewRequestId = () => {
+        this.requestIdPrefix += 1;
+        return this.requestIdPrefix * this.requestIdMultiplier +
+            this.getRandomInt({ max: 1000000 });
+    };
+
     buildMessage = ({ requestHeader, messageBody }) => ({
         ...requestHeader,
         body: messageBody
@@ -22,6 +37,7 @@ class MessageFactory {
     };
 
     buildRequestMessage = ({ requestHeader, messageBody }) => {
+        requestHeader.requestID = this.generateNewRequestId();
         const message = this.buildMessage({ requestHeader, messageBody});
         return this.buildMessageContainer({ message,
             messageType: messageTypes.REQUEST });
@@ -54,6 +70,16 @@ class MessageFactory {
         return this.buildRequestMessage({ requestHeader, messageBody });
     };
 
+    buildAuthorizationRefreshMessage = ({
+        requestHeader,
+        authorizationRefreshParams
+    }) => {
+        const messageBody =
+            MessageBodyFactory.buildAuthorizationRefreshMessageBody({
+                authorizationRefreshParams });
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
+
     buildPlaceSingleOrderMessage = ({
         requestHeader,
         placeOrderParams
@@ -61,6 +87,17 @@ class MessageFactory {
         const messageBody =
             MessageBodyFactory.buildPlaceSingleOrderMessageBody({
                 placeOrderParams
+            });
+        return this.buildRequestMessage({ requestHeader, messageBody });
+    };
+
+    buildPlaceContingentOrderMessage = ({
+        requestHeader,
+        placeContingentOrderParams
+    }) => {
+        const messageBody =
+            MessageBodyFactory.buildPlaceContingentOrderMessageBody({
+                placeContingentOrderParams
             });
         return this.buildRequestMessage({ requestHeader, messageBody });
     };

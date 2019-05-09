@@ -67,4 +67,5 @@ setTimeout(
     () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
             accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 5000);
 
-// setTimeout(() => logoff(), 30000);
+setTimeout(() => logoff(), 10000);
+setTimeout(() => client.close(), 12000);

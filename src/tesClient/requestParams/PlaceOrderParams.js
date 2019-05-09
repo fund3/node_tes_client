@@ -17,7 +17,7 @@ class PlaceSingleOrderParams {
       timeInForce = undefined,
       expireAt = undefined,
       leverageType = undefined,
-      leverage = undefined,
+      leverage = undefined
   }) {
         this.accountInfo = new AccountInfo({ accountId });
         this.clientOrderID = clientOrderId;

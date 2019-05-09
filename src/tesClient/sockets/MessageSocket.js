@@ -1,6 +1,7 @@
 import * as zmq from "zeromq";
 
 class MessageSocket {
+
   constructor({ socketEndpoint }) {
     this.socket = zmq.socket("dealer");
     this.socketEndpoint = socketEndpoint;
@@ -13,7 +14,9 @@ class MessageSocket {
   sendSerializedMessage = ({ serializedMessage }) =>
       this.socket.send(serializedMessage);
 
-   get = () => this.socket;
+  get = () => this.socket;
+
+  close = () => this.socket.close();
 }
 
 export default MessageSocket;

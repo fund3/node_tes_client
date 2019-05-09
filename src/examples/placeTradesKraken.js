@@ -138,3 +138,4 @@ setTimeout(() =>
 }), 15000);
 
 setTimeout(() => logoff(), 30000);
+setTimeout(() => client.close(), 32000);
