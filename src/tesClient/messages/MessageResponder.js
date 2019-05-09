@@ -1,5 +1,5 @@
 import Debug from "debug";
-import { messageBodyTypes } from '~/tesClient/constants';
+import { messageBodyTypes } from '../constants/index';
 import { Observable } from "rxjs";
 import { share, skipWhile, takeWhile } from 'rxjs/operators';
 
