@@ -47,6 +47,10 @@ class Messenger {
         });
     };
 
+    subscribePlaceholderCallback = () => {
+        this.messageResponder.subscribePlaceholderCallback();
+    };
+
     initializeSockets = ({
         curveServerKey,
         tesSocketEndpoint,

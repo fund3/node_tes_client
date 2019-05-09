@@ -230,10 +230,7 @@ class Client {
         // that listens to non-existent "null" messageTypes so that
         // at any given time there will only be one extra
         // subscription.
-        this.messenger.subscribeCallbackToResponseType({
-            responseMessageBodyType: 'null',
-            responseTypeCallback: () => {}
-        });
+        this.messenger.subscribePlaceholderCallback();
     };
 
     internalLogonAckCallback = ({ logonAck }) => {

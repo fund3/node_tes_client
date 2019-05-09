@@ -1,6 +1,6 @@
 import Debug from "debug";
 import { Observable } from "rxjs";
-import { share, takeWhile } from 'rxjs/operators';
+import { share, skipWhile, takeWhile } from 'rxjs/operators';
 
 import MessageParser from './MessageParser'
 
@@ -52,8 +52,9 @@ class MessageResponder {
             messageBodyType,
             messageBodyContents
         }) => {
-            debug('in id callback: ' + expectedRequestId +
-                incomingRequestId + messageBodyType + messageBodyContents);
+            debug('in id callback: ' + expectedRequestId + ' ' +
+                incomingRequestId + ' ' + messageBodyType + ' ' +
+                messageBodyContents);
             if (incomingRequestId === 0) {
                 // Only fallback when requestId is default value.
                 if (responseMessageBodyType !== undefined &&
@@ -69,6 +70,15 @@ class MessageResponder {
                 }
             }
         });
+    };
+
+    subscribePlaceholderCallback = () => {
+        this.messageObserver.pipe(skipWhile(() => true))
+            .subscribe(({
+            incomingRequestId,
+            messageBodyType,
+            messageBodyContents
+        }) => {});
     };
 
     subscribeCallbackToResponseType = ({
