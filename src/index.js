@@ -25,6 +25,7 @@ import GetOrderStatusParams from "./tesClient/requestParams/GetOrderStatusParams
 import GetWorkingOrdersParams from "./tesClient/requestParams/GetWorkingOrdersParams";
 import LogonParams from "./tesClient/requestParams/LogonParams";
 import PlaceOrderParams from "./tesClient/requestParams/PlaceOrderParams";
+import PlaceContingentOrderParams from "./tesClient/requestParams/PlaceContingentOrderParams";
 import ReplaceOrderParams from "./tesClient/requestParams/ReplaceOrderParams";
 import RequestHeader from "./tesClient/requestParams/RequestHeader";
 import TestMessageParams from "./tesClient/requestParams/RequestHeader";
@@ -55,6 +56,7 @@ export {
     LogonParams,
     PlaceOrderParams,
     ReplaceOrderParams,
+    PlaceContingentOrderParams,
     RequestHeader,
     TestMessageParams,
     BackendSocket,
