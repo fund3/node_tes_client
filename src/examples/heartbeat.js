@@ -28,7 +28,7 @@ const coinbasePrimeAccountCredentials = new AccountCredentials({
 });
 
 const accountCredentialsList = [
-    geminiAccountCredentials,
+    // geminiAccountCredentials,
     coinbasePrimeAccountCredentials
 ];
 
@@ -77,7 +77,7 @@ const waitForClientToBeReady = async (readyCallback) => {
 
 setTimeout(() => logon(), 3000);
 
-const interval = setInterval(() => heartbeat(), 3200);
+const interval = setInterval(() => heartbeat(), 4000);
 
 setTimeout(() => logoff(), 20000);
 setTimeout(() => cleanup(interval), 22000);
