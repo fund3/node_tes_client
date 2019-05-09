@@ -66,3 +66,4 @@ setTimeout(
             accountId: process.env.GEMINI_ACCOUNT_ID})}), 5000);
 
 setTimeout(() => logoff(), 10000);
+setTimeout(() => client.close(), 12000);

@@ -1,11 +1,11 @@
 const capnp = require("capnp");
-const msgsCapnp = require("@fund3/communicationprotocol/TradeMessage.capnp");
+const msgsCapnp = require("omegaprotocol/TradeMessage.capnp");
 
 class MessageSender {
 
     constructor({ messageSocket }) {
         this.messageSocket = messageSocket
-    }
+    };
 
     serializeMessage = ({ message }) => capnp.serialize(
         msgsCapnp.TradeMessage, message);
@@ -13,7 +13,7 @@ class MessageSender {
     sendMessage = ({ message }) => {
         const serializedMessage = this.serializeMessage({ message });
         this.messageSocket.sendSerializedMessage({ serializedMessage });
-    }
+    };
 }
 
 export default MessageSender;
