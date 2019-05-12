@@ -1,5 +1,4 @@
 import AccountInfo from "~/tesClient/account/AccountInfo";
-import { leverageType, timeInForce } from "~/tesClient/constants";
 
 
 class ReplaceOrderParams {

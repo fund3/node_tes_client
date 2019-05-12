@@ -1,7 +1,7 @@
 import AccountInfo from "~/tesClient/account/AccountInfo";
 
 class AccountCredentials {
-	public account_info;
+	public accountInfo;
 	public apiKey;
 	public secretKey;
 	public passphrase;
@@ -17,13 +17,11 @@ class AccountCredentials {
     * @param passphrase: (String) optional passphrase for connecting to API
     *    associated with accountID
     */
-		this.account_info = new AccountInfo({ accountId });
+		this.accountInfo = new AccountInfo({ accountId });
 		this.apiKey = String(apiKey);
 		this.secretKey = String(secretKey);
 		this.passphrase = String(passphrase);
 	}
-
-	accountInfo = () => this.account_info;
 }
 
 export default AccountCredentials;
