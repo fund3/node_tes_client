@@ -1,13 +1,12 @@
 {
 	"name": "@fund3/node_tes_client",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"description": "NodeJS library to be used with Fund3 Omega",
 	"main": "dist/index.js",
 	"module": "dist/index.es.js",
 	"files": [
 		"dist"
 	],
-	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "rollup -c",
 		"watch": "rollup -cw"
@@ -24,9 +23,10 @@
 	"homepage": "https://github.com/fund3/node_tes_client#readme",
 	"devDependencies": {
 		"rollup": "^1.11.3",
+		"rollup-plugin-auto-external": "^2.0.0",
+		"rollup-plugin-commonjs": "^9.3.4",
 		"rollup-plugin-node-resolve": "^4.2.3",
 		"rollup-plugin-typescript2": "^0.21.0",
 		"typescript": "^3.4.5"
-	},
-	"dependencies": {}
+	}
 }
