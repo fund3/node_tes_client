@@ -1,40 +1,46 @@
 //index.js
-//
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import CancelOrderParams from "../tesClient/requestParams/CancelOrderParams";
+
+//
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
 import GetAccountBalancesParams from '~/tesClient/requestParams/GetAccountBalancesParams'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
+import PlaceOrderParams from '~/tesClient/requestParams/PlaceOrderParams'
+import GetOrderStatusParams from '~/tesClient/requestParams/GetOrderStatusParams'
+import GetWorkingOrdersParams from "../tesClient/requestParams/GetWorkingOrdersParams";
+import GetExchangePropertiesParams from "../tesClient/requestParams/GetExchangePropertiesParams";
+import GetCompletedOrdersParams from "../tesClient/requestParams/GetCompletedOrdersParams";
 
 const geminiAccountInfo = new AccountInfo(
     { accountId: process.env.GEMINI_ACCOUNT_ID });
 const geminiAccountCredentials =
     new AccountCredentials({
-        accountInfo: geminiAccountInfo,
+        accountId: process.env.GEMINI_ACCOUNT_ID,
         apiKey: process.env.GEMINI_API_KEY,
         secretKey: process.env.GEMINI_SECRET_KEY,
-        passphrase: process.env.GEMINI_PASSPHRASE
+        passphrase: process.env.GEMINI_PASSPHRASE 
     });
 
 const coinbasePrimeAccountInfo = new AccountInfo(
     { accountId: process.env.COINBASE_PRIME_ACCOUNT_ID });
-const coinbasePrimeAccountCredentials =
-    new AccountCredentials({
-        accountInfo: coinbasePrimeAccountInfo,
-        apiKey: process.env.COINBASE_PRIME_API_KEY,
-        secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
-        passphrase: process.env.COINBASE_PRIME_PASSPHRASE
-    });
+const coinbasePrimeAccountCredentials = new AccountCredentials({
+	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+	apiKey: process.env.COINBASE_PRIME_API_KEY,
+	secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
+	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
+});
 
 const accountCredentialsList = [
     geminiAccountCredentials,
     coinbasePrimeAccountCredentials
 ];
 
-const client =
+const client = 
     new Client({
         clientId: parseInt(process.env.CLIENT_ID),
         senderCompId: String(uuidv4()),
@@ -43,17 +49,6 @@ const client =
         tesSocketEndpoint: process.env.TCP_ADDRESS
     });
 
-function setAccessToken( logonAck ) {
-    if (logonAck.success){
-        const newAccessToken = logonAck.authorizationGrant.accessToken;
-        client.updateAccessToken({newAccessToken});
-    }
-}
-
-function incrementRequestId() {
-    client.defaultRequestHeader.requestID += 1;
-}
-
 function logon() {
     // incrementRequestId();
     client.sendLogonMessage({
@@ -61,78 +56,80 @@ function logon() {
             clientSecret: process.env.CLIENT_SECRET,
             credentials: client.accountCredentialsList
         }),
-        requestIdCallback: response => console.log(response),
-        responseTypeCallback: setAccessToken
+        requestIdCallback: logonAck => console.log(logonAck)
     })
 }
 
 function logoff() {
     // incrementRequestId();
     client.sendLogoffMessage(
-        { requestIdCallback: response => console.log(response),
-        responseTypeCallback: response => console.log(response) })
+        { requestIdCallback: response => console.log(response) })
 }
 
 function getBalances({getAccountBalancesParams}) {
     // incrementRequestId();
     client.sendGetAccountBalancesMessage({
         getAccountBalancesParams,
-        requestIdCallback: response => console.log(response),
-        responseTypeCallback: response => console.log(response)
+        requestIdCallback: response => console.log(response)
     })
 }
 
 setTimeout(() => logon(), 3000);
 
-setTimeout(
-    () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
-            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 4000);
+setTimeout(() => client.sendHeartbeatMessage({
+    requestIdCallback: response => console.log(response) }), 7000);
 
-setTimeout(
-    () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
-            accountId: process.env.GEMINI_ACCOUNT_ID})}), 6000);
+// setTimeout(
+//     () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
+//             accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 4000);
+//
+// setTimeout(
+//     () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
+//             accountId: process.env.GEMINI_ACCOUNT_ID})}), 6000);
+
+// setTimeout(() =>
+//     client.sendGetExchangePropertiesMessage({
+//         getExchangePropertiesParams: new GetExchangePropertiesParams({
+//             exchange: 'coinbasePrime'
+//         }),
+//         requestIdCallback: response => {
+// 				console.log(response)
+//         }
+// }), 5000);
 
 let geminiOrderId1 = 1111;
 let coinbasePrimeOrderId1 = 2222;
 
-// setTimeout(
-// 	() =>
-// 		client.sendPlaceSingleOrderMessage({
-//             onResponse: ({ orderId }) => (geminiOrderId1 = orderId),
-// 			accountInfo: geminiAccountInfo,
-// 			clientOrderId: 1111,
-// 			symbol: "BTC/USD",
-// 			side: "buy",
-// 			quantity: 5.0,
-// 			price: 0.0,
-//             orderType: 'limit'
-// 		}),
-// 	15000
-// );
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: geminiAccountInfo.accountID,
+                clientOrderId: 1111,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 5.0,
+                price: 1.0,
+                orderType: 'limit'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+                geminiOrderId1 = response.orderID;
+            },
+		}),
+	8000
+);
 
-// setTimeout(
-// 	() =>
-// 		client.sendPlaceSingleOrderMessage({
-//             onResponse: ({ orderId }) => (coinbasePrimeOrderId1 = orderId),
-// 			accountInfo: coinbasePrimeAccountInfo,
-// 			clientOrderId: 2222,
-// 			symbol: "ETH/USD",
-// 			side: "buy",
-// 			quantity: 5.0,
-// 			price: 10.0,
-//             orderType: 'limit'
-// 		}),
-// 	3000
-// );
-
-// setTimeout(() =>
-//     client.sendGetOrderStatusMessage({
-//         accountInfo: geminiAccountInfo,
-//         orderId: geminiOrderId1,
-//         onResponse: (response) => {
-//             console.log(response)
-//         }
-// }), 40000);
+setTimeout(() =>
+    client.sendGetOrderStatusMessage({
+        getOrderStatusParams: new GetOrderStatusParams({
+            accountId: geminiAccountInfo.accountID,
+            orderId: geminiOrderId1,
+        }),
+        requestIdCallback: (response) => {
+            console.log(response)
+        }
+}), 13000);
 
 // setTimeout(() =>
 //     client.sendGetOrderStatusMessage({
@@ -161,11 +158,13 @@ let coinbasePrimeOrderId1 = 2222;
 
 // setTimeout(() =>
 //     client.sendGetWorkingOrdersMessage({
-//         accountId: geminiAccountInfo.accountId,
-//         onResponse: (response) => {
+//         getWorkingOrderParams: new GetWorkingOrdersParams({
+//             accountId: geminiAccountInfo.accountID
+//         }),
+//         requestIdCallback: (response) => {
 //             console.log(response)
 //         }
-// }), 2000);
+// }), 15000);
 
 // setTimeout(() =>
 //     client.sendGetWorkingOrdersMessage({
@@ -176,14 +175,16 @@ let coinbasePrimeOrderId1 = 2222;
 // }), 3000);
 
 
-// setTimeout(() =>
-//     client.sendCancelOrderMessage({
-//         accountId: coinbasePrimeAccountInfo.accountId,
-//         orderId: "7056844b-af32-4e58-b03c-c48e6d2e65aa",
-//         onResponse: (response) => {
-//             console.log(response)
-//         }
-// }), 3000);
+setTimeout(() =>
+    client.sendCancelOrderMessage({
+        cancelOrderParams: new CancelOrderParams({
+            accountId: geminiAccountInfo.accountID,
+            orderId: geminiOrderId1
+        }),
+        requestIdCallback: (response) => {
+            console.log(response)
+        }
+}), 20000);
 
 // setTimeout(() =>
 //     client.sendGetWorkingOrdersMessage({
@@ -212,21 +213,15 @@ let coinbasePrimeOrderId1 = 2222;
 // }), 3000);
 
 // setTimeout(() =>
-//     client.sendGetExchangePropertiesMessage({
-//         exchange: 'coinbasePrime',
-//         onResponse: response => {
-// 				console.log(response)
-//         }
-// }), 3000);
-
-// setTimeout(() =>
 //     client.sendGetCompletedOrdersMessage({
-//         accountId: geminiAccountInfo.accountId,
-//         count: 50,
-//         onResponse: response => {
+//         getCompletedOrdersParams: new GetCompletedOrdersParams({
+//             accountId: coinbasePrimeAccountInfo.accountID,
+//             count: 1,
+//         }),
+//         requestIdCallback: response => {
 // 				console.log(response)
 //         }
-// }), 5000);
+// }), 20000);
 
 // setTimeout(() =>
 //     client.sendGetCompletedOrdersMessage({
@@ -237,5 +232,5 @@ let coinbasePrimeOrderId1 = 2222;
 //         }
 // }), 10000);
 
-setTimeout(() => logoff(), 10000);
-setTimeout(() => client.close(), 12000);
+setTimeout(() => logoff(), 24000);
+setTimeout(() => client.close(), 26000);

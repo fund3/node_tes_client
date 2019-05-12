@@ -1,14 +1,12 @@
 //index.js
-import PlaceOrderParams from "../tesClient/requestParams/PlaceOrderParams";
-import CancelOrderParams from "../tesClient/requestParams/CancelOrderParams";
-
 //
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
+import GetOpenPositionsParams from "../tesClient/requestParams/GetOpenPositionsParams";
 
 const geminiAccountCredentials =
     new AccountCredentials({
@@ -58,56 +56,15 @@ function logoff() {
 
 setTimeout(() => logon(), 3000);
 
-let orderId = 0;
-
-setTimeout(
-	() =>
-		client.sendPlaceSingleOrderMessage({
-            placeOrderParams: new PlaceOrderParams({
-                accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-                clientOrderId: 1111,
-                symbol: "BTC/USD",
-                side: "buy",
-                quantity: 1.0,
-                price: 1.0,
-                orderType: 'limit'
-            }),
-            requestIdCallback: (response) => {
-                console.log(response);
-                orderId = response.orderID;
-            },
-		}),
-	10000
-);
-
-setTimeout(
-	() =>
-		client.sendPlaceSingleOrderMessage({
-            placeOrderParams: new PlaceOrderParams({
-                accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-                clientOrderId: 1112,
-                symbol: "BTC/USD",
-                side: "buy",
-                quantity: 1.0,
-                orderType: 'market'
-            }),
-            requestIdCallback: (response) => {
-                console.log(response);
-            },
-		}),
-	8000
-);
-
 setTimeout(() =>
-    client.sendCancelOrderMessage({
-        cancelOrderParams: new CancelOrderParams({
-            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-            orderId: orderId
+    client.sendGetOpenPositionsMessage({
+        getOpenPositionsParams: new GetOpenPositionsParams({
+            accountId: process.env.GEMINI_ACCOUNT_ID
         }),
         requestIdCallback: (response) => {
             console.log(response)
         }
-}), 15000);
+}), 7000);
 
-setTimeout(() => logoff(), 30000);
-setTimeout(() => client.close(), 32000);
+setTimeout(() => logoff(), 20000);
+setTimeout(() => client.close(), 22000);

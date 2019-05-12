@@ -10,7 +10,7 @@ import PlaceContingentOrderParams from '~/tesClient/requestParams/PlaceContingen
 import { messageBodyTypes } from '~/tesClient/constants';
 
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 const geminiAccountCredentials =
     new AccountCredentials({

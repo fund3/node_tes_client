@@ -9,7 +9,7 @@ import CancelOrderParams from '~/tesClient/requestParams/CancelOrderParams'
 
 //
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 const krakenAccountCredentials = new AccountCredentials({
 	accountId: process.env.KRAKEN_ACCOUNT_ID,

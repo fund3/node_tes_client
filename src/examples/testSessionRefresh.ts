@@ -1,16 +1,15 @@
 //index.js
+import AuthorizationRefreshParams from "../tesClient/requestParams/AuthorizationRefreshParams";
+
 //
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
-import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
-import GetAccountBalancesParams from '~/tesClient/requestParams/GetAccountBalancesParams'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
 
-const geminiAccountInfo = new AccountInfo(
-    { accountId: process.env.GEMINI_ACCOUNT_ID });
+
 const geminiAccountCredentials =
     new AccountCredentials({
         accountId: process.env.GEMINI_ACCOUNT_ID,
@@ -19,8 +18,6 @@ const geminiAccountCredentials =
         passphrase: process.env.GEMINI_PASSPHRASE
     });
 
-const coinbasePrimeAccountInfo = new AccountInfo(
-    { accountId: process.env.COINBASE_PRIME_ACCOUNT_ID });
 const coinbasePrimeAccountCredentials = new AccountCredentials({
 	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
 	apiKey: process.env.COINBASE_PRIME_API_KEY,
@@ -43,7 +40,6 @@ const client =
     });
 
 function logon() {
-    // incrementRequestId();
     client.sendLogonMessage({
         logonParams: new LogonParams({
             clientSecret: process.env.CLIENT_SECRET,
@@ -58,18 +54,38 @@ function logoff() {
         { requestIdCallback: response => console.log(response) })
 }
 
-function getBalances({getAccountBalancesParams}) {
-    client.sendGetAccountBalancesMessage({
-        getAccountBalancesParams,
-        requestIdCallback: response => console.log(response)
+function heartbeat() {
+    client.sendHeartbeatMessage({
+        requestIdCallback: response => console.log(response) });
+}
+
+function cleanup(interval) {
+    client.close();
+    clearInterval(interval);
+}
+
+function refreshAuthorization() {
+    client.sendAuthorizationRefreshMessage({
+        authorizationRefreshParams: new AuthorizationRefreshParams({
+            refreshToken: client.refreshToken
+        }),
+        requestIdCallback: (authorizationGrant) =>
+            console.log(authorizationGrant)
     })
 }
 
+const waitForClientToBeReady = async (readyCallback) => {
+    await client.ready().catch((err) => console.log(err));
+    console.log('Client is ready!');
+};
+
+// waitForClientToBeReady();
+
 setTimeout(() => logon(), 3000);
 
-setTimeout(
-    () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
-            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 5000);
+const interval = setInterval(() => heartbeat(), 3200);
 
-setTimeout(() => logoff(), 10000);
-setTimeout(() => client.close(), 12000);
+setInterval(() => refreshAuthorization(), 4000);
+
+setTimeout(() => logoff(), 20000);
+setTimeout(() => cleanup(interval), 22000);

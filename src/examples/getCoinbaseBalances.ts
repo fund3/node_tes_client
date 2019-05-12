@@ -1,12 +1,12 @@
 //index.js
+//
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
-import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
+import GetAccountBalancesParams from '~/tesClient/requestParams/GetAccountBalancesParams'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
-import GetCompletedOrdersParams from "../tesClient/requestParams/GetCompletedOrdersParams";
 
 const geminiAccountCredentials =
     new AccountCredentials({
@@ -16,13 +16,12 @@ const geminiAccountCredentials =
         passphrase: process.env.GEMINI_PASSPHRASE
     });
 
-const coinbasePrimeAccountCredentials =
-    new AccountCredentials({
-        accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-        apiKey: process.env.COINBASE_PRIME_API_KEY,
-        secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
-        passphrase: process.env.COINBASE_PRIME_PASSPHRASE
-    });
+const coinbasePrimeAccountCredentials = new AccountCredentials({
+	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+	apiKey: process.env.COINBASE_PRIME_API_KEY,
+	secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
+	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
+});
 
 const accountCredentialsList = [
     geminiAccountCredentials,
@@ -38,7 +37,6 @@ const client =
         tesSocketEndpoint: process.env.TCP_ADDRESS
     });
 
-
 function logon() {
     client.sendLogonMessage({
         logonParams: new LogonParams({
@@ -51,21 +49,23 @@ function logon() {
 
 function logoff() {
     client.sendLogoffMessage(
-        { requestIdCallback: response => console.log(response) })
+        { requestIdCallback: response => console.log(response),
+            requestTypeCallback: response => console.log(response) })
 }
 
+function getBalances({getAccountBalancesParams}) {
+    client.sendGetAccountBalancesMessage({
+        getAccountBalancesParams,
+        requestIdCallback: response => console.log(response)
+    })
+}
+
+logoff()
 setTimeout(() => logon(), 3000);
 
-setTimeout(() =>
-    client.sendGetCompletedOrdersMessage({
-        getCompletedOrdersParams: new GetCompletedOrdersParams({
-            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-            count: 50,
-        }),
-        requestIdCallback: response => {
-				console.log(response)
-        }
-}), 7000);
+setTimeout(
+    () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
+            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 5000);
 
-setTimeout(() => logoff(), 13000);
-setTimeout(() => client.close(), 15000);
+setTimeout(() => logoff(), 10000);
+setTimeout(() => client.close(), 12000);

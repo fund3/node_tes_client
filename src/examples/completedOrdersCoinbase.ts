@@ -1,14 +1,11 @@
 //index.js
-import AuthorizationRefreshParams from "../tesClient/requestParams/AuthorizationRefreshParams";
-
-//
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
-
+import GetCompletedOrdersParams from "../tesClient/requestParams/GetCompletedOrdersParams";
 
 const geminiAccountCredentials =
     new AccountCredentials({
@@ -18,12 +15,13 @@ const geminiAccountCredentials =
         passphrase: process.env.GEMINI_PASSPHRASE
     });
 
-const coinbasePrimeAccountCredentials = new AccountCredentials({
-	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-	apiKey: process.env.COINBASE_PRIME_API_KEY,
-	secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
-	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
-});
+const coinbasePrimeAccountCredentials =
+    new AccountCredentials({
+        accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+        apiKey: process.env.COINBASE_PRIME_API_KEY,
+        secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
+        passphrase: process.env.COINBASE_PRIME_PASSPHRASE
+    });
 
 const accountCredentialsList = [
     geminiAccountCredentials,
@@ -38,6 +36,7 @@ const client =
         curveServerKey: process.env.CURVE_SERVER_KEY,
         tesSocketEndpoint: process.env.TCP_ADDRESS
     });
+
 
 function logon() {
     client.sendLogonMessage({
@@ -54,38 +53,18 @@ function logoff() {
         { requestIdCallback: response => console.log(response) })
 }
 
-function heartbeat() {
-    client.sendHeartbeatMessage({
-        requestIdCallback: response => console.log(response) });
-}
-
-function cleanup(interval) {
-    client.close();
-    clearInterval(interval);
-}
-
-function refreshAuthorization() {
-    client.sendAuthorizationRefreshMessage({
-        authorizationRefreshParams: new AuthorizationRefreshParams({
-            refreshToken: client.refreshToken
-        }),
-        requestIdCallback: (authorizationGrant) =>
-            console.log(authorizationGrant)
-    })
-}
-
-const waitForClientToBeReady = async (readyCallback) => {
-    await client.ready().catch((err) => console.log(err));
-    console.log('Client is ready!');
-};
-
-// waitForClientToBeReady();
-
 setTimeout(() => logon(), 3000);
 
-const interval = setInterval(() => heartbeat(), 3200);
+setTimeout(() =>
+    client.sendGetCompletedOrdersMessage({
+        getCompletedOrdersParams: new GetCompletedOrdersParams({
+            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+            count: 50,
+        }),
+        requestIdCallback: response => {
+				console.log(response)
+        }
+}), 7000);
 
-setInterval(() => refreshAuthorization(), 4000);
-
-setTimeout(() => logoff(), 20000);
-setTimeout(() => cleanup(interval), 22000);
+setTimeout(() => logoff(), 13000);
+setTimeout(() => client.close(), 15000);

@@ -1,10 +1,8 @@
 //index.js
-require("@babel/polyfill");
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
-import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
 import GetCompletedOrdersParams from "../tesClient/requestParams/GetCompletedOrdersParams";

@@ -1,15 +1,13 @@
 //index.js
+//
+require("dotenv").config();
+import * as uuidv4 from 'uuid/v4'
+
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
+import GetAccountBalancesParams from '~/tesClient/requestParams/GetAccountBalancesParams'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
-import PlaceOrderParams from '~/tesClient/requestParams/PlaceOrderParams'
-import GetOrderStatusParams from '~/tesClient/requestParams/GetOrderStatusParams'
-import CancelOrderParams from '~/tesClient/requestParams/CancelOrderParams'
-
-//
-require("dotenv").config();
-import uuidv4 from 'uuid/v4'
 
 const geminiAccountInfo = new AccountInfo(
     { accountId: process.env.GEMINI_ACCOUNT_ID });
@@ -56,56 +54,22 @@ function logon() {
 }
 
 function logoff() {
-    // incrementRequestId();
     client.sendLogoffMessage(
         { requestIdCallback: response => console.log(response) })
 }
 
-let geminiOrderId1 = 1111;
+function getBalances({getAccountBalancesParams}) {
+    client.sendGetAccountBalancesMessage({
+        getAccountBalancesParams,
+        requestIdCallback: response => console.log(response)
+    })
+}
 
 setTimeout(() => logon(), 3000);
 
 setTimeout(
-	() =>
-		client.sendPlaceSingleOrderMessage({
-            placeOrderParams: new PlaceOrderParams({
-                accountId: geminiAccountInfo.accountID,
-                clientOrderId: 1111,
-                symbol: "BTC/USD",
-                side: "buy",
-                quantity: 5.0,
-                price: 1.0,
-                orderType: 'limit'
-            }),
-            requestIdCallback: (response) => {
-                console.log(response);
-                geminiOrderId1 = response.orderID;
-            },
-		}),
-	8000
-);
+    () => getBalances({getAccountBalancesParams: new GetAccountBalancesParams({
+            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID})}), 5000);
 
-setTimeout(() =>
-    client.sendGetOrderStatusMessage({
-        getOrderStatusParams: new GetOrderStatusParams({
-            accountId: geminiAccountInfo.accountID,
-            orderId: geminiOrderId1,
-        }),
-        requestIdCallback: (response) => {
-            console.log(response)
-        }
-}), 13000);
-
-setTimeout(() =>
-    client.sendCancelOrderMessage({
-        cancelOrderParams: new CancelOrderParams({
-            accountId: geminiAccountInfo.accountID,
-            orderId: geminiOrderId1
-        }),
-        requestIdCallback: (response) => {
-            console.log(response)
-        }
-}), 20000);
-
-setTimeout(() => logoff(), 24000);
-setTimeout(() => client.close(), 26000);
+setTimeout(() => logoff(), 10000);
+setTimeout(() => client.close(), 12000);

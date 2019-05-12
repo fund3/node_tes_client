@@ -1,12 +1,14 @@
 //index.js
+import GetWorkingOrdersParams from "../tesClient/requestParams/GetWorkingOrdersParams";
+
 //
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
+import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
-import GetOpenPositionsParams from "../tesClient/requestParams/GetOpenPositionsParams";
 
 const geminiAccountCredentials =
     new AccountCredentials({
@@ -57,14 +59,14 @@ function logoff() {
 setTimeout(() => logon(), 3000);
 
 setTimeout(() =>
-    client.sendGetOpenPositionsMessage({
-        getOpenPositionsParams: new GetOpenPositionsParams({
-            accountId: process.env.COINBASE_PRIME_ACCOUNT_ID
+    client.sendGetWorkingOrdersMessage({
+        getWorkingOrdersParams: new GetWorkingOrdersParams({
+            accountId: process.env.GEMINI_ACCOUNT_ID
         }),
         requestIdCallback: (response) => {
             console.log(response)
         }
 }), 7000);
 
-setTimeout(() => logoff(), 20000);
-setTimeout(() => client.close(), 22000);
+setTimeout(() => logoff(), 13000);
+setTimeout(() => client.close(), 15000);

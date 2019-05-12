@@ -1,12 +1,15 @@
 //index.js
-require("dotenv").config();
-
-//
-import uuidv4 from 'uuid/v4'
-
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
+import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
+import PlaceOrderParams from '~/tesClient/requestParams/PlaceOrderParams'
+import GetOrderStatusParams from '~/tesClient/requestParams/GetOrderStatusParams'
+import CancelOrderParams from '~/tesClient/requestParams/CancelOrderParams'
+
+//
+require("dotenv").config();
+import * as uuidv4 from 'uuid/v4'
 
 const geminiAccountCredentials =
     new AccountCredentials({
@@ -37,28 +40,55 @@ const client =
         tesSocketEndpoint: process.env.TCP_ADDRESS
     });
 
-
-setTimeout(() =>
+function logon() {
     client.sendLogonMessage({
         logonParams: new LogonParams({
             clientSecret: process.env.CLIENT_SECRET,
             credentials: client.accountCredentialsList
         }),
         requestIdCallback: logonAck => console.log(logonAck)
-    }),
-    2000
-);
+    })
+}
 
-const readyCallback = () => {
+function logoff() {
     client.sendLogoffMessage(
         { requestIdCallback: response => console.log(response) })
-    setTimeout(() => client.close(), 2000);
-};
+}
 
-const waitForClientToBeReady = async (readyCallback) => {
-    await client.ready().catch((err) => console.log(err));
-    console.log('Client is ready!');
-    readyCallback()
-};
+setTimeout(() => logon(), 3000);
 
-waitForClientToBeReady(readyCallback);
+let orderId = 0;
+
+setTimeout(
+	() =>
+		client.sendPlaceSingleOrderMessage({
+            placeOrderParams: new PlaceOrderParams({
+                accountId: process.env.GEMINI_ACCOUNT_ID,
+                clientOrderId: 1113,
+                symbol: "BTC/USD",
+                side: "buy",
+                quantity: 5.0,
+                price: 1.0,
+                orderType: 'limit'
+            }),
+            requestIdCallback: (response) => {
+                console.log(response);
+                orderId = response.orderID;
+            },
+		}),
+	10000
+);
+
+setTimeout(() =>
+    client.sendCancelOrderMessage({
+        cancelOrderParams: new CancelOrderParams({
+            accountId: process.env.GEMINI_ACCOUNT_ID,
+            orderId: orderId
+        }),
+        requestIdCallback: (response) => {
+            console.log(response)
+        }
+}), 15000);
+
+setTimeout(() => logoff(), 30000);
+setTimeout(() => client.close(), 32000);

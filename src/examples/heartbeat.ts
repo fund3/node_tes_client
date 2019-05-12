@@ -1,13 +1,15 @@
 //index.js
 //
 require("dotenv").config();
-import uuidv4 from 'uuid/v4'
+import * as uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
+import AccountInfo from '~/tesClient/account/AccountInfo'
 import Client from '~/tesClient/Client'
 import LogonParams from '~/tesClient/requestParams/LogonParams'
-import GetOpenPositionsParams from "../tesClient/requestParams/GetOpenPositionsParams";
 
+const geminiAccountInfo = new AccountInfo(
+    { accountId: process.env.GEMINI_ACCOUNT_ID });
 const geminiAccountCredentials =
     new AccountCredentials({
         accountId: process.env.GEMINI_ACCOUNT_ID,
@@ -16,16 +18,17 @@ const geminiAccountCredentials =
         passphrase: process.env.GEMINI_PASSPHRASE
     });
 
-const coinbasePrimeAccountCredentials =
-    new AccountCredentials({
-        accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
-        apiKey: process.env.COINBASE_PRIME_API_KEY,
-        secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
-        passphrase: process.env.COINBASE_PRIME_PASSPHRASE
-    });
+const coinbasePrimeAccountInfo = new AccountInfo(
+    { accountId: process.env.COINBASE_PRIME_ACCOUNT_ID });
+const coinbasePrimeAccountCredentials = new AccountCredentials({
+	accountId: process.env.COINBASE_PRIME_ACCOUNT_ID,
+	apiKey: process.env.COINBASE_PRIME_API_KEY,
+	secretKey: process.env.COINBASE_PRIME_SECRET_KEY,
+	passphrase: process.env.COINBASE_PRIME_PASSPHRASE
+});
 
 const accountCredentialsList = [
-    geminiAccountCredentials,
+    // geminiAccountCredentials,
     coinbasePrimeAccountCredentials
 ];
 
@@ -38,8 +41,8 @@ const client =
         tesSocketEndpoint: process.env.TCP_ADDRESS
     });
 
-
 function logon() {
+    // incrementRequestId();
     client.sendLogonMessage({
         logonParams: new LogonParams({
             clientSecret: process.env.CLIENT_SECRET,
@@ -50,21 +53,31 @@ function logon() {
 }
 
 function logoff() {
+    // incrementRequestId();
     client.sendLogoffMessage(
         { requestIdCallback: response => console.log(response) })
 }
 
+function heartbeat() {
+    client.sendHeartbeatMessage({
+        requestIdCallback: response => console.log(response) });
+}
+
+function cleanup(interval) {
+    client.close();
+    clearInterval(interval);
+}
+
+const waitForClientToBeReady = async (readyCallback) => {
+    await client.ready().catch((err) => console.log(err));
+    console.log('Client is ready!');
+};
+
+// waitForClientToBeReady();
+
 setTimeout(() => logon(), 3000);
 
-setTimeout(() =>
-    client.sendGetOpenPositionsMessage({
-        getOpenPositionsParams: new GetOpenPositionsParams({
-            accountId: process.env.GEMINI_ACCOUNT_ID
-        }),
-        requestIdCallback: (response) => {
-            console.log(response)
-        }
-}), 7000);
+const interval = setInterval(() => heartbeat(), 4000);
 
 setTimeout(() => logoff(), 20000);
-setTimeout(() => client.close(), 22000);
+setTimeout(() => cleanup(interval), 22000);
