@@ -9,7 +9,7 @@ import OcoParams from '~/tesClient/requestParams/OcoParams';
 import PlaceContingentOrderParams from '~/tesClient/requestParams/PlaceContingentOrderParams'
 import { messageBodyTypes } from '~/tesClient/constants';
 
-require("@babel/polyfill");
+//
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 

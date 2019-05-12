@@ -1,7 +1,7 @@
 //index.js
 require("dotenv").config();
 
-require("@babel/polyfill");
+//
 import uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'

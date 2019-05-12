@@ -1,7 +1,7 @@
 //index.js
 import AuthorizationRefreshParams from "../tesClient/requestParams/AuthorizationRefreshParams";
 
-require("@babel/polyfill");
+//
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 

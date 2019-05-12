@@ -1,6 +1,6 @@
 //index.js
 
-require("@babel/polyfill");
+//
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 

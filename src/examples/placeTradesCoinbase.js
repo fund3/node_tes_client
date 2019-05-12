@@ -2,7 +2,7 @@
 import PlaceOrderParams from "../tesClient/requestParams/PlaceOrderParams";
 import CancelOrderParams from "../tesClient/requestParams/CancelOrderParams";
 
-require("@babel/polyfill");
+//
 require("dotenv").config();
 import uuidv4 from 'uuid/v4'
 
