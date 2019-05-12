@@ -1,6 +1,6 @@
 import typescript from "rollup-plugin-typescript2";
-import pkg from "./package.json";
-import resolve from "rollup-plugin-node-resolve";
+import pkg from './package.json'
+import autoExternal from "rollup-plugin-auto-external";
 
 export default {
 	input: "src/index.ts",
@@ -14,9 +14,13 @@ export default {
 			format: "es"
 		}
 	],
-	external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
+	external: [
+		...Object.keys(pkg.dependencies || {}),
+		...Object.keys(pkg.peerDependencies || {}),
+		"rxjs/operators"
+	],
 	plugins: [
-		resolve(),
+		autoExternal(),
 		typescript({
 			typescript: require("typescript")
 		})

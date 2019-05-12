@@ -64,8 +64,9 @@ typings/
 # next.js build output
 .next
 
-/lib/
-/node_modules/
-*lib*
+*yarn*
+*node_modules*
+*dist*
+*.log*
 
 *.rpt2_cache*

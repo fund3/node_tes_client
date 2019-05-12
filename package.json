@@ -7,10 +7,6 @@
 	"files": [
 		"dist"
 	],
-	"scripts": {
-		"build": "rollup -c",
-		"watch": "rollup -cw"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/fund3/node_tes_client.git"
@@ -40,6 +36,12 @@
 		"rollup-plugin-commonjs": "^9.3.4",
 		"rollup-plugin-node-resolve": "^4.2.3",
 		"rollup-plugin-typescript2": "^0.21.0",
+		"tsconfig-paths": "^3.8.0",
 		"typescript": "^3.4.5"
+	},
+	"scripts": {
+		"build": "rollup -c",
+		"watch": "rollup -cw",
+		"example-completed-orders-kraken": "ts-node-dev -r tsconfig-paths/register ./src/examples/completedOrdersKraken.ts ./src/examples"
 	}
 }
