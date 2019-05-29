@@ -59,18 +59,15 @@ function heartbeat() {
         requestIdCallback: response => console.log(response) });
 }
 
-function cleanup(interval) {
+function cleanup(heartbeat_interval, refresh_interval) {
     client.close();
-    clearInterval(interval);
+    clearInterval(heartbeat_interval);
+    clearInterval(refresh_interval);
 }
 
 function refreshAuthorization() {
-    client.sendAuthorizationRefreshMessage({
-        authorizationRefreshParams: new AuthorizationRefreshParams({
-            refreshToken: client.refreshToken
-        }),
-        requestIdCallback: (authorizationGrant) =>
-            console.log(authorizationGrant)
+    client.scheduleAuthorizationRefresh({
+        delayInSeconds: 5000
     })
 }
 
@@ -83,9 +80,10 @@ const waitForClientToBeReady = async (readyCallback) => {
 
 setTimeout(() => logon(), 3000);
 
-const interval = setInterval(() => heartbeat(), 3200);
-
-setInterval(() => refreshAuthorization(), 4000);
+// Test runs successfully if heartbeat and logoff calls are sent and received
+// without error.
+const heartbeat_interval = setInterval(() => heartbeat(), 3200);
+const refresh_interval = setInterval(() => refreshAuthorization(), 4000);
 
 setTimeout(() => logoff(), 20000);
-setTimeout(() => cleanup(interval), 22000);
+setTimeout(() => cleanup(heartbeat_interval, refresh_interval), 22000);
