@@ -1,0 +1,6 @@
+version: '3'
+services:
+    node-omega-client:
+        build:
+            context: ../../
+            dockerfile: docker/node_omega_client/Dockerfile
