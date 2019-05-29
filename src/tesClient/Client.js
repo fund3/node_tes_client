@@ -77,7 +77,7 @@ class Client {
             if (authorizationGrant.success) {
                 this.updateAuthorization({ authorizationGrant });
             } else {
-                this.scheduleAuthorizationRefresh({ delayInSeconds: 60 })
+                this.scheduleAuthorizationRefresh({ delayInSeconds: 60000 })
             }
         }
     };
@@ -92,7 +92,7 @@ class Client {
     };
 
     scheduleAuthorizationRefresh = ({ delayInSeconds }) => {
-        setTimeout(() => this.refreshAuthorization, delayInSeconds);
+        setTimeout(this.refreshAuthorization, delayInSeconds);
     };
 
     updateAuthorization = ({ authorizationGrant }) => {
@@ -100,7 +100,8 @@ class Client {
         this.updateAccessToken({ newAccessToken:
             authorizationGrant.accessToken});
         this.scheduleAuthorizationRefresh({
-            delayInSeconds: authorizationGrant.expireAt - Date.now() - 120
+            delayInSeconds:
+                (authorizationGrant.expireAt - Date.now()/1000 - 30) * 1000
         });
     };
 
