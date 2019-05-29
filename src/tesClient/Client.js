@@ -36,6 +36,8 @@ class Client {
         this.accountDataSystemError = false;
         this.pendingAccountIds = new Set([]);
         this.erroneousAccountIds = new Set([]);
+
+        this.refreshTimeout = undefined;
     }
 
     checkAccountData = (resolve, reject) => {
@@ -77,7 +79,7 @@ class Client {
             if (authorizationGrant.success) {
                 this.updateAuthorization({ authorizationGrant });
             } else {
-                this.scheduleAuthorizationRefresh({ delayInSeconds: 60000 })
+                this.scheduleAuthorizationRefresh({ delayInSeconds: 10000 })
             }
         }
     };
@@ -88,11 +90,13 @@ class Client {
                 refreshToken: this.refreshToken
             }),
             requestIdCallback: this.internalAuthorizationGrantCallback
-        })
+        });
+        clearTimeout(this.refreshTimeout);
     };
 
     scheduleAuthorizationRefresh = ({ delayInSeconds }) => {
-        setTimeout(this.refreshAuthorization, delayInSeconds);
+        this.refreshTimeout = setTimeout(
+            this.refreshAuthorization, delayInSeconds);
     };
 
     updateAuthorization = ({ authorizationGrant }) => {
@@ -101,7 +105,8 @@ class Client {
             authorizationGrant.accessToken});
         this.scheduleAuthorizationRefresh({
             delayInSeconds:
-                (authorizationGrant.expireAt - Date.now()/1000 - 30) * 1000
+                Math.round((
+                    authorizationGrant.expireAt - Date.now()/1000 - 40) * 1000)
         });
     };
 
@@ -139,6 +144,7 @@ class Client {
 
     close = () => {
         this.messenger.cleanup();
+        clearTimeout(this.refreshTimeout);
     };
 
     subscribeCallbackToResponseType = ({
