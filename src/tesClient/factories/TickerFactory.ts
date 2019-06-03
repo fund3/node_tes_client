@@ -1,4 +1,4 @@
-import * as request from "request";
+import request from "request";
 
 import { exchanges } from "~/tesClient/constants";
 const KrakenClient = require('kraken-api');
