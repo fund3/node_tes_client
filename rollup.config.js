@@ -1,5 +1,6 @@
 import typescript from "rollup-plugin-typescript2";
 import pkg from './package.json'
+import commonjs from "rollup-plugin-commonjs";
 import autoExternal from "rollup-plugin-auto-external";
 
 export default {
@@ -23,6 +24,7 @@ export default {
 		autoExternal(),
 		typescript({
 			typescript: require("typescript")
-		})
+		}),
+		commonjs()
 	]
 };

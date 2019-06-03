@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "moduleResolution": "node",
-        "module": "ESNext",
+        "module": "esnext",
         "outDir": "./dist",
         "target": "es5",
         "baseUrl": ".",
