@@ -1,6 +1,6 @@
 //index.js
 require("dotenv").config();
-import * as uuidv4 from 'uuid/v4'
+import uuidv4 from 'uuid/v4'
 
 import AccountCredentials from '~/tesClient/account/AccountCredentials'
 import AccountInfo from '~/tesClient/account/AccountInfo'

@@ -6,7 +6,7 @@ import LogonParams from '~/tesClient/requestParams/LogonParams'
 import PlaceOrderParams from '~/tesClient/requestParams/PlaceOrderParams'
 
 require("dotenv").config();
-import * as uuidv4 from 'uuid/v4'
+import uuidv4 from 'uuid/v4'
 
 const geminiAccountInfo = new AccountInfo(
     { accountId: process.env.GEMINI_ACCOUNT_ID });

@@ -1,4 +1,4 @@
-import * as zmq from "zeromq";
+import zmq from "zeromq";
 
 class TesSocket {
 
